@@ -1,0 +1,11 @@
+Log 1, Onsdag den 17/09 2014
+Done: Vi gjorde en prototyp av hemsida efter överenskommelser med Herr Svensson.
+      Skapade en testwebbplats för att demonstrera sidan på. 
+Todo: Bestämde att vi skulle göra prototyp för android app (Design). 
+      Java applikation-layout för administrativa händelser.
+      
+Log 2, Torsdag den 18/09 2014
+Done: Dela upp arbetsuppgifter för android applikationen i de olika vyerna.
+        - Kökvy för anders
+        - Kyparvy för beställningar + minivy för bord
+Todo: Skapa vyerna....
