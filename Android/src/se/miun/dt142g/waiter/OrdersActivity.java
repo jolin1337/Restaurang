@@ -134,7 +134,7 @@ public class OrdersActivity extends Activity {
         //CharSequence colors[] = new CharSequence[] {"red", "green", "blue", "black"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Pick a color");
+        builder.setTitle("Väj en meny till vår gäst");
         builder.setItems(availableMenus.toCharSequence(), blob);
         builder.show();
     }
