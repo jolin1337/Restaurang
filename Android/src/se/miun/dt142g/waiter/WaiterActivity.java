@@ -36,9 +36,7 @@ public class WaiterActivity extends Activity
         if(v.getClass() != Button.class)
             throw new Exception("No button click. The view passed is invalid");
         Button btn = (Button)v;
-        Toast.makeText(getApplicationContext(),
-                  String.valueOf(btn.getId()), Toast.LENGTH_LONG)
-                  .show();
+        
         Intent ordersActivity = new Intent(getApplicationContext(), OrdersActivity.class);
         ordersActivity.putExtra("bord_str", btn.getText());
         ordersActivity.putExtra("bord_id", btn.getId());
