@@ -1,18 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Beställningar</string>
+    <string name="app_name_login">Login till restaurangen</string>
     <string name="test">Some text</string>
     <color name="green">#ff99CC00</color>
     <color name="dark_green">#ff669900</color>
     <color name="yellow">#ffFFBB33</color>
     <color name="dark_yellow">#ffFF8800</color>
     
-    <style name="ButtonStyle">
+    <style name="Button">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">#ffffff</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_margin">3dp</item>
+        <item name="android:textSize">30dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">2</item>
+    </style>
+    <style name="android:widget:Button">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_margin">0dp</item>
         <item name="android:textSize">30dp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:shadowColor">#000000</item>
