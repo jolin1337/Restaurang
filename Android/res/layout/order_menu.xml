@@ -8,12 +8,12 @@
          <ListView
               android:layout_weight="1"
               android:id="@+id/orderView"
-              android:layout_height="wrap_content"
+              android:layout_height="0dp"
               android:layout_width="match_parent">
          </ListView>
          <Button
              android:onClick="newOrder"
-             android:text="Ny beställing"
+             android:text="@string/add_order_text"
              android:layout_width="fill_parent" 
              android:layout_height="wrap_content" 
              android:layout_gravity="bottom"

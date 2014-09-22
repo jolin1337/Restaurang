@@ -1,3 +1,23 @@
-# view AndroidManifest.xml #generated:7
--keep class se.miun.dt142g.Main { <init>(...); }
+# view AndroidManifest.xml #generated:16
+-keep class se.miun.dt142g.waiter.OrdersActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:9
+-keep class se.miun.dt142g.waiter.WaiterActivity { <init>(...); }
+
+# onClick res/layout/order_menu.xml #generated:14
+-keepclassmembers class * { *** newOrder(...); }
+
+# onClick res/layout/order_list_item.xml #generated:16
+-keepclassmembers class * { *** orderDetails(...); }
+
+# onClick res/layout/order_list_item.xml #generated:8
+-keepclassmembers class * { *** removeBtnClicked(...); }
+
+# onClick res/layout/table_menu.xml #generated:12
+# onClick res/layout/table_menu.xml #generated:13
+# onClick res/layout/table_menu.xml #generated:14
+# onClick res/layout/table_menu.xml #generated:15
+# onClick res/layout/table_menu.xml #generated:16
+# onClick res/layout/table_menu.xml #generated:17
+-keepclassmembers class * { *** table_click(...); }
 

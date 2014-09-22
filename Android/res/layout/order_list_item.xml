@@ -12,7 +12,7 @@
         android:layout_height="50dp" 
         android:background="@drawable/red_button" 
         android:textColor="#66111111"
-        android:text="x"/>
+        android:text="@string/remove_text"/>
     <Button android:onClick="orderDetails" 
         android:id="@+id/orderText1"
         android:layout_width="fill_parent"

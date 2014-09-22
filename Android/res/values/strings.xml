@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="bord_text1">Bord 1</string>
+    <string name="bord_text2">Bord 2</string>
+    <string name="bord_text3">Bord 3</string>
+    <string name="bord_text4">Bord 4</string>
+    <string name="bord_text5">Bord 5</string>
+    <string name="bord_text6">Bord 6</string>
+    <string name="add_order_text">Ny beställing</string>
+    <string name="remove_text">X</string>
     <string name="app_name">Beställningar</string>
     <string name="app_name_login">Login till restaurangen</string>
     <string name="test">Some text</string>

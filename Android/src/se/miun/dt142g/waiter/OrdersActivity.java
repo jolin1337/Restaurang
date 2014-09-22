@@ -5,6 +5,7 @@
  */
 package se.miun.dt142g.waiter;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -41,6 +42,9 @@ public class OrdersActivity extends Activity {
         super.onCreate(icicle);
        
         setContentView(R.layout.order_menu);
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
         
         Intent thisActivity = getIntent();
         setTitle(thisActivity.getExtras().getString("bord_str"));

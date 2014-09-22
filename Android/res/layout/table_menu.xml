@@ -9,12 +9,12 @@
         android:layout_height="wrap_content" 
         android:background="#ffffff"
         android:orientation="vertical">
-        <Button android:text="Bord 1" android:id="@+id/bord1" android:onClick="table_click" android:background="@drawable/default_button" style="@style/android:widget:Button" />
-        <Button android:text="Bord 2" android:id="@+id/bord2" android:onClick="table_click" android:background="@drawable/red_button" style="@style/android:widget:Button" />
-        <Button android:text="Bord 3" android:id="@+id/bord3" android:onClick="table_click" android:background="@drawable/green_button" style="@style/android:widget:Button" />
-        <Button android:text="Bord 4" android:id="@+id/bord4" android:onClick="table_click" android:background="@drawable/default_button" style="@style/android:widget:Button" />
-        <Button android:text="Bord 5" android:id="@+id/bord5" android:onClick="table_click" android:background="@drawable/orange_button" style="@style/android:widget:Button" />
-        <Button android:text="Bord 6" android:id="@+id/bord6" android:onClick="table_click" android:background="@drawable/default_button" style="@style/android:widget:Button" />
+        <Button android:text="@string/bord_text1" android:id="@+id/bord1" android:onClick="table_click" android:background="@drawable/default_button" style="@style/android:widget:Button" />
+        <Button android:text="@string/bord_text2" android:id="@+id/bord2" android:onClick="table_click" android:background="@drawable/red_button" style="@style/android:widget:Button" />
+        <Button android:text="@string/bord_text3" android:id="@+id/bord3" android:onClick="table_click" android:background="@drawable/green_button" style="@style/android:widget:Button" />
+        <Button android:text="@string/bord_text4" android:id="@+id/bord4" android:onClick="table_click" android:background="@drawable/default_button" style="@style/android:widget:Button" />
+        <Button android:text="@string/bord_text5" android:id="@+id/bord5" android:onClick="table_click" android:background="@drawable/orange_button" style="@style/android:widget:Button" />
+        <Button android:text="@string/bord_text6" android:id="@+id/bord6" android:onClick="table_click" android:background="@drawable/default_button" style="@style/android:widget:Button" />
     </LinearLayout>
 </ScrollView>
 

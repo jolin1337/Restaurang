@@ -1,4 +1,4 @@
-/home/jolin1337/NetBeansProjects/Restaurang/Android/gen/se/miun/dt142g/R.java \
+/home/jolin1337/NetBeansProjects/Restaurang/Android/bin/Android.ap_ \
  : /home/jolin1337/NetBeansProjects/Restaurang/Android/res/values/strings.xml \
 /home/jolin1337/NetBeansProjects/Restaurang/Android/res/drawable-mdpi/ic_launcher.png \
 /home/jolin1337/NetBeansProjects/Restaurang/Android/res/layout/order_list_item.xml \
