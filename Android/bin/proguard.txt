@@ -1,3 +1,6 @@
+# view AndroidManifest.xml #generated:23
+-keep class se.miun.dt142g.kitchen.Orders { <init>(...); }
+
 # view AndroidManifest.xml #generated:16
 -keep class se.miun.dt142g.waiter.OrdersActivity { <init>(...); }
 

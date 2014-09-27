@@ -1,2 +1,2 @@
-/home/jolin1337/NetBeansProjects/Restaurang/Android/bin/AndroidManifest.xml : \
-/home/jolin1337/NetBeansProjects/Restaurang/Android/AndroidManifest.xml \
+C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\AndroidManifest.xml : \
+C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\AndroidManifest.xml \

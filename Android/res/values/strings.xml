@@ -6,6 +6,8 @@
     <string name="bord_text4">Bord 4</string>
     <string name="bord_text5">Bord 5</string>
     <string name="bord_text6">Bord 6</string>
+    <string name="kitchen">Köket</string>
+    <string name="waiter">Kypare</string>
     <string name="add_order_text">Ny beställing</string>
     <string name="remove_text">X</string>
     <string name="app_name">Beställningar</string>

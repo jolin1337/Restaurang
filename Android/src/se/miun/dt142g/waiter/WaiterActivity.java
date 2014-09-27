@@ -8,9 +8,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import se.miun.dt142g.BaseActivity;
 import se.miun.dt142g.R;
 
-public class WaiterActivity extends Activity
+public class WaiterActivity extends BaseActivity
 {
     /** Called when the activity is first created. */
     @Override

@@ -2,7 +2,6 @@ package se.miun.dt142g;
 
 import android.app.Activity;
 import android.os.Bundle;
-import se.miun.dt142g.R;
 
 public class LoginActivity extends Activity
 {

@@ -1,4 +1,6 @@
-package se.miun.dt142g;
+package se.miun.dt142g.kitchen;
+
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -10,8 +12,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Button;
-import android.graphics.Color;
+import se.miun.dt142g.R;
 /**
  * Created by Tomas on 2014-09-20.
  */

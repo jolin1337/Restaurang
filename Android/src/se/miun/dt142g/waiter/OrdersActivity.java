@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
+import se.miun.dt142g.BaseActivity;
 
 import se.miun.dt142g.R;
 import se.miun.dt142g.data.Menu;
@@ -28,7 +29,7 @@ import se.miun.dt142g.data.Menus;
  *
  * @author Johannes
  */
-public class OrdersActivity extends Activity {
+public class OrdersActivity extends BaseActivity {
     private ListView listView;
     private ArrayAdapter<Menu> orders = null;
     private final List<Menu> values = new ArrayList<Menu>();
