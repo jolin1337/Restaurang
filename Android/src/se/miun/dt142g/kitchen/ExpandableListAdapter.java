@@ -28,6 +28,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         this._context = context;
         this._listDataHeader = listDataHeader;
         this._listDataChild = listChildData;
+        
     }
 
     @Override
@@ -102,15 +103,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             @Override
             public void onClick(View view) {
                 //Do something with database
-                _listDataHeader.remove(groupPosition);
-                notifyDataSetChanged();
-            }
-        });
-
-        ImageView taBort = (ImageView) convertView.findViewById(R.id.CloseButton);
-        taBort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
                 _listDataHeader.remove(groupPosition);
                 notifyDataSetChanged();
             }

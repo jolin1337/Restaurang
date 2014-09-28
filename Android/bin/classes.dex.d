@@ -4,7 +4,6 @@ C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\m
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\Menu.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\Menus.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\kitchen\ExpandableListAdapter$1.class \
-C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\kitchen\ExpandableListAdapter$2.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\kitchen\ExpandableListAdapter.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\kitchen\Orders$1.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\kitchen\Orders$2.class \

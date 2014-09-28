@@ -33,6 +33,7 @@
     </style>
     <style name="android:widget:Button">
         <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_weight">0.3</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">#ffffff</item>
         <item name="android:gravity">center</item>

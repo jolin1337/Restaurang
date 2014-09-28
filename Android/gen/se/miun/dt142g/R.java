@@ -32,22 +32,21 @@ public final class R {
         public static final int red_button=0x7f020006;
     }
     public static final class id {
-        public static final int CloseButton=0x7f090006;
         public static final int ListOrders=0x7f090000;
-        public static final int bord1=0x7f090008;
-        public static final int bord2=0x7f090009;
-        public static final int bord3=0x7f09000a;
-        public static final int bord4=0x7f09000b;
-        public static final int bord5=0x7f09000c;
-        public static final int bord6=0x7f09000d;
+        public static final int bord1=0x7f090007;
+        public static final int bord2=0x7f090008;
+        public static final int bord3=0x7f090009;
+        public static final int bord4=0x7f09000a;
+        public static final int bord5=0x7f09000b;
+        public static final int bord6=0x7f09000c;
         public static final int button=0x7f090005;
-        public static final int kitchen=0x7f09000e;
+        public static final int kitchen=0x7f09000d;
         public static final int lblListHeader=0x7f090004;
         public static final int lblListItem=0x7f090003;
         public static final int orderText1=0x7f090001;
         public static final int orderView=0x7f090002;
-        public static final int order_btns=0x7f090007;
-        public static final int waiter=0x7f09000f;
+        public static final int order_btns=0x7f090006;
+        public static final int waiter=0x7f09000e;
     }
     public static final class layout {
         public static final int activity_orders=0x7f030000;

@@ -20,7 +20,7 @@ public class WaiterActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.table_menu);
         LinearLayout parent = (LinearLayout)findViewById(R.id.order_btns);
-        for(int i=0;i<1;i++) {
+        for(int i=0;i<0 ;i++) {
             
             Button btnTmp = new Button(this);
             btnTmp.setTextColor(Color.WHITE);

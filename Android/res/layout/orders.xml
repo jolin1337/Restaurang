@@ -13,24 +13,16 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
-            android:textSize="17dp" />
+            android:textSize="30dp" />
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="5dp"
             android:clickable="false"
             android:focusable="false"
             android:layout_alignParentRight="true"
             android:src="@drawable/ic_done"
             android:id="@+id/button" />
-        <ImageView
-            android:id="@+id/CloseButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="false"
-            android:focusable="false"
-            android:layout_toLeftOf="@id/button"
-            android:src="@drawable/ic_close" />
-
 
         </RelativeLayout>
 

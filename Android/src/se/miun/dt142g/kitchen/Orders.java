@@ -35,6 +35,7 @@ public class Orders extends BaseActivity {
 
         // setting list adapter
         expListView.setAdapter(listAdapter);
+        expListView.expandGroup(0);
         // Listview Group click listener
         expListView.setOnGroupClickListener(new OnGroupClickListener() {
 
@@ -117,7 +118,7 @@ public class Orders extends BaseActivity {
 
         List<String> bord2 = new ArrayList<String>();
         bord2.add("The Conjuring");
-        bord2.add("Despicable Me 2");
+        bord2.add("Despicable Me 2 återkomsten: Gubbarna har tänkt klart");
         bord2.add("Turbo");
         bord2.add("Grown Ups 2");
         bord2.add("Red 2");
