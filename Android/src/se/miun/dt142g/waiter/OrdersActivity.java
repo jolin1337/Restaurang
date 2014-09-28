@@ -5,8 +5,6 @@
  */
 package se.miun.dt142g.waiter;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,13 +12,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 import se.miun.dt142g.BaseActivity;
-
 import se.miun.dt142g.R;
 import se.miun.dt142g.data.Menu;
 import se.miun.dt142g.data.Menus;
@@ -61,9 +59,11 @@ public class OrdersActivity extends BaseActivity {
         values.add(availableMenus.getMenu("Spagetti"));
         values.add(availableMenus.getMenu("Potatisbullar"));
         
-        orders = new ArrayAdapter<Menu>(this,
-          R.layout.order_list_item, R.id.orderText1, values);
-
+        
+        
+        orders = new OrdersListView(this,
+          R.layout.order_list_item, R.id.orderText1, R.id.foodPrice, values);
+        
         // Assign adapter to ListView
         listView.setAdapter(orders);
     }
@@ -144,4 +144,17 @@ public class OrdersActivity extends BaseActivity {
         builder.show();
     }
     
+    public void toggleSpecial(View v){
+        if(v instanceof ImageView){
+            ImageView special = (ImageView)v;
+            if (special.getTag().equals(R.drawable.special)) {
+                special.setImageResource(R.drawable.special_gray);
+                special.setTag(R.drawable.special_gray);
+            }
+            else {
+                special.setTag(R.drawable.special);
+                special.setImageResource(R.drawable.special);
+            }
+        }
+    }
 }

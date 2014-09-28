@@ -10,7 +10,7 @@
 # onClick res/layout/order_menu.xml #generated:14
 -keepclassmembers class * { *** newOrder(...); }
 
-# onClick res/layout/order_list_item.xml #generated:16
+# onClick res/layout/order_list_item.xml #generated:17
 -keepclassmembers class * { *** orderDetails(...); }
 
 # onClick res/layout/order_list_item.xml #generated:8
@@ -23,4 +23,7 @@
 # onClick res/layout/table_menu.xml #generated:16
 # onClick res/layout/table_menu.xml #generated:17
 -keepclassmembers class * { *** table_click(...); }
+
+# onClick res/layout/order_list_item.xml #generated:37
+-keepclassmembers class * { *** toggleSpecial(...); }
 

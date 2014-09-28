@@ -13,10 +13,32 @@
         android:background="@drawable/red_button" 
         android:textColor="#66111111"
         android:text="@string/remove_text"/>
-    <Button android:onClick="orderDetails" 
+
+        <Button android:onClick="orderDetails" 
         android:id="@+id/orderText1"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:textColor="#000000"
-        android:background="#ffffff" />
+        android:gravity="left|center_vertical"
+        android:paddingLeft="4dp"
+        android:background="#ffffff" 
+        android:layout_weight="0.6"/>
+        
+        <TextView android:id="@+id/foodPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:text="Cookies"
+        android:textColor="#000000"
+        android:gravity="center_vertical"
+        android:paddingRight="6dp"
+        android:background="#ffffff" 
+        />
+        
+        <ImageView android:src="@drawable/special_gray"
+            android:onClick="toggleSpecial"
+            android:tag="0"
+            android:layout_height="50dp"
+            android:layout_width="70dp"
+        />
+    
 </LinearLayout>
