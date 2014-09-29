@@ -13,6 +13,7 @@
     <string name="app_name">Beställningar</string>
     <string name="app_name_login">Login till restaurangen</string>
     <string name="test">Some text</string>
+    <string name="reservations">Bokningar</string>
     <color name="green">#ff99CC00</color>
     <color name="dark_green">#ff669900</color>
     <color name="yellow">#ffFFBB33</color>

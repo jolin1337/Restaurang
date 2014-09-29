@@ -10,4 +10,8 @@
         android:title="@string/waiter"
         android:orderInCategory="100"
         android:showAsAction="never" />
+    <item android:id="@+id/reservations"
+        android:title="@string/reservations"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
 </menu>

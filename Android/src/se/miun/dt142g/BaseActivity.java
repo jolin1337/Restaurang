@@ -45,9 +45,15 @@ public class BaseActivity extends Activity {
             return true;
         }
         if (id == R.id.kitchen && !(this instanceof se.miun.dt142g.kitchen.Orders)) {
-            System.out.println("Kitcgen loading view...");
+            System.out.println("Kitchen loading view...");
             Intent ordersActivity = new Intent(getApplicationContext(), se.miun.dt142g.kitchen.Orders.class);
             startActivity(ordersActivity);
+            return true;
+        }
+        if (id == R.id.reservations && !(this instanceof se.miun.dt142g.reservations.ReservationsActivity)) {
+            System.out.println("Reservations loading view...");
+            Intent reservationsActivity = new Intent(getApplicationContext(), se.miun.dt142g.reservations.ReservationsActivity.class);
+            startActivity(reservationsActivity);
             return true;
         }
         return super.onOptionsItemSelected(item);
