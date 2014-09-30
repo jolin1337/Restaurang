@@ -17,5 +17,9 @@ public abstract class DataSource {
     public void dbConnect() {
         // Do connection here
     }
+    protected void upploadData(String... data) {
+        // TODO: Update data
+    }
+    public abstract void update();
 }
 

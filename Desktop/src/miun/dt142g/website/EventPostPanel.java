@@ -24,13 +24,14 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import miun.dt142g.data.EventPost;
 
 /**
  *
  * @author Johannes
  */
-public class EventPost extends JPanel{
-    private String imagePath;
+public class EventPostPanel extends JPanel{
+    private EventPost eventPost = null;
 
     private final Button imgBtn = new Button("Lägg till poster");
     private final TextField editDate = new TextField();
@@ -44,19 +45,26 @@ public class EventPost extends JPanel{
             final JFileChooser fileChooser = new JFileChooser();
             FileFilter filter = new FileNameExtensionFilter(null, "jpg", "jpeg", "png");
             fileChooser.setFileFilter(filter);
-            int returnVal = fileChooser.showOpenDialog(EventPost.this);
+            int returnVal = fileChooser.showOpenDialog(EventPostPanel.this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
-                imagePath = file.getAbsolutePath();
+                eventPost.setImgSrc(file.getAbsolutePath());
                 imgBtn.setLabel("Vald Poster: " + file.getName());
             }
         }
     };
-    public EventPost() {
+    public EventPostPanel(EventPost eventPost) {
+        this.eventPost = eventPost;
+        
         setBorder(new EmptyBorder(10,10,10,10));
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setBackground(Color.LIGHT_GRAY);
         imgBtn.addActionListener(imageEvent);
+        int index = eventPost.getImgSrc().lastIndexOf("/");
+        if(index > -1)
+            imgBtn.setLabel(eventPost.getImgSrc().substring(index+1));
+        else if(!eventPost.getImgSrc().isEmpty())
+            imgBtn.setLabel(eventPost.getImgSrc());
         add(imgBtn);
         
         JLabel date = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>Publicationsdatum</div></html>");
@@ -64,6 +72,7 @@ public class EventPost extends JPanel{
         leftJustify.add( date );
         leftJustify.add( Box.createHorizontalGlue() );
         add(leftJustify);
+        editDate.setText(eventPost.getPubDate());
         editDate.setMaximumSize(new Dimension(Integer.MAX_VALUE, editDate.getPreferredSize().height));
         add(editDate);
         
@@ -73,6 +82,7 @@ public class EventPost extends JPanel{
         leftJustify.add( lTitle );
         leftJustify.add( Box.createHorizontalGlue() );
         add(leftJustify);
+        editTitle.setText(eventPost.getTitle());
         editTitle.setMaximumSize(new Dimension(Integer.MAX_VALUE, editTitle.getPreferredSize().height));
         add(editTitle, BorderLayout.WEST);
         
@@ -81,15 +91,8 @@ public class EventPost extends JPanel{
         leftJustify.add( lDesc );
         leftJustify.add( Box.createHorizontalGlue() );
         add(leftJustify);
+        editDesc.setText(eventPost.getDescription());
         add(editDesc, BorderLayout.WEST);
-    }
-    
-    public String getImagePath() {
-        return imagePath;
-    }
-
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
     }
     
 }
