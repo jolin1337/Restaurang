@@ -29,7 +29,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  * @author Johannes
  */
-public class EventPost extends JPanel implements ActionListener{
+public class EventPost extends JPanel{
     private String imagePath;
 
     private final Button imgBtn = new Button("Lägg till poster");
@@ -37,11 +37,26 @@ public class EventPost extends JPanel implements ActionListener{
     private final TextField editTitle = new TextField();
     private final TextArea editDesc = new TextArea();
     
+    private final ActionListener imageEvent = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            final JFileChooser fileChooser = new JFileChooser();
+            FileFilter filter = new FileNameExtensionFilter(null, "jpg", "jpeg", "png");
+            fileChooser.setFileFilter(filter);
+            int returnVal = fileChooser.showOpenDialog(EventPost.this);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                imagePath = file.getAbsolutePath();
+                imgBtn.setLabel("Vald Poster: " + file.getName());
+            }
+        }
+    };
     public EventPost() {
         setBorder(new EmptyBorder(10,10,10,10));
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setBackground(Color.LIGHT_GRAY);
-        imgBtn.addActionListener(this);
+        imgBtn.addActionListener(imageEvent);
         add(imgBtn);
         
         JLabel date = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>Publicationsdatum</div></html>");
@@ -67,19 +82,6 @@ public class EventPost extends JPanel implements ActionListener{
         leftJustify.add( Box.createHorizontalGlue() );
         add(leftJustify);
         add(editDesc, BorderLayout.WEST);
-    }
-    
-    @Override
-    public void actionPerformed(ActionEvent ae) {
-        final JFileChooser fileChooser = new JFileChooser();
-        FileFilter filter = new FileNameExtensionFilter(null, "jpg", "jpeg", "png");
-        fileChooser.setFileFilter(filter);
-        int returnVal = fileChooser.showOpenDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            imagePath = file.getAbsolutePath();
-            imgBtn.setLabel("Vald Poster: " + file.getName());
-        }
     }
     
     public String getImagePath() {

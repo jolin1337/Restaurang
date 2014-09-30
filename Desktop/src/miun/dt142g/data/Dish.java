@@ -16,10 +16,10 @@ public class Dish {
     private int ingredients[]; 
     
     public Dish(int id, String name, int price, int ingredients[]){
-        setId(id); 
-        setName(name); 
-        setPrice(price);
-        setIngredients(ingredients);
+        this.id = id; 
+        this.name = name; 
+        this.price = price;
+        this.ingredients = ingredients;
     }
 
     /**

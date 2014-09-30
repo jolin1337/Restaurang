@@ -9,6 +9,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Label;
 import java.awt.TextArea;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -21,6 +23,7 @@ import javax.swing.border.EmptyBorder;
  * @author Johannes
  */
 public class WebsitePanel extends JPanel {
+    List<EventPost> events = new ArrayList<>();
     public WebsitePanel() {
         setBackground(Color.WHITE);
         setBorder(new EmptyBorder(10,10,10,10));
@@ -47,5 +50,9 @@ public class WebsitePanel extends JPanel {
         add(Box.createRigidArea(new Dimension(1, 10)));
         EventPost ep2 = new EventPost();
         add(ep2);
+    }
+    
+    void loadDatabase() {
+        
     }
 }

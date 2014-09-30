@@ -13,10 +13,10 @@ import java.util.Arrays;
  * @author Ulf
  */
 public class Dishes{
-    private ArrayList<Dish> dishes;
+    private final ArrayList<Dish> dishes;
     
     public Dishes(Dish dish[]){
-       dishes = new ArrayList<Dish>(Arrays.asList(dish));
+       dishes = new ArrayList<>(Arrays.asList(dish));
     }
     
     public Dish getDish(int id){

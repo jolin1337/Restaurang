@@ -12,7 +12,7 @@ package miun.dt142g.data;
 public class Ingredient {
     private int id; 
     private String name; 
-    private int servings; 
+    private int amount; 
 
     /**
      * @return the id
@@ -43,16 +43,16 @@ public class Ingredient {
     }
 
     /**
-     * @return the servings
+     * @return the amount
      */
-    public int getServings() {
-        return servings;
+    public int getAmount() {
+        return amount;
     }
 
     /**
-     * @param servings the servings to set
+     * @param amount the amount to set
      */
-    public void setServings(int servings) {
-        this.servings = servings;
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 }

@@ -13,7 +13,6 @@ CREATE TABLE Info(
 
 CREATE TABLE Inventory (
 	id Int PRIMARY KEY,
-	price float,
 	name Text,
 	amount Int
 );
@@ -21,7 +20,7 @@ CREATE TABLE Inventory (
 CREATE TABLE Dish (
 	id Int PRIMARY KEY,
 	name Varchar(255),
-	priceDiff float
+	price float
 );
 
 CREATE TABLE Dish_has_Inventory (
