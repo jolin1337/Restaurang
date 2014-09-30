@@ -10,6 +10,7 @@ import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Label;
+import java.awt.TextArea;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,10 +30,12 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author Johannes
  */
 public class EventPost extends JPanel implements ActionListener{
-    String imagePath;
-    Date pubDate;
-    String title;
-    final Button imgBtn = new Button("Lägg till poster");
+    private String imagePath;
+
+    private final Button imgBtn = new Button("Lägg till poster");
+    private final TextField editDate = new TextField();
+    private final TextField editTitle = new TextField();
+    private final TextArea editDesc = new TextArea();
     
     public EventPost() {
         setBorder(new EmptyBorder(10,10,10,10));
@@ -46,7 +49,6 @@ public class EventPost extends JPanel implements ActionListener{
         leftJustify.add( date );
         leftJustify.add( Box.createHorizontalGlue() );
         add(leftJustify);
-        TextField editDate = new TextField();
         editDate.setMaximumSize(new Dimension(Integer.MAX_VALUE, editDate.getPreferredSize().height));
         add(editDate);
         
@@ -56,9 +58,15 @@ public class EventPost extends JPanel implements ActionListener{
         leftJustify.add( lTitle );
         leftJustify.add( Box.createHorizontalGlue() );
         add(leftJustify);
-        TextField editTitle = new TextField();
         editTitle.setMaximumSize(new Dimension(Integer.MAX_VALUE, editTitle.getPreferredSize().height));
         add(editTitle, BorderLayout.WEST);
+        
+        JLabel lDesc = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>Beskrivning av event</div></html>");
+        leftJustify = Box.createHorizontalBox();
+        leftJustify.add( lDesc );
+        leftJustify.add( Box.createHorizontalGlue() );
+        add(leftJustify);
+        add(editDesc, BorderLayout.WEST);
     }
     
     @Override
@@ -73,4 +81,13 @@ public class EventPost extends JPanel implements ActionListener{
             imgBtn.setLabel("Vald Poster: " + file.getName());
         }
     }
+    
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+    
 }

@@ -3,7 +3,6 @@
  */
 package miun.dt142g;
 
-import miun.dt142g.website.WebsitePanel;
 import java.awt.BorderLayout;
 import java.awt.ScrollPane;
 import javax.swing.JFrame;

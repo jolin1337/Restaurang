@@ -41,6 +41,7 @@ public class WebsitePanel extends JPanel {
         TextArea contactEdit = new TextArea();
         add(contactEdit);
         
+        add(Box.createRigidArea(new Dimension(1, 10)));
         EventPost ep1 = new EventPost();
         add(ep1);
         add(Box.createRigidArea(new Dimension(1, 10)));
