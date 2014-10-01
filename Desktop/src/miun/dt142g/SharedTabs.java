@@ -22,6 +22,7 @@ import javax.swing.event.ChangeListener;
 import miun.dt142g.data.Dish;
 import miun.dt142g.food.DishDetailPanel;
 import miun.dt142g.food.DishesPanel;
+import miun.dt142g.inventory.InventoryPanel;
 import miun.dt142g.website.WebsitePanel;
 
 /**
@@ -66,7 +67,9 @@ public class SharedTabs extends JPanel {
         panels.add(panel1);
         JComponent panel2 = new WebsitePanel();
         panels.add(panel2);
-        String[] titles = {"Rätter", "Hemsida"};
+        InventoryPanel panel3 = new InventoryPanel(); 
+        panels.add(panel3);
+        String[] titles = {"Rätter", "Hemsida","Inventarie"};
         int i = 0;
         for(JComponent panel : panels) {
             ScrollPane sp = new ScrollPane(ScrollPane.SCROLLBARS_AS_NEEDED);
