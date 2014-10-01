@@ -19,7 +19,12 @@ public class Ingredient {
         this.name = name;
         this.amount = amount;
     }
-
+    
+    public Ingredient(){
+        
+    }
+             
+    
     /**
      * @return the id
      */
