@@ -17,6 +17,7 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import miun.dt142g.Controller;
 import miun.dt142g.data.Dish;
 
 /**
@@ -27,7 +28,9 @@ public class DishesPanel extends JPanel {
     List<DishPanel> dishPanels = new ArrayList<>();
     Dishes dishes = new Dishes();
     Button addDishBtn = new Button("Lägg till rätt");
-    public DishesPanel() {
+    private Controller fjarr = null;
+    public DishesPanel(Controller c) {
+        this.fjarr = c;
         dishes.dbConnect();
         dishes.loadData();
         
@@ -35,7 +38,7 @@ public class DishesPanel extends JPanel {
         setBackground(Color.white);
         setBorder(new EmptyBorder(10,10,10,10));
         for(Dish dish : dishes) {
-            DishPanel dp = new DishPanel(dish);
+            DishPanel dp = new DishPanel(dish, fjarr);
             add(dp);
             dishPanels.add(dp);
         }
@@ -43,7 +46,7 @@ public class DishesPanel extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                DishPanel dp = new DishPanel(new Dish(dishes.getUniqueId(), "", 0.0f, null));
+                DishPanel dp = new DishPanel(new Dish(dishes.getUniqueId(), "", 0.0f, null), fjarr);
                 remove(addDishBtn);
                 add(dp);
                 add(addDishBtn);
@@ -53,5 +56,9 @@ public class DishesPanel extends JPanel {
         });
         add(addDishBtn);
         addDishBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+    }
+    
+    public void setViewSwitch(Controller c) {
+        this.fjarr = c;
     }
 }

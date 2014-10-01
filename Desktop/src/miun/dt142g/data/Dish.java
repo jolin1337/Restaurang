@@ -6,6 +6,7 @@
 package miun.dt142g.data;
 
 import java.util.List;
+import miun.dt142g.food.Inventory;
 
 /**
  *
@@ -80,6 +81,10 @@ public class Dish {
     @Override
     public String toString(){
         return this.getName() + "\n" +Float.toString(this.getPrice())+":-";
+    }
+
+    public List<Integer> getIngredients() {
+        return ingredients;
     }
             
 }

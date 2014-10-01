@@ -7,16 +7,20 @@ package miun.dt142g;
 
 
 import javax.swing.JTabbedPane;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridLayout;
+import java.awt.ScrollPane;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import miun.dt142g.data.Dish;
+import miun.dt142g.food.DishDetailPanel;
 import miun.dt142g.food.DishesPanel;
 import miun.dt142g.website.WebsitePanel;
 
@@ -24,23 +28,66 @@ import miun.dt142g.website.WebsitePanel;
  *
  * @author Tomas
  */
-public class SharedTabs extends JPanel{
+public class SharedTabs extends JPanel {
+    DishDetailPanel dishDetailView = new DishDetailPanel(null);
+    JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+    List<JComponent> panels = new ArrayList<>();
+    
+    Controller fjarr = new Controller() {
 
+        @Override
+        public void setViewDishes() {
+            tabbedPane.setSelectedIndex(0);
+        }
+
+        @Override
+        public void setViewWebsite() {
+            tabbedPane.setSelectedIndex(1);
+        }
+
+        @Override
+        public void setViewDishDetail(Dish d) {
+            dishDetailView.setDish(d);
+            tabbedPane.addTab("Rätten i detaij", dishDetailView);
+            tabbedPane.revalidate();
+            tabbedPane.setSelectedComponent(dishDetailView);
+        }
+
+        @Override
+        public void setViewInventory() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    };
     public SharedTabs() {
         //super(new GridLayout(1, 1)); //Not needed?
-        
-        JTabbedPane tabbedPane = new JTabbedPane();
-        
-        JComponent panel1 = new DishesPanel();
-        tabbedPane.addTab("Rätter", panel1);
-        tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
-        
+        setLayout(new BorderLayout());
+        DishesPanel panel1 = new DishesPanel(fjarr);
+        panel1.setViewSwitch(fjarr);
+        panels.add(panel1);
         JComponent panel2 = new WebsitePanel();
+        panels.add(panel2);
+        String[] titles = {"Rätter", "Hemsida"};
+        int i = 0;
+        for(JComponent panel : panels) {
+            ScrollPane sp = new ScrollPane(ScrollPane.SCROLLBARS_AS_NEEDED);
+            sp.add(panel);
+            tabbedPane.addTab(titles[i], sp);
+            i++;
+        }
+        
         //Currently WebsitePanel is very large, 
         //needs a scrollbar to implement preferred size.
         //panel2.setPreferredSize(new Dimension(410, 50));
-        tabbedPane.addTab("Hemsida", panel2);
-        tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
+        
+        tabbedPane.addChangeListener(new ChangeListener() {
+
+            @Override
+            public void stateChanged(ChangeEvent ce) {
+                if(tabbedPane.isAncestorOf(dishDetailView) && tabbedPane.getSelectedComponent() != dishDetailView)
+                    tabbedPane.remove(dishDetailView);
+            }
+        });
+        
         
         //Add more tabs using this template
         /*
@@ -77,8 +124,11 @@ public class SharedTabs extends JPanel{
         
         //Display the window.
         frame.pack();
+        frame.setMinimumSize(new Dimension(600,600));
         frame.setVisible(true);
     }
+    
+    
     
     
     public static void main(String[] args) {
