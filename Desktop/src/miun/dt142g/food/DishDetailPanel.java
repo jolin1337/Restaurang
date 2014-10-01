@@ -66,21 +66,21 @@ public class DishDetailPanel extends JPanel {
         if(ingredients != null)
             for(Integer ingredient : ingredients) {
                 Button remove = new Button("X");
+                remove.setMaximumSize(new Dimension(35, 35));
+                remove.addActionListener(removeIngredientListener);
                 JComboBox jListInventory = new JComboBox();
-                String name = "";
                 for(Ingredient ing : inv) {
                     jListInventory.addItem(ing);
                     if(ing.getId() == ingredient) {
-                        name = ing.getName();
+                        jListInventory.setSelectedItem(ing);
                     }       
                 }
-                add(jListInventory);
-                JTextField ingEdit = new JTextField(name);
+                //JTextField ingEdit = new JTextField(name);
                 JPanel horiView = new JPanel();
                 horiView.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
                 horiView.setLayout(new BoxLayout(horiView, BoxLayout.LINE_AXIS));
                 horiView.add(remove);
-                horiView.add(ingEdit);
+                horiView.add(jListInventory);
                 ingredientsPanel.add(horiView);
             }
         ingredientsPanel.setMaximumSize(ingredientsPanel.getPreferredSize());
@@ -91,13 +91,19 @@ public class DishDetailPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 Button remove = new Button("X");
+                remove.setMaximumSize(new Dimension(35, 35));
                 remove.addActionListener(removeIngredientListener);
-                JTextField ingEdit = new JTextField("");
+                
+                JComboBox jListInventory = new JComboBox();
+                String name = "";
+                for(Ingredient ing : inv) {
+                    jListInventory.addItem(ing);
+                }
                 JPanel horiView = new JPanel();
                 horiView.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
                 horiView.setLayout(new BoxLayout(horiView, BoxLayout.LINE_AXIS));
                 horiView.add(remove);
-                horiView.add(ingEdit);
+                horiView.add(jListInventory);
                 ingredientsPanel.add(horiView);
                 ingredientsPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, ingredientsPanel.getPreferredSize().height));
                 ingredientsPanel.revalidate();
