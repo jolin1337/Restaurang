@@ -16,7 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import miun.dt142g.data.AboutUs;
-import miun.dt142g.food.EventPosts;
+import miun.dt142g.data.EventPost;
 
 /**
  *
@@ -53,10 +53,11 @@ public class WebsitePanel extends JPanel {
         contactEdit.setText(about.getDataContacts());
         add(contactEdit);
         
-        for(int i=eventPosts.getRows();i>0; i--) {
+        for(EventPost ep : eventPosts) {
             add(Box.createRigidArea(new Dimension(1, 10)));
-            EventPostPanel ep1 = new EventPostPanel(eventPosts.getEvent(i-1));
+            EventPostPanel ep1 = new EventPostPanel(ep);
             add(ep1);
+            eventPostPanels.add(ep1);
         }
     }
 }

@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package miun.dt142g.food;
+package miun.dt142g.website;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import miun.dt142g.DataSource;
 import miun.dt142g.data.EventPost;
@@ -14,7 +15,7 @@ import miun.dt142g.data.EventPost;
  *
  * @author Johannes
  */
-public class EventPosts extends DataSource {
+public class EventPosts extends DataSource implements Iterable<EventPost> {
     private final List<EventPost> events = new ArrayList<>();
     
     @Override
@@ -46,5 +47,10 @@ public class EventPosts extends DataSource {
     }
     public int getRows() {
         return events.size();
+    }
+
+    @Override
+    public Iterator<EventPost> iterator() {
+        return events.iterator();
     }
 }

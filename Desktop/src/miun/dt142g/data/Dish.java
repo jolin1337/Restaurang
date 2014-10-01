@@ -5,35 +5,23 @@
  */
 package miun.dt142g.data;
 
+import java.util.List;
+
 /**
  *
  * @author Ulf
  */
 public class Dish {
-    private int id; 
+    private final int id; 
     private String name; 
-    private int price; 
-    private int ingredients[]; 
+    private float price; 
+    private final List<Integer> ingredients; 
     
-    public Dish(int id, String name, int price, int ingredients[]){
+    public Dish(int id, String name, float price, List<Integer> ingredients){
         this.id = id; 
         this.name = name; 
         this.price = price;
         this.ingredients = ingredients;
-    }
-
-    /**
-     * @return the id
-     */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(int id) {
-        this.id = id;
     }
 
     /**
@@ -53,41 +41,41 @@ public class Dish {
     /**
      * @return the price
      */
-    public int getPrice() {
+    public float getPrice() {
         return price;
     }
 
     /**
      * @param price the price to set
      */
-    public void setPrice(int price) {
+    public void setPrice(float price) {
         this.price = price;
     }
 
     /**
+     * @param ingred - the ingredient to retrieve
      * @return the ingredients
      */
-    public int[] getIngredients() {
-        return ingredients;
+    public int getIngredient(int ingred) {
+        return ingredients.get(ingred);
     }
-
-    /**
-     * @param ingredients the ingredients to set
-     */
-    public void setIngredients(int[] ingredients) {
-        this.ingredients = ingredients;
+    public void addIngredient(int id) {
+        ingredients.add(id);
+    }
+    public void removeIngredient(int index) {
+        ingredients.remove(id);
+    }
+    public void editIngredient(int index, int id) {
+        ingredients.set(index, id);
     }
     
     public boolean equals(Dish x){
-        if(this.getId()==x.getId())
-            return true; 
-        else
-            return false; 
+        return this.id==x.id; 
     }
     
     @Override
     public String toString(){
-        return this.getName() + "\n" +Integer.toString(this.getPrice())+":-";
+        return this.getName() + "\n" +Float.toString(this.getPrice())+":-";
     }
             
 }
