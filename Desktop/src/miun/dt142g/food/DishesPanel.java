@@ -26,6 +26,7 @@ import miun.dt142g.data.Dish;
 public class DishesPanel extends JPanel {
     List<DishPanel> dishPanels = new ArrayList<>();
     Dishes dishes = new Dishes();
+    Button addDishBtn = new Button("Lägg till rätt");
     public DishesPanel() {
         dishes.dbConnect();
         dishes.loadData();
@@ -38,14 +39,16 @@ public class DishesPanel extends JPanel {
             add(dp);
             dishPanels.add(dp);
         }
-        Button addDishBtn = new Button("Lägg till rätt");
         addDishBtn.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
                 DishPanel dp = new DishPanel(new Dish(dishes.getUniqueId(), "", 0.0f, null));
+                remove(addDishBtn);
                 add(dp);
+                add(addDishBtn);
                 dishPanels.add(dp);
+                DishesPanel.this.revalidate();
             }
         });
         add(addDishBtn);

@@ -31,11 +31,11 @@ public class Restaurang {
         //3. Create components and put them in the frame.
         //...create emptyLabel...
         ScrollPane sp = new ScrollPane(ScrollPane.SCROLLBARS_AS_NEEDED);
-        Dishes dishes = new Dishes();
-        dishes.dbConnect();
-        dishes.loadData();
-        sp.add(new DishDetailPanel(dishes.getDish(0)));
-        //sp.add(new DishesPanel());
+        //Dishes dishes = new Dishes();
+        //dishes.dbConnect();
+        //dishes.loadData();
+        //sp.add(new DishDetailPanel(dishes.getDish(0)));
+        sp.add(new DishesPanel());
         tmp.getContentPane().add(sp, BorderLayout.CENTER);
 
         //4. Size the frame.

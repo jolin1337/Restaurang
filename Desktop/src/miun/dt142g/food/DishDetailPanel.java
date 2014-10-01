@@ -5,16 +5,17 @@
  */
 package miun.dt142g.food;
 
+import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Label;
-import java.awt.TextField;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import miun.dt142g.data.Dish;
+import miun.dt142g.data.Ingredient;
 
 /**
  *
@@ -22,7 +23,10 @@ import miun.dt142g.data.Dish;
  */
 public class DishDetailPanel extends JPanel {
     Dish dish;
+    Inventory inv = new Inventory();
     public DishDetailPanel(Dish dish) {
+        inv.dbConnect();
+        inv.loadData();
         setBackground(Color.white);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         
@@ -30,6 +34,17 @@ public class DishDetailPanel extends JPanel {
         addTextField(dish.getName());
         
         addLabel("Ingredienser");
+        for(Ingredient ing : inv) {
+            Button remove = new Button("X");
+            JComboBox jListInventory;
+            JTextField ingEdit = new JTextField(ing.getName());
+            JPanel horiView = new JPanel();
+            horiView.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+            horiView.setLayout(new BoxLayout(horiView, BoxLayout.LINE_AXIS));
+            horiView.add(remove);
+            horiView.add(ingEdit);
+            add(horiView);
+        }
         
         addLabel("Pris");
         addTextField(Float.toString(dish.getPrice()));
