@@ -23,6 +23,10 @@ public class Dish {
         this.price = price;
         this.ingredients = ingredients;
     }
+    
+    public int getId() {
+        return id;
+    }
 
     /**
      * @return the name

@@ -10,6 +10,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BoxLayout;
@@ -36,5 +38,17 @@ public class DishesPanel extends JPanel {
             add(dp);
             dishPanels.add(dp);
         }
+        Button addDishBtn = new Button("Lägg till rätt");
+        addDishBtn.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                DishPanel dp = new DishPanel(new Dish(dishes.getUniqueId(), "", 0.0f, null));
+                add(dp);
+                dishPanels.add(dp);
+            }
+        });
+        add(addDishBtn);
+        addDishBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
     }
 }

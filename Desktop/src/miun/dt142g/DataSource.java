@@ -21,5 +21,6 @@ public abstract class DataSource {
         // TODO: Update data
     }
     public abstract void update();
+    public abstract int getUniqueId();
 }
 

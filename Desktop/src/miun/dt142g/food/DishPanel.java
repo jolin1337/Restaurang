@@ -12,6 +12,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.TextField;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -26,20 +27,23 @@ import miun.dt142g.data.Dish;
 public class DishPanel extends JPanel {
     Dish dish;
     public DishPanel(Dish dish) {
+        setLayout(new BorderLayout());
+        setBorder(new EmptyBorder(10,10,10,10));
         setBackground(Color.white);
+        setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
         this.dish = dish;
-        JPanel item = new JPanel(new FlowLayout());
+        JPanel item = new JPanel(new BorderLayout());
         item.setBackground(Color.white);
         Button remove = new Button("X");
-        item.add(remove, FlowLayout.LEFT);
+        add(remove, BorderLayout.WEST);
         TextField name = new TextField();
         name.setText(dish.getName());
-        name.setPreferredSize(new Dimension(200, 25));
-        item.add(name, FlowLayout.CENTER);
+        name.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
+        add(name, BorderLayout.CENTER);
         Button detail = new Button("Detaljer");
         //detail.setMaximumSize(new Dimension(Integer.MAX_VALUE, detail.getPreferredSize().height));
-        item.add(detail, FlowLayout.RIGHT);
+        add(detail, BorderLayout.EAST);
        // item.setBorder(new EmptyBorder(10,10,10,10));
-        add(item);
+        //add(item);
     }
 }

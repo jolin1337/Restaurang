@@ -53,4 +53,9 @@ public class EventPosts extends DataSource implements Iterable<EventPost> {
     public Iterator<EventPost> iterator() {
         return events.iterator();
     }
+
+    @Override
+    public int getUniqueId() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -5,7 +5,11 @@ package miun.dt142g;
 
 import java.awt.BorderLayout;
 import java.awt.ScrollPane;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import miun.dt142g.data.Dish;
+import miun.dt142g.food.DishDetailPanel;
+import miun.dt142g.food.Dishes;
 import miun.dt142g.food.DishesPanel;
 import miun.dt142g.website.WebsitePanel;
 /**
@@ -27,7 +31,11 @@ public class Restaurang {
         //3. Create components and put them in the frame.
         //...create emptyLabel...
         ScrollPane sp = new ScrollPane(ScrollPane.SCROLLBARS_AS_NEEDED);
-        sp.add(new DishesPanel());
+        Dishes dishes = new Dishes();
+        dishes.dbConnect();
+        dishes.loadData();
+        sp.add(new DishDetailPanel(dishes.getDish(0)));
+        //sp.add(new DishesPanel());
         tmp.getContentPane().add(sp, BorderLayout.CENTER);
 
         //4. Size the frame.

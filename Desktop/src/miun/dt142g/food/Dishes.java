@@ -26,7 +26,10 @@ public class Dishes extends DataSource implements Iterable<Dish> {
         return dishes.size();
     }
     public Dish getDish(int id){
-        return dishes.get(dishes.indexOf(id)); 
+        for(Dish d : dishes)
+            if(d.getId() == id)
+                return d;
+        return null; 
     }
     
     public void addDish(Dish dish){
@@ -55,5 +58,15 @@ public class Dishes extends DataSource implements Iterable<Dish> {
     @Override
     public Iterator<Dish> iterator() {
         return dishes.iterator();
+    }
+
+    @Override
+    public int getUniqueId() {
+        int id = 0;
+        for(Dish d : dishes) {
+            if(d.getId() > id)
+                id = d.getId()+1;
+        }
+        return id;
     }
 }

@@ -45,5 +45,10 @@ public class AboutUs extends DataSource {
     @Override
     public void update() {
     }
+
+    @Override
+    public int getUniqueId() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

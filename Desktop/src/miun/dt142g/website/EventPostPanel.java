@@ -65,7 +65,7 @@ public class EventPostPanel extends JPanel{
             imgBtn.setLabel(eventPost.getImgSrc());
         add(imgBtn);
         
-        JLabel date = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>Publicationsdatum</div></html>");
+        JLabel date = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>Datum för evenemang</div></html>");
         Box  leftJustify = Box.createHorizontalBox();
         leftJustify.add( date );
         leftJustify.add( Box.createHorizontalGlue() );
@@ -75,7 +75,7 @@ public class EventPostPanel extends JPanel{
         add(editDate);
         
         
-        JLabel lTitle = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>Rubrik av event</div></html>");
+        JLabel lTitle = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>Rubrik av evenemang</div></html>");
         leftJustify = Box.createHorizontalBox();
         leftJustify.add( lTitle );
         leftJustify.add( Box.createHorizontalGlue() );
@@ -84,7 +84,7 @@ public class EventPostPanel extends JPanel{
         editTitle.setMaximumSize(new Dimension(Integer.MAX_VALUE, editTitle.getPreferredSize().height));
         add(editTitle, BorderLayout.WEST);
         
-        JLabel lDesc = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>Beskrivning av event</div></html>");
+        JLabel lDesc = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>Beskrivning av evenemang</div></html>");
         leftJustify = Box.createHorizontalBox();
         leftJustify.add( lDesc );
         leftJustify.add( Box.createHorizontalGlue() );
