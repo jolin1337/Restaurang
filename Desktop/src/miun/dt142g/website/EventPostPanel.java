@@ -6,7 +6,6 @@
 package miun.dt142g.website;
 
 import java.awt.BorderLayout;
-import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.TextArea;
@@ -16,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -31,7 +31,7 @@ import miun.dt142g.data.EventPost;
 public class EventPostPanel extends JPanel{
     private EventPost eventPost = null;
 
-    private final Button imgBtn = new Button("Lägg till poster");
+    private final JButton imgBtn = new JButton("Lägg till poster");
     private final TextField editDate = new TextField();
     private final TextField editTitle = new TextField();
     private final TextArea editDesc = new TextArea();
