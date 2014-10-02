@@ -17,6 +17,7 @@ import java.awt.ScrollPane;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import miun.dt142g.data.Dish;
@@ -130,6 +131,8 @@ public class SharedTabs extends JPanel {
         //Create and set up the window.
         JFrame frame = new JFrame("Restaurang");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ImageIcon img = new ImageIcon("res/graphics/logo.png");
+        frame.setIconImage(img.getImage());
         
         //Add content to the window.
         frame.add(new SharedTabs(), BorderLayout.CENTER);

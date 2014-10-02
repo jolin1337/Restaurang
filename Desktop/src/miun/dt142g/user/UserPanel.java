@@ -42,7 +42,7 @@ public class UserPanel extends JPanel{
         setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
         JPanel a = new JPanel();
         remove = new Button("X");
-        remove.setMaximumSize(new Dimension(20,20));
+        remove.setMaximumSize(new Dimension(20,180));
         
         
         a.setLayout(new BoxLayout(a, BoxLayout.PAGE_AXIS));
