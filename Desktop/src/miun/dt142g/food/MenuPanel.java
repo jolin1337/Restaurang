@@ -18,6 +18,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import miun.dt142g.Controller;
 import miun.dt142g.data.Dish;
 
@@ -25,50 +26,74 @@ import miun.dt142g.data.Dish;
  *
  * @author Tomas
  */
-public class AlaCartePanel extends JPanel {
+public class MenuPanel extends JPanel {
+
     List<SingleDishPanel> dishPanels = new ArrayList<>();
-    Dishes dishes = new Dishes();
-    Button addDishBtn = new Button("Lägg till rätt");
+    DishGroups dishGroups = new DishGroups();
+    Button addDishBtn;
     private Controller fjarr = null;
-    public AlaCartePanel(Controller c) {
+    private ActionListener addDishBtnListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            SingleDishPanel dp = new SingleDishPanel(new DishGroup(dishGroups.getUniqueId(), -1, ""), fjarr);
+            remove(addDishBtn);
+            add(dp);
+            add(addDishBtn);
+            dishPanels.add(dp);
+            MenuPanel.this.revalidate();
+        }
+    };
+
+    public MenuPanel(Controller c, String[] groupNames) {
         this.fjarr = c;
-        dishes.dbConnect();
-        dishes.loadData();
-        
+        dishGroups.dbConnect();
+        dishGroups.loadData();
+
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.white);
-        setBorder(new EmptyBorder(10,10,10,10));
-        for(Dish dish : dishes) {
-            SingleDishPanel dp = new SingleDishPanel(dish, fjarr);
+        setBorder(new EmptyBorder(10, 10, 10, 10));
+        List<DishGroup> dishList = dishGroups.getDishesInGroup(groupNames);
+        String previous = "";
+        JPanel groupContainer = new JPanel();
+        for (DishGroup dishGroup : dishList) {
+            if (previous.isEmpty()) {
+                JLabel groupTitle = new JLabel(dishGroup.getGroup());
+                add(groupTitle);
+                previous = dishGroup.getGroup();
+            } else if (!previous.equals(dishGroup.getGroup())) {
+                addDishBtn = new Button("Lägg till rätt");
+                addDishBtn.addActionListener(addDishBtnListener);
+                add(addDishBtn);
+                addDishBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+            }
+            if (!previous.equals(dishGroup.getGroup())) {
+                JLabel groupTitle = new JLabel(dishGroup.getGroup());
+                add(groupTitle);
+                previous = dishGroup.getGroup();
+            }
+            SingleDishPanel dp = new SingleDishPanel(dishGroup, fjarr);
             add(dp);
             dishPanels.add(dp);
         }
-        addDishBtn.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                SingleDishPanel dp = new SingleDishPanel(new Dish(dishes.getUniqueId(), "", 0.0f, null), fjarr);
-                remove(addDishBtn);
-                add(dp);
-                add(addDishBtn);
-                dishPanels.add(dp);
-                AlaCartePanel.this.revalidate();
-            }
-        });
+        addDishBtn = new Button("Lägg till rätt");
+        addDishBtn.addActionListener(addDishBtnListener);
         add(addDishBtn);
         addDishBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+
     }
-    
+
     public void setViewSwitch(Controller c) {
         this.fjarr = c;
     }
-    
+
     class SingleDishPanel extends JPanel {
 
-        Dish dish;
+        DishGroup dish;
 
-        public SingleDishPanel(Dish dish, final Controller c) {
+        public SingleDishPanel(DishGroup dish, final Controller c) {
             this.dish = dish;
+
             /**
              * Set layout
              */
@@ -85,9 +110,11 @@ public class AlaCartePanel extends JPanel {
              * Create combobox - Inefficient to iterate through list every time
              */
             JComboBox myComboBox = new JComboBox();
-            for (Dish d : dishes) {
+            for (Dish d : dishGroups.getDishes()) {
                 myComboBox.addItem(d);
             }
+            myComboBox.setSelectedIndex(dish.getDishId());
+
             myComboBox.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
             add(myComboBox, BorderLayout.CENTER);
 

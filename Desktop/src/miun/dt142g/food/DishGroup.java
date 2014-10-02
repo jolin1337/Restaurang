@@ -11,31 +11,9 @@ import miun.dt142g.data.Dish;
  * @author Tomas
  */
 public class DishGroup {
-    private ArrayList<Dish> dishesInGroup;
+    private int dishId;
     private String group;
-
-    public void addDish(Dish d){
-        dishesInGroup.add(d);
-    }
-        
-    /**
-     * Remove the dish(es) from the group with name equal to id
-     * Possibly replaceable with Dish as parameter
-     * @param id 
-     */
-    public void remove(String id) {
-        for (Dish d : dishesInGroup) {
-            if (id == null ? d.toString() == null : id.equals(d.toString())) {
-                dishesInGroup.remove(d);
-            }
-        }
-    }
-    /**
-     * @return the dishesInGroup
-     */
-    public ArrayList<Dish> getDishesInGroup() {
-        return dishesInGroup;
-    }
+    private final int groupId;
 
     /**
      * @return the group
@@ -50,5 +28,23 @@ public class DishGroup {
     public void setGroup(String group) {
         this.group = group;
     }
-    
+
+    public int getDishId() {
+        return dishId;
+    }
+
+    public void setDishId(int dishId) {
+        this.dishId = dishId;
+    }
+
+    public DishGroup(int groupId, int dishId, String group) {
+        this.groupId = groupId;
+        this.dishId = dishId;
+        this.group = group;
+    }
+
+    public int getGroupId() {
+        return groupId;
+    }
+
 }

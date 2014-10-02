@@ -22,9 +22,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import miun.dt142g.bookings.BookingsPanel;
 import miun.dt142g.data.Dish;
-import miun.dt142g.food.AlaCartePanel;
 import miun.dt142g.food.DishDetailPanel;
 import miun.dt142g.food.DishesPanel;
+import miun.dt142g.food.MenuPanel;
 import miun.dt142g.inventory.InventoryPanel;
 import miun.dt142g.user.UsersPanel;
 import miun.dt142g.website.WebsitePanel;
@@ -81,11 +81,13 @@ public class SharedTabs extends JPanel {
         panels.add(panel3);
         UsersPanel panel4 = new UsersPanel();
         panels.add(panel4);
-        AlaCartePanel panel5 = new AlaCartePanel(fjarr);
+        MenuPanel panel5 = new MenuPanel(fjarr, new String[]{"A la Carte"});
         panels.add(panel5);
-        BookingsPanel panel6 = new BookingsPanel();
+        MenuPanel panel6 = new MenuPanel(fjarr, new String[]{"Måndag","Tisdag","Onsdag","Torsdag","Fredag"});
         panels.add(panel6);
-        String[] titles = {"Rätter", "Hemsida","Inventarie", "Användare", "A La Carté", "El'ala'bokningar"};
+        BookingsPanel panel7 = new BookingsPanel();
+        panels.add(panel7);
+        String[] titles = {"Rätter", "Hemsida","Inventarie", "Användare", "A La Carté","Veckans Meny", "Bokningar"};
         int i = 0;
         for(JComponent panel : panels) {
             ScrollPane sp = new ScrollPane(ScrollPane.SCROLLBARS_AS_NEEDED);
