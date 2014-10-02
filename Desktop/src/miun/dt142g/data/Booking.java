@@ -12,54 +12,105 @@ package miun.dt142g.data;
  * @author Marcus
  */
 public class Booking {
-    private final int id;
+    private int id;
     
     // Variables for adding a table
-    private int hour, min, persons = 1;
+    private int date, time, duration, persons = 1;
     private String name;
     
     // Construct a new booking
-    public Booking(int id, String name, int hour, int min, int persons){
+    public Booking(int id, String name, int date, int time, int duration, int persons){
         this.id = id;
         this.name = name;
-        this.hour = hour;
-        this.min = min;
+        this.date = date;
+        this.time = time;
+        this.duration = duration; 
         this.persons = persons;
     }
-    
-    public int getId() {
-        return id;
+
+    /**
+     * @return the date
+     */
+    public int getDate() {
+        return date;
     }
 
+    /**
+     * @param date the date to set
+     */
+    public void setDate(int date) {
+        this.date = date;
+    }
+
+    /**
+     * @return the time
+     */
+    public int getTime() {
+        return time;
+    }
+
+    /**
+     * @param time the time to set
+     */
+    public void setTime(int time) {
+        this.time = time;
+    }
+
+    /**
+     * @return the duration
+     */
+    public int getDuration() {
+        return duration;
+    }
+
+    /**
+     * @param duration the duration to set
+     */
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    /**
+     * @return the persons
+     */
     public int getPersons() {
         return persons;
     }
-    
-    public String getName() {
-        return name;
-    }
 
-    public int getHour() {
-        return hour;
-    }
-
-    public int getMin() {
-        return min;
-    }
-
-    public void setHour(int hour) {
-        this.hour = hour;
-    }
-
-    public void setMin(int min) {
-        this.min = min;
-    }
-
+    /**
+     * @param persons the persons to set
+     */
     public void setPersons(int persons) {
         this.persons = persons;
     }
 
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name the name to set
+     */
     public void setName(String name) {
         this.name = name;
     }
+
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+    
+    
 }

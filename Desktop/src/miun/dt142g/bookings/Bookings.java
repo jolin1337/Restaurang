@@ -4,12 +4,13 @@
  * and open the template in the editor.
  */
 
-package miun.dt142g.data;
+package miun.dt142g.bookings;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import miun.dt142g.DataSource;
+import miun.dt142g.data.Booking;
 
 /**
  *
@@ -46,18 +47,21 @@ public class Bookings extends DataSource implements Iterable<Booking> {
     
     @Override
     public void loadData() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void update() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public int getUniqueId() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        int id  = 0;
+        for(Booking bok : bookings){
+            if(bok.getId() > id)
+                id = bok.getId()+1;
+        }
+        return id; 
+    } 
 
     @Override
     public Iterator<Booking> iterator() {

@@ -16,35 +16,35 @@ import miun.dt142g.data.Ingredient;
  * @author Ulf
  */
 public class Inventory extends DataSource implements Iterable<Ingredient> {
-    private final List<Ingredient> ingredientes = new ArrayList<>();
+    private final List<Ingredient> ingredients = new ArrayList<>();
     
     public Inventory(){
     }
     
     public Ingredient getIngredient(int id){
-        for(Ingredient ing : ingredientes)
+        for(Ingredient ing : ingredients)
             if(ing.getId() == id)
                 return ing;
         return null;
     }
     
     public void addIngredient(Ingredient ingredient){
-        ingredientes.add(ingredient);
+        ingredients.add(ingredient);
     }
     
     public void remove(int id){
-        ingredientes.remove(this.getIngredient(id)); 
+        ingredients.remove(this.getIngredient(id)); 
     }
     
     public void editIngredient(int id, Ingredient ingredient){
-        ingredientes.set(ingredientes.indexOf(id), ingredient);
+        ingredients.set(ingredients.indexOf(id), ingredient);
     }
 
     @Override
     public void loadData() {
-        ingredientes.add(new Ingredient(0, "Fisk", 10));
-        ingredientes.add(new Ingredient(0, "Potatis", 10));
-        ingredientes.add(new Ingredient(0, "Gurka", 10));
+        ingredients.add(new Ingredient(0, "Fisk", 10));
+        ingredients.add(new Ingredient(0, "Potatis", 10));
+        ingredients.add(new Ingredient(0, "Gurka", 10));
     }
 
     @Override
@@ -54,11 +54,16 @@ public class Inventory extends DataSource implements Iterable<Ingredient> {
 
     @Override
     public int getUniqueId() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int id  = 0;
+        for(Ingredient ing : ingredients){
+            if(ing.getId() > id)
+                id = ing.getId()+1;
+        }
+        return id; 
     }
 
     @Override
     public Iterator<Ingredient> iterator() {
-        return ingredientes.iterator();
+        return ingredients.iterator();
     }
 }

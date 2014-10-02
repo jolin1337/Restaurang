@@ -49,7 +49,7 @@ public class InventoryPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 InventoryPanel.this.remove(addIngredient);
-                InventoryPanel.this.add(new IngredientPanel(new Ingredient()));
+                InventoryPanel.this.add(new IngredientPanel(new Ingredient(inventory.getUniqueId(),"",0)));
                 InventoryPanel.this.add(addIngredient);
                 InventoryPanel.this.revalidate();   
             }  
