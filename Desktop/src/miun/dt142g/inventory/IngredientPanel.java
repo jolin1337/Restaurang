@@ -53,7 +53,7 @@ public class IngredientPanel extends JPanel {
                 Container parent = IngredientPanel.this.getParent(); 
                 parent.remove(IngredientPanel.this);
                 parent.revalidate();
-                
+                parent.repaint();
                 //add remove from database
 
             }

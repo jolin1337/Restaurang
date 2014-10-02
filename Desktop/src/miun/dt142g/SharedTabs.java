@@ -6,11 +6,6 @@
 package miun.dt142g;
 
 
-import javax.swing.JTabbedPane;
-import javax.swing.JPanel;
-import javax.swing.JFrame;
-import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.ScrollPane;
@@ -18,15 +13,21 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import miun.dt142g.bookings.BookingsPanel;
 import miun.dt142g.data.Dish;
+import miun.dt142g.food.AlaCartePanel;
 import miun.dt142g.food.DishDetailPanel;
 import miun.dt142g.food.DishesPanel;
 import miun.dt142g.inventory.InventoryPanel;
 import miun.dt142g.user.UsersPanel;
 import miun.dt142g.website.WebsitePanel;
-import miun.dt142g.food.AlaCartePanel;
 
 /**
  *
@@ -82,7 +83,9 @@ public class SharedTabs extends JPanel {
         panels.add(panel4);
         AlaCartePanel panel5 = new AlaCartePanel(fjarr);
         panels.add(panel5);
-        String[] titles = {"Rätter", "Hemsida","Inventarie", "Användare", "A La Carté"};
+        BookingsPanel panel6 = new BookingsPanel();
+        panels.add(panel6);
+        String[] titles = {"Rätter", "Hemsida","Inventarie", "Användare", "A La Carté", "El'ala'bokningar"};
         int i = 0;
         for(JComponent panel : panels) {
             ScrollPane sp = new ScrollPane(ScrollPane.SCROLLBARS_AS_NEEDED);

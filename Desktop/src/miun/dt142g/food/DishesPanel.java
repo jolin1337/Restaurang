@@ -55,7 +55,7 @@ public class DishesPanel extends JPanel {
             }
         });
         add(addDishBtn);
-        addDishBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        addDishBtn.setMaximumSize(new Dimension(120, 35));
     }
     
     public void setViewSwitch(Controller c) {

@@ -10,6 +10,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -39,7 +40,7 @@ public class BookingPanel extends JPanel{
     
     public BookingPanel(Booking booking){
         this.booking = booking; 
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         this.setBackground(Color.white);
         
         remove = new JButton("X");
@@ -50,31 +51,33 @@ public class BookingPanel extends JPanel{
                 Container parent = BookingPanel.this.getParent(); 
                 parent.remove(BookingPanel.this);
                 parent.revalidate();
-                
+                parent.repaint();
                 //add remove from database
 
             }
         });
         
-        nameField = new JTextField(); 
-        personsField = new JTextField(); 
-        dateField = new JTextField(); 
-        timeField = new JTextField(); 
-        timeLengthField = new JTextField(); 
+        nameField = new JTextField(booking.getName()); 
+        personsField = new JTextField(Integer.toString(booking.getPersons())); 
+        dateField = new JTextField(Integer.toString(booking.getDate())); 
+        timeField = new JTextField(Integer.toString(booking.getTime())); 
+        timeLengthField = new JTextField(booking.getDuration()); 
         
         //element layout
-        nameField.setSize(new Dimension(100,25));
-        personsField.setSize(new Dimension(50,25));
-        dateField.setSize(new Dimension(100,25));
-        timeField.setSize(new Dimension(50,25));
-        timeLengthField.setSize(new Dimension(50,25));
+        nameField.setMaximumSize(new Dimension(100,25));
+        personsField.setMaximumSize(new Dimension(50,25));
+        dateField.setMaximumSize(new Dimension(100,25));
+        timeField.setMaximumSize(new Dimension(50,25));
+        timeLengthField.setMaximumSize(new Dimension(50,25));
         
+        this.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
         this.add(remove);
         this.add(nameField);
         this.add(personsField);
         this.add(dateField);
         this.add(timeField);
         this.add(timeLengthField);
+        this.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         this.setVisible(true);
         
     }

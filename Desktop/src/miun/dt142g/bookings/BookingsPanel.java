@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.chrono.JapaneseDate;
 import java.util.Date;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -20,13 +21,14 @@ import miun.dt142g.data.Booking;
 
 /**
  *
- * @author Nanashi-
+ * @author Marcus
  */
 public class BookingsPanel extends JPanel {
     
     // Variables declaration - do not modify                     
     private Bookings bookings; 
-    
+    private JPanel labels = new JPanel();
+ 
     private JButton addBooking; 
     private JLabel nameLabel; 
     private JLabel personsLabel;
@@ -42,22 +44,15 @@ public class BookingsPanel extends JPanel {
     public void initComponents(){
         this.bookings = new Bookings();
         this.bookings.loadData();
+        initiateLabels();
+        this.add(labels);
+        labels.setVisible(true);
+
+        for (Booking bok : bookings) {
+            this.add(new BookingPanel(bok));
+        }
         
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        JPanel labels = new JPanel();
-        labels.setLayout(new BoxLayout(labels, BoxLayout.X_AXIS));
-        nameLabel = new JLabel("Namn:");
-        personsLabel = new JLabel("Antal: ");
-        dateLabel = new JLabel("Datum: "); 
-        timeLabel = new JLabel("Tid: "); 
-        timeLengthLabel = new JLabel("Längd: "); 
-        
-        labels.add(nameLabel);
-        labels.add(personsLabel);
-        labels.add(dateLabel);
-        labels.add(timeLabel);
-        labels.add(timeLengthLabel);
-        labels.setVisible(true);
         
         addBooking = new JButton("Lägg till bokning");
         this.addBooking.addActionListener(new ActionListener(){
@@ -66,12 +61,34 @@ public class BookingsPanel extends JPanel {
                 BookingsPanel.this.remove(addBooking);
                 BookingsPanel.this.add(new BookingPanel(new Booking(bookings.getUniqueId(), "", 0, 0, 0, 0)));
                 BookingsPanel.this.add(addBooking);
-                BookingsPanel.this.revalidate();   
+                BookingsPanel.this.revalidate();
             }  
         });
-        
         this.add(addBooking);
         this.setVisible(true);
+    }
+    public void initiateLabels(){
+        labels.setLayout(new BoxLayout(labels, BoxLayout.X_AXIS));
+        nameLabel = new JLabel("Namn:");
+        nameLabel.setBorder(BorderFactory.createEmptyBorder(0,40,0,0));
         
+        personsLabel = new JLabel("Antal: ");
+        personsLabel.setBorder(BorderFactory.createEmptyBorder(0,80,0,0));
+        
+        dateLabel = new JLabel("Datum: "); 
+        dateLabel.setBorder(BorderFactory.createEmptyBorder(0,80,0,0));
+        
+        timeLabel = new JLabel("Tid: "); 
+        timeLabel.setBorder(BorderFactory.createEmptyBorder(0,80,0,0));
+        
+        timeLengthLabel = new JLabel("Längd: "); 
+        timeLengthLabel.setBorder(BorderFactory.createEmptyBorder(0,80,0,0));
+        
+        labels.add(nameLabel);
+        labels.add(personsLabel);
+        labels.add(dateLabel);
+        labels.add(timeLabel);
+        labels.add(timeLengthLabel);
+
     }
 }

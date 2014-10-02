@@ -14,7 +14,7 @@ import miun.dt142g.data.Booking;
 
 /**
  *
- * @author Nanashi-
+ * @author Marcus
  */
 public class Bookings extends DataSource implements Iterable<Booking> {
     private final List<Booking> bookings = new ArrayList<>();
@@ -47,6 +47,10 @@ public class Bookings extends DataSource implements Iterable<Booking> {
     
     @Override
     public void loadData() {
+        bookings.add(new Booking(0, "chocklad", 22, 0, 0, 0));
+        bookings.add(new Booking(1, "majs", 13, 0, 17, 44));
+        bookings.add(new Booking(2, "pannkaka", 4, 0, 0, 0));
+        
     }
 
     @Override
@@ -65,7 +69,7 @@ public class Bookings extends DataSource implements Iterable<Booking> {
 
     @Override
     public Iterator<Booking> iterator() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return bookings.iterator();
     }
     
 }
