@@ -59,7 +59,7 @@ public class BookingsPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 BookingsPanel.this.remove(addBooking);
-                BookingsPanel.this.add(new BookingPanel(new Booking(bookings.getUniqueId(), "", 0, 0, 0, 0)));
+                BookingsPanel.this.add(new BookingPanel(new Booking(bookings.getUniqueId(), "", "1/3-37", 0, 0, 0)));
                 BookingsPanel.this.add(addBooking);
                 BookingsPanel.this.revalidate();
             }  

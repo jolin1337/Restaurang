@@ -59,7 +59,7 @@ public class BookingPanel extends JPanel{
         
         nameField = new JTextField(booking.getName()); 
         personsField = new JTextField(Integer.toString(booking.getPersons())); 
-        dateField = new JTextField(Integer.toString(booking.getDate())); 
+        dateField = new JTextField(booking.getDate()); 
         timeField = new JTextField(Integer.toString(booking.getTime())); 
         timeLengthField = new JTextField(booking.getDuration()); 
         

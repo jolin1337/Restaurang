@@ -15,11 +15,11 @@ public class Booking {
     private int id;
     
     // Variables for adding a table
-    private int date, time, duration, persons = 1;
-    private String name;
+    private int time, duration, persons = 1;
+    private String name, date;
     
     // Construct a new booking
-    public Booking(int id, String name, int date, int time, int duration, int persons){
+    public Booking(int id, String name, String date, int time, int duration, int persons){
         this.id = id;
         this.name = name;
         this.date = date;
@@ -31,14 +31,14 @@ public class Booking {
     /**
      * @return the date
      */
-    public int getDate() {
+    public String getDate() {
         return date;
     }
 
     /**
      * @param date the date to set
      */
-    public void setDate(int date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

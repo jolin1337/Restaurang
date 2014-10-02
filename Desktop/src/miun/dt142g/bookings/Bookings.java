@@ -47,9 +47,9 @@ public class Bookings extends DataSource implements Iterable<Booking> {
     
     @Override
     public void loadData() {
-        bookings.add(new Booking(0, "chocklad", 22, 0, 0, 0));
-        bookings.add(new Booking(1, "majs", 13, 0, 17, 44));
-        bookings.add(new Booking(2, "pannkaka", 4, 0, 0, 0));
+        bookings.add(new Booking(0, "chocklad", "2/10-14", 0, 0, 0));
+        bookings.add(new Booking(1, "majs", "3/10-14", 0, 17, 44));
+        bookings.add(new Booking(2, "pannkaka", "3/10-56", 0, 0, 0));
         
     }
 
