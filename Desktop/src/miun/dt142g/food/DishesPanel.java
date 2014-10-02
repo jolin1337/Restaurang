@@ -5,16 +5,14 @@
  */
 package miun.dt142g.food;
 
-import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import miun.dt142g.Controller;
@@ -27,7 +25,7 @@ import miun.dt142g.data.Dish;
 public class DishesPanel extends JPanel {
     List<DishPanel> dishPanels = new ArrayList<>();
     Dishes dishes = new Dishes();
-    Button addDishBtn = new Button("Lägg till rätt");
+    JButton addDishBtn = new JButton("Lägg till rätt");
     private Controller fjarr = null;
     public DishesPanel(Controller c) {
         this.fjarr = c;

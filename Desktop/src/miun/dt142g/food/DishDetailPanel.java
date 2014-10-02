@@ -5,16 +5,15 @@
  */
 package miun.dt142g.food;
 
-import java.awt.Button;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -29,7 +28,7 @@ import miun.dt142g.data.Ingredient;
 public class DishDetailPanel extends JPanel {
     Dish dish=null;
     Inventory inv = new Inventory();
-    Button addIngBtn = new Button("Lägg till ingrediens");
+    JButton addIngBtn = new JButton("Lägg till ingrediens");
     JPanel ingredientsPanel = new JPanel();
     public DishDetailPanel(Dish dish) {
         inv.dbConnect();
@@ -65,7 +64,7 @@ public class DishDetailPanel extends JPanel {
         List<Integer> ingredients = dish.getIngredients();
         if(ingredients != null)
             for(Integer ingredient : ingredients) {
-                Button remove = new Button("X");
+                JButton remove = new JButton("X");
                 remove.setMaximumSize(new Dimension(35, 35));
                 remove.addActionListener(removeIngredientListener);
                 JComboBox jListInventory = new JComboBox();
@@ -90,7 +89,7 @@ public class DishDetailPanel extends JPanel {
         addIngBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                Button remove = new Button("X");
+                JButton remove = new JButton("X");
                 remove.setMaximumSize(new Dimension(35, 35));
                 remove.addActionListener(removeIngredientListener);
                 
@@ -116,9 +115,9 @@ public class DishDetailPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent ae) {
-            if(ae.getSource().getClass() != Button.class)
+            if(ae.getSource().getClass() != JButton.class)
                 return;
-            Button btn = (Button)ae.getSource();
+            JButton btn = (JButton)ae.getSource();
             if(btn.getParent() == null)
                 return;
             Container parent = btn.getParent().getParent();

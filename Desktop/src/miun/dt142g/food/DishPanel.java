@@ -1,18 +1,18 @@
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * and open the template in the editor.I
  */
 package miun.dt142g.food;
 
 import java.awt.BorderLayout;
-import java.awt.Button;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import miun.dt142g.Controller;
@@ -32,13 +32,13 @@ public class DishPanel extends JPanel {
         this.dish = dish;
         JPanel item = new JPanel(new BorderLayout());
         item.setBackground(Color.white);
-        Button remove = new Button("X");
+        JButton remove = new JButton("X");
         add(remove, BorderLayout.WEST);
         TextField name = new TextField();
         name.setText(dish.getName());
         name.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
         add(name, BorderLayout.CENTER);
-        Button detail = new Button("Detaljer");
+        JButton detail = new JButton("Detaljer");
         detail.addActionListener(new ActionListener() {
 
             @Override

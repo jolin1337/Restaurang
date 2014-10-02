@@ -6,7 +6,6 @@
 package miun.dt142g.food;
 
 import java.awt.BorderLayout;
-import java.awt.Button;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -15,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JComboBox;
@@ -30,7 +30,7 @@ public class MenuPanel extends JPanel {
 
     List<SingleDishPanel> dishPanels = new ArrayList<>();
     DishGroups dishGroups = new DishGroups();
-    Button addDishBtn;
+    JButton addDishBtn;
     private Controller fjarr = null;
     private ActionListener addDishBtnListener = new ActionListener() {
 
@@ -62,7 +62,7 @@ public class MenuPanel extends JPanel {
                 add(groupTitle);
                 previous = dishGroup.getGroup();
             } else if (!previous.equals(dishGroup.getGroup())) {
-                addDishBtn = new Button("Lägg till rätt");
+                addDishBtn = new JButton("Lägg till rätt");
                 addDishBtn.addActionListener(addDishBtnListener);
                 add(addDishBtn);
                 addDishBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
@@ -76,7 +76,7 @@ public class MenuPanel extends JPanel {
             add(dp);
             dishPanels.add(dp);
         }
-        addDishBtn = new Button("Lägg till rätt");
+        addDishBtn = new JButton("Lägg till rätt");
         addDishBtn.addActionListener(addDishBtnListener);
         add(addDishBtn);
         addDishBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
@@ -104,7 +104,7 @@ public class MenuPanel extends JPanel {
             /**
              * Create removebutton
              */
-            Button remove = new Button("X");
+            JButton remove = new JButton("X");
             add(remove, BorderLayout.WEST);
             /**
              * Create combobox - Inefficient to iterate through list every time

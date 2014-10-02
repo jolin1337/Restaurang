@@ -5,14 +5,8 @@ package miun.dt142g;
 
 import java.awt.BorderLayout;
 import java.awt.ScrollPane;
-import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import miun.dt142g.bookings.BookingsPanel;
-import miun.dt142g.data.Dish;
-import miun.dt142g.food.DishDetailPanel;
-import miun.dt142g.food.Dishes;
-import miun.dt142g.food.DishesPanel;
-import miun.dt142g.website.WebsitePanel;
 /**
  *
  * @author jolin1337

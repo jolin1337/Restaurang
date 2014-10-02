@@ -6,17 +6,13 @@
 package miun.dt142g.user;
 
 import miun.dt142g.data.User;
-import java.awt.Button;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 /**
  *
@@ -24,7 +20,7 @@ import javax.swing.JScrollPane;
  */
 public class UsersPanel extends JPanel {
     
-    private Button add;
+    private JButton add;
     
     public UsersPanel(){
         Users s = new Users();
@@ -32,7 +28,7 @@ public class UsersPanel extends JPanel {
         
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setBackground(Color.WHITE);
-        add = new Button("Lägg till användare");
+        add = new JButton("Lägg till användare");
         
         add.setMinimumSize(new Dimension(50, 25));
         add.setPreferredSize(new Dimension(50, 25));

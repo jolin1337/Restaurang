@@ -6,18 +6,12 @@
 package miun.dt142g.user;
 
 import miun.dt142g.data.User;
-import java.awt.Button;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Label;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashSet;
-import java.util.Set;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -31,7 +25,7 @@ import javax.swing.border.EmptyBorder;
  */
 public class UserPanel extends JPanel{
     
-    private Button remove;
+    private JButton remove;
     private JLabel name,tele, epost, password;
     private TextField user, pwd, mail, telenr;
     
@@ -41,8 +35,8 @@ public class UserPanel extends JPanel{
         setBorder(new EmptyBorder(10,10,10,10));
         setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
         JPanel a = new JPanel();
-        remove = new Button("X");
-        remove.setMaximumSize(new Dimension(20,180));
+        remove = new JButton("X");
+        remove.setMaximumSize(new Dimension(25,25));
         
         
         a.setLayout(new BoxLayout(a, BoxLayout.PAGE_AXIS));
@@ -57,13 +51,13 @@ public class UserPanel extends JPanel{
         tele = new JLabel("Tel:");
         
         this.user = new TextField(user.getUsername());
-        this.user.setMaximumSize(new Dimension(600,25));
+        this.user.setMaximumSize(new Dimension(600,40));
         pwd = new TextField(user.getPassword());
-        pwd.setMaximumSize(new Dimension(600,25));
+        pwd.setMaximumSize(new Dimension(600,40));
         mail = new TextField(user.getUsername());
-        mail.setMaximumSize(new Dimension(600,25));
+        mail.setMaximumSize(new Dimension(600,40));
         telenr = new TextField(user.getPhoneNumber());
-        telenr.setMaximumSize(new Dimension(600,25));
+        telenr.setMaximumSize(new Dimension(600,40));
 
         
         leftAlignLabel(name, a);

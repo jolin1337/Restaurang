@@ -6,7 +6,6 @@
 package miun.dt142g.food;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import miun.dt142g.DataSource;

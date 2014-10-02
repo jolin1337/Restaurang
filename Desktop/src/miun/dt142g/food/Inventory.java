@@ -43,8 +43,8 @@ public class Inventory extends DataSource implements Iterable<Ingredient> {
     @Override
     public void loadData() {
         ingredients.add(new Ingredient(0, "Fisk", 10));
-        ingredients.add(new Ingredient(0, "Potatis", 10));
-        ingredients.add(new Ingredient(0, "Gurka", 10));
+        //ingredients.add(new Ingredient(0, "Potatis", 10));
+        //ingredients.add(new Ingredient(0, "Gurka", 10));
     }
 
     @Override
