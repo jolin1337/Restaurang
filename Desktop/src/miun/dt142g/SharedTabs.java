@@ -23,6 +23,7 @@ import miun.dt142g.data.Dish;
 import miun.dt142g.food.DishDetailPanel;
 import miun.dt142g.food.DishesPanel;
 import miun.dt142g.inventory.InventoryPanel;
+import miun.dt142g.user.UsersPanel;
 import miun.dt142g.website.WebsitePanel;
 
 /**
@@ -58,6 +59,12 @@ public class SharedTabs extends JPanel {
         public void setViewInventory() {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
+        
+        @Override
+        public void setViewUsers(){
+            tabbedPane.setSelectedIndex(4);
+        }
+        
     };
     public SharedTabs() {
         //super(new GridLayout(1, 1)); //Not needed?
@@ -69,7 +76,9 @@ public class SharedTabs extends JPanel {
         panels.add(panel2);
         InventoryPanel panel3 = new InventoryPanel(); 
         panels.add(panel3);
-        String[] titles = {"Rätter", "Hemsida","Inventarie"};
+        UsersPanel panel4 = new UsersPanel();
+        panels.add(panel4);
+        String[] titles = {"Rätter", "Hemsida","Inventarie", "Användare"};
         int i = 0;
         for(JComponent panel : panels) {
             ScrollPane sp = new ScrollPane(ScrollPane.SCROLLBARS_AS_NEEDED);

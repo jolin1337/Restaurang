@@ -20,6 +20,8 @@ public interface Controller {
     
     void setViewInventory();
     
+    void setViewUsers();
+    
     /**
      * ... more comming ...
      */
