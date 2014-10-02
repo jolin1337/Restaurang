@@ -7,6 +7,7 @@ import java.awt.BorderLayout;
 import java.awt.ScrollPane;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import miun.dt142g.bookings.BookingsPanel;
 import miun.dt142g.data.Dish;
 import miun.dt142g.food.DishDetailPanel;
 import miun.dt142g.food.Dishes;
@@ -36,7 +37,7 @@ public class Restaurang {
         //dishes.loadData();
         //sp.add(new DishDetailPanel(dishes.getDish(0)));
         //sp.add(new DishesPanel());
-        tmp.getContentPane().add(new WebsitePanel(), BorderLayout.CENTER);
+        tmp.getContentPane().add(new BookingsPanel(), BorderLayout.CENTER);
 
         //4. Size the frame.
         tmp.pack();
