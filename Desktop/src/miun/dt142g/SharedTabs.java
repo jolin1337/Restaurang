@@ -25,6 +25,7 @@ import miun.dt142g.food.DishesPanel;
 import miun.dt142g.inventory.InventoryPanel;
 import miun.dt142g.user.UsersPanel;
 import miun.dt142g.website.WebsitePanel;
+import miun.dt142g.food.AlaCartePanel;
 
 /**
  *
@@ -67,7 +68,7 @@ public class SharedTabs extends JPanel {
         
     };
     public SharedTabs() {
-        //super(new GridLayout(1, 1)); //Not needed?
+        
         setLayout(new BorderLayout());
         DishesPanel panel1 = new DishesPanel(fjarr);
         panel1.setViewSwitch(fjarr);
@@ -78,7 +79,9 @@ public class SharedTabs extends JPanel {
         panels.add(panel3);
         UsersPanel panel4 = new UsersPanel();
         panels.add(panel4);
-        String[] titles = {"Rätter", "Hemsida","Inventarie", "Användare"};
+        AlaCartePanel panel5 = new AlaCartePanel(fjarr);
+        panels.add(panel5);
+        String[] titles = {"Rätter", "Hemsida","Inventarie", "Användare", "A La Carté"};
         int i = 0;
         for(JComponent panel : panels) {
             ScrollPane sp = new ScrollPane(ScrollPane.SCROLLBARS_AS_NEEDED);
@@ -86,10 +89,6 @@ public class SharedTabs extends JPanel {
             tabbedPane.addTab(titles[i], sp);
             i++;
         }
-        
-        //Currently WebsitePanel is very large, 
-        //needs a scrollbar to implement preferred size.
-        //panel2.setPreferredSize(new Dimension(410, 50));
         
         tabbedPane.addChangeListener(new ChangeListener() {
 
@@ -99,20 +98,6 @@ public class SharedTabs extends JPanel {
                     tabbedPane.remove(dishDetailView);
             }
         });
-        
-        
-        //Add more tabs using this template
-        /*
-        JComponent panel3 = new ClassName();
-        tabbedPane.addTab("Fliknamn", panel3);
-        tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
-        */
-        
-        /*
-        JComponent panel4 = new ClassName();
-        tabbedPane.addTab("Fliknamn", panel4);
-        tabbedPane.setMnemonicAt(3, KeyEvent.VK_4);
-        */
         
         //Add the tabbed pane to this panel.
         add(tabbedPane);
@@ -140,9 +125,6 @@ public class SharedTabs extends JPanel {
         frame.setVisible(true);
     }
     
-    
-    
-    
     public static void main(String[] args) {
         //Schedule a job for the event dispatch thread:
         //creating and showing this application's GUI.
@@ -151,7 +133,6 @@ public class SharedTabs extends JPanel {
 		createAndShowGUI();
             }
         });
-    }
-    
+    } 
 }
 
