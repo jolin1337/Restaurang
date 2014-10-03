@@ -7,6 +7,7 @@
 package miun.dt142g.bookings;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import miun.dt142g.DataSource;
@@ -47,9 +48,10 @@ public class Bookings extends DataSource implements Iterable<Booking> {
     
     @Override
     public void loadData() {
-        bookings.add(new Booking(0, "chocklad", "2/10-14", 0, 0, 0));
-        bookings.add(new Booking(1, "majs", "3/10-14", 0, 17, 44));
-        bookings.add(new Booking(2, "pannkaka", "3/10-56", 0, 0, 0));
+        Date date = new Date();
+        bookings.add(new Booking(0, "chocklad", date, 0, 0, 0));
+        bookings.add(new Booking(1, "majs", date, 0, 17, 44));
+        bookings.add(new Booking(2, "pannkaka", date, 0, 0, 0));
         
     }
 

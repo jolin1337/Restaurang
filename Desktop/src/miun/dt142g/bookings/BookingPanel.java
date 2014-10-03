@@ -10,6 +10,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -59,7 +60,9 @@ public class BookingPanel extends JPanel{
         
         nameField = new JTextField(booking.getName()); 
         personsField = new JTextField(Integer.toString(booking.getPersons())); 
-        dateField = new JTextField(booking.getDate()); 
+        SimpleDateFormat ft = new SimpleDateFormat ("dd/MM-yy 'at' hh:mm");
+        
+        dateField = new JTextField(ft.format(booking.getDate())); 
         timeField = new JTextField(Integer.toString(booking.getTime())); 
         timeLengthField = new JTextField(booking.getDuration()); 
         

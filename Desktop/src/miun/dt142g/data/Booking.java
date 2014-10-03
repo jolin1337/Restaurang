@@ -6,6 +6,8 @@
 
 package miun.dt142g.data;
 
+import java.util.Date;
+
 
 /**
  *
@@ -16,10 +18,11 @@ public class Booking {
     
     // Variables for adding a table
     private int time, duration, persons = 1;
-    private String name, date;
+    private String name;
+    private Date date;
     
     // Construct a new booking
-    public Booking(int id, String name, String date, int time, int duration, int persons){
+    public Booking(int id, String name, Date date, int time, int duration, int persons){
         this.id = id;
         this.name = name;
         this.date = date;
@@ -31,14 +34,14 @@ public class Booking {
     /**
      * @return the date
      */
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
     /**
      * @param date the date to set
      */
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

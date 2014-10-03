@@ -9,7 +9,6 @@ package miun.dt142g;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.ScrollPane;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -21,6 +20,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import miun.dt142g.bookings.BookingsPanel;
+import miun.dt142g.bookings.NewBooking;
+import miun.dt142g.data.Booking;
 import miun.dt142g.data.Dish;
 import miun.dt142g.food.DishDetailPanel;
 import miun.dt142g.food.DishesPanel;
@@ -37,6 +38,7 @@ public class SharedTabs extends JPanel {
     DishDetailPanel dishDetailView = new DishDetailPanel(null);
     JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
     List<JComponent> panels = new ArrayList<>();
+    NewBooking newBooking = new NewBooking();
     
     Controller fjarr = new Controller() {
 
@@ -67,6 +69,14 @@ public class SharedTabs extends JPanel {
         public void setViewUsers(){
             tabbedPane.setSelectedIndex(4);
         }
+
+        @Override
+        public void setViewNewBooking(Booking b) {
+            newBooking.newBooking(b);
+            tabbedPane.addTab("Bokning i detaij", newBooking);
+            tabbedPane.revalidate();
+            tabbedPane.setSelectedComponent(newBooking);
+        }
         
     };
     public SharedTabs() {
@@ -85,7 +95,7 @@ public class SharedTabs extends JPanel {
         panels.add(panel5);
         MenuPanel panel6 = new MenuPanel(fjarr, new String[]{"Måndag","Tisdag","Onsdag","Torsdag","Fredag"});
         panels.add(panel6);
-        BookingsPanel panel7 = new BookingsPanel();
+        BookingsPanel panel7 = new BookingsPanel(fjarr);
         panels.add(panel7);
         String[] titles = {"Rätter", "Hemsida","Inventarie", "Användare", "A La Carté","Veckans Meny", "Bokningar"};
         int i = 0;
@@ -97,7 +107,7 @@ public class SharedTabs extends JPanel {
         }
         
         tabbedPane.addChangeListener(new ChangeListener() {
-
+            
             @Override
             public void stateChanged(ChangeEvent ce) {
                 if(tabbedPane.isAncestorOf(dishDetailView) && tabbedPane.getSelectedComponent() != dishDetailView)

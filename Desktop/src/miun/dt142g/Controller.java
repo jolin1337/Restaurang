@@ -5,6 +5,7 @@
  */
 package miun.dt142g;
 
+import miun.dt142g.data.Booking;
 import miun.dt142g.data.Dish;
 
 /**
@@ -17,6 +18,7 @@ public interface Controller {
     void setViewDishes();
     
     void setViewDishDetail(Dish d);
+    void setViewNewBooking(Booking b);
     
     void setViewInventory();
     

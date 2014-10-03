@@ -31,7 +31,7 @@ public class Restaurang {
         //dishes.loadData();
         //sp.add(new DishDetailPanel(dishes.getDish(0)));
         //sp.add(new DishesPanel());
-        tmp.getContentPane().add(new BookingsPanel(), BorderLayout.CENTER);
+//        tmp.getContentPane().add(new BookingsPanel(), BorderLayout.CENTER);
 
         //4. Size the frame.
         tmp.pack();
