@@ -7,8 +7,10 @@ package miun.dt142g.food;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -28,7 +30,6 @@ import miun.dt142g.data.Dish;
  */
 public class MenuPanel extends JPanel {
 
-    List<SingleDishPanel> dishPanels = new ArrayList<>();
     DishGroups dishGroups = new DishGroups();
     JButton addDishBtn;
     private Controller fjarr = null;
@@ -36,12 +37,15 @@ public class MenuPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent ae) {
-            SingleDishPanel dp = new SingleDishPanel(new DishGroup(dishGroups.getUniqueId(), -1, ""), fjarr);
-            remove(addDishBtn);
-            add(dp);
-            add(addDishBtn);
-            dishPanels.add(dp);
-            MenuPanel.this.revalidate();
+            if (ae.getSource() instanceof JButton) {
+                JButton actionButton = (JButton) ae.getSource();
+                JPanel dishContainer = (JPanel) actionButton.getParent();
+                SingleDishPanel dp = new SingleDishPanel(new DishGroup(dishGroups.getUniqueId(), -1, ""), fjarr);
+                dishContainer.remove(actionButton);
+                dishContainer.add(dp);
+                dishContainer.add(actionButton);
+                MenuPanel.this.revalidate();
+            }
         }
     };
 
@@ -56,31 +60,35 @@ public class MenuPanel extends JPanel {
         List<DishGroup> dishList = dishGroups.getDishesInGroup(groupNames);
         String previous = "";
         JPanel groupContainer = new JPanel();
+        groupContainer.setLayout(new BoxLayout(groupContainer, BoxLayout.Y_AXIS));
+        groupContainer.setBackground(Color.white);
         for (DishGroup dishGroup : dishList) {
             if (previous.isEmpty()) {
                 JLabel groupTitle = new JLabel(dishGroup.getGroup());
-                add(groupTitle);
+                groupContainer.add(groupTitle);
                 previous = dishGroup.getGroup();
             } else if (!previous.equals(dishGroup.getGroup())) {
                 addDishBtn = new JButton("Lägg till rätt");
                 addDishBtn.addActionListener(addDishBtnListener);
-                add(addDishBtn);
+                groupContainer.add(addDishBtn);
                 addDishBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+                groupContainer = new JPanel();
+                groupContainer.setLayout(new BoxLayout(groupContainer, BoxLayout.Y_AXIS));
+                groupContainer.setBackground(Color.white);
             }
             if (!previous.equals(dishGroup.getGroup())) {
                 JLabel groupTitle = new JLabel(dishGroup.getGroup());
-                add(groupTitle);
+                groupContainer.add(groupTitle);
                 previous = dishGroup.getGroup();
             }
             SingleDishPanel dp = new SingleDishPanel(dishGroup, fjarr);
-            add(dp);
-            dishPanels.add(dp);
+            groupContainer.add(dp);
+            add(groupContainer);
         }
         addDishBtn = new JButton("Lägg till rätt");
         addDishBtn.addActionListener(addDishBtnListener);
-        add(addDishBtn);
+        groupContainer.add(addDishBtn);
         addDishBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-
     }
 
     public void setViewSwitch(Controller c) {
