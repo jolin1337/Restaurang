@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import miun.dt142g.bookings.BookingsPanel;
@@ -105,6 +106,7 @@ public class SharedTabs extends JPanel {
         for(JComponent panel : panels) {
             ScrollPane sp = new ScrollPane(ScrollPane.SCROLLBARS_AS_NEEDED);
             sp.add(panel);
+            panel.setBorder(new EmptyBorder(10,10,10,10));
             tabbedPane.addTab(titles[i], sp);
             i++;
         }
@@ -149,8 +151,7 @@ public class SharedTabs extends JPanel {
     public static void main(String[] args) {
         UIManager.put("Button.font", new Font("Calibri", Font.PLAIN, 22));
         UIManager.put("Button.background", new Color(200,150,150));
-        UIManager.put("Label.font", new Font("Calibri", Font.PLAIN, 25));
-        UIManager.put("Label.font", new Font("Calibri", Font.PLAIN, 25));
+        UIManager.put("Label.font", new Font("Calibri", Font.BOLD, 25));
         UIManager.put("TextArea.font", new Font("Calibri", Font.PLAIN, 22));
         UIManager.put("TextField.font", new Font("Calibri", Font.PLAIN, 22));
         //Schedule a job for the event dispatch thread:

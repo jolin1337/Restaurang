@@ -20,38 +20,39 @@ import javax.swing.JPanel;
  */
 public class UsersPanel extends JPanel {
     
-    private JButton add;
+    private JButton addUserBtn;
+    private Users usrs = new Users();
     
     public UsersPanel(){
-        Users s = new Users();
+        usrs.dbConnect();
+        usrs.loadData();
         //.addUser();
         
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setBackground(Color.WHITE);
-        add = new JButton("Lägg till användare");
+        addUserBtn = new JButton("Lägg till användare");
         
-        add.setMinimumSize(new Dimension(50, 25));
-        add.setPreferredSize(new Dimension(50, 25));
+        addUserBtn.setMinimumSize(new Dimension(50, 25));
+        addUserBtn.setPreferredSize(new Dimension(50, 25));
       
         
         
-        for (User user : s)
-        {
+        for (User user : usrs) {
             UserPanel pn = new UserPanel(user);
             add(pn);
         }
 
-        add.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
-        add(add);  
-        add.addActionListener(new ActionListener(){
+        addUserBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
+        add(addUserBtn);  
+        addUserBtn.addActionListener(new ActionListener(){
             
             @Override
             public void actionPerformed(ActionEvent event)
             {
-                UsersPanel.this.remove(add);
-                UserPanel p = new UserPanel(new User(2,"as","asdddd","ddddddd","24535456546"));
+                remove(addUserBtn);
+                UserPanel p = new UserPanel(new User(2,"","","",""));
                 add(p);
-                add(add);
+                add(addUserBtn);
                 
             }
             

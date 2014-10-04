@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -39,11 +40,15 @@ public class MenuPanel extends JPanel {
         public void actionPerformed(ActionEvent ae) {
             if (ae.getSource() instanceof JButton) {
                 JButton actionButton = (JButton) ae.getSource();
-                JPanel dishContainer = (JPanel) actionButton.getParent();
+                JPanel groupContainer = (JPanel) actionButton.getParent();
+                
+                
                 SingleDishPanel dp = new SingleDishPanel(new DishGroup(dishGroups.getUniqueId(), -1, ""), fjarr);
-                dishContainer.remove(actionButton);
-                dishContainer.add(dp);
-                dishContainer.add(actionButton);
+                
+                
+                groupContainer.remove(actionButton);
+                groupContainer.add(dp);
+                groupContainer.add(actionButton);
                 MenuPanel.this.revalidate();
             }
         }
@@ -56,7 +61,6 @@ public class MenuPanel extends JPanel {
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.white);
-        setBorder(new EmptyBorder(10, 10, 10, 10));
         List<DishGroup> dishList = dishGroups.getDishesInGroup(groupNames);
         String previous = "";
         JPanel groupContainer = new JPanel();
@@ -70,8 +74,9 @@ public class MenuPanel extends JPanel {
             } else if (!previous.equals(dishGroup.getGroup())) {
                 addDishBtn = new JButton("Lägg till rätt");
                 addDishBtn.addActionListener(addDishBtnListener);
+                addDishBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, addDishBtn.getPreferredSize().height));
                 groupContainer.add(addDishBtn);
-                addDishBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+                
                 groupContainer = new JPanel();
                 groupContainer.setLayout(new BoxLayout(groupContainer, BoxLayout.Y_AXIS));
                 groupContainer.setBackground(Color.white);
@@ -87,8 +92,10 @@ public class MenuPanel extends JPanel {
         }
         addDishBtn = new JButton("Lägg till rätt");
         addDishBtn.addActionListener(addDishBtnListener);
+        addDishBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, addDishBtn.getPreferredSize().height));
         groupContainer.add(addDishBtn);
-        addDishBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        
+        add(Box.createGlue());
     }
 
     public void setViewSwitch(Controller c) {

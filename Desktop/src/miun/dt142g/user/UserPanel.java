@@ -17,6 +17,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.border.EmptyBorder;
 
 /**
@@ -25,23 +26,25 @@ import javax.swing.border.EmptyBorder;
  */
 public class UserPanel extends JPanel{
     
-    private JButton remove;
-    private JLabel name,tele, epost, password;
-    private TextField user, pwd, mail, telenr;
+    private final JButton remove;
+    private final JLabel name,tele, epost, password;
+    private final TextField user, pwd, mail, telenr;
     
     public UserPanel(User user){
         
         setBackground(Color.WHITE);
-        setBorder(new EmptyBorder(10,10,10,10));
-        setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         JPanel a = new JPanel();
         remove = new JButton("X");
         remove.setMaximumSize(new Dimension(25,25));
         
         
-        a.setLayout(new BoxLayout(a, BoxLayout.PAGE_AXIS));
+        a.setLayout(new BoxLayout(a, BoxLayout.LINE_AXIS));
         a.setBackground(Color.WHITE);
         
+        JPanel inputs = new JPanel();
+        inputs.setLayout(new BoxLayout(inputs, BoxLayout.Y_AXIS));
+        //inputs.setBackground(Color.LIGHT_GRAY);
         
         name = new JLabel("Namn:");
         name.setMaximumSize(new Dimension(60,25));
@@ -51,25 +54,30 @@ public class UserPanel extends JPanel{
         tele = new JLabel("Tel:");
         
         this.user = new TextField(user.getUsername());
-        this.user.setMaximumSize(new Dimension(600,40));
+        this.user.setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
         pwd = new TextField(user.getPassword());
-        pwd.setMaximumSize(new Dimension(600,40));
+        pwd.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
         mail = new TextField(user.getUsername());
-        mail.setMaximumSize(new Dimension(600,40));
+        mail.setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
         telenr = new TextField(user.getPhoneNumber());
-        telenr.setMaximumSize(new Dimension(600,40));
+        telenr.setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
 
-        
-        leftAlignLabel(name, a);
-        a.add(this.user);
-        leftAlignLabel(password, a);
-        a.add(pwd);
-        leftAlignLabel(epost, a);
-        a.add(mail);
-        leftAlignLabel(tele, a);
-        a.add(telenr);
-        add(remove);
+        leftAlignLabel(name, inputs);
+        inputs.add(this.user);
+        leftAlignLabel(password, inputs);
+        inputs.add(pwd);
+        leftAlignLabel(epost, inputs);
+        inputs.add(mail);
+        leftAlignLabel(tele, inputs);
+        inputs.add(telenr);
+        inputs.add(Box.createGlue());
+        a.add(remove);
+        a.add(inputs);
+        a.setMaximumSize(new Dimension(Integer.MAX_VALUE, 400));
         add(a);
+        add(Box.createRigidArea(new Dimension(1, 10)));
+        add(new JSeparator());
+
         remove.addActionListener(new ActionListener(){
             
             @Override

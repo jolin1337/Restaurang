@@ -6,6 +6,7 @@
 package miun.dt142g.inventory;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
@@ -42,6 +43,7 @@ public class InventoryPanel extends JPanel {
         }
         
         this.add(addIngredient); 
+        addIngredient.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         
         
         //adding button event listener to add IngredientPanel

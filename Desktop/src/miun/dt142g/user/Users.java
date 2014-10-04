@@ -45,7 +45,7 @@ public class Users extends DataSource implements Iterable<User>{
     
     @Override
     public void loadData(){
-        
+        addUser(new User(getUniqueId(), "Bength Karlsson", "321rea", "karl@gmail.com", ""));
     }
     
     @Override
