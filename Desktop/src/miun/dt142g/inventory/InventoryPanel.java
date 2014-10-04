@@ -50,13 +50,12 @@ public class InventoryPanel extends JPanel {
         this.addIngredient.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                InventoryPanel.this.remove(addIngredient);
-                InventoryPanel.this.add(new IngredientPanel(new Ingredient(inventory.getUniqueId(),"",0)));
-                InventoryPanel.this.add(addIngredient);
-                InventoryPanel.this.revalidate();   
+                remove(addIngredient);
+                add(new IngredientPanel(new Ingredient(inventory.getUniqueId(),"",0)));
+                add(addIngredient);
+                revalidate();   
             }  
         });
         
-        this.setVisible(true);
     }
 }

@@ -13,6 +13,7 @@ import java.awt.Font;
 import java.awt.ScrollPane;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -150,10 +151,15 @@ public class SharedTabs extends JPanel {
     
     public static void main(String[] args) {
         UIManager.put("Button.font", new Font("Calibri", Font.PLAIN, 22));
-        UIManager.put("Button.background", new Color(200,150,150));
+        UIManager.put("Button.background", new Color(255,120,110));
         UIManager.put("Label.font", new Font("Calibri", Font.BOLD, 25));
         UIManager.put("TextArea.font", new Font("Calibri", Font.PLAIN, 22));
+        UIManager.put("TextArea.border", BorderFactory.createLoweredBevelBorder());
         UIManager.put("TextField.font", new Font("Calibri", Font.PLAIN, 22));
+        UIManager.put("TextField.background", Color.yellow);
+        UIManager.put("TextField.selectionBackground", Color.ORANGE);
+        UIManager.put("TextField.selectionForeground", Color.WHITE);
+        UIManager.put("TextField.caretForeground", Color.pink);
         //Schedule a job for the event dispatch thread:
         //creating and showing this application's GUI.
         SwingUtilities.invokeLater(new Runnable() {

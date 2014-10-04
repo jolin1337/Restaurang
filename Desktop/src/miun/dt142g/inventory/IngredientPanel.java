@@ -10,6 +10,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -24,10 +25,10 @@ import miun.dt142g.data.Ingredient;
 public class IngredientPanel extends JPanel {
     
     private JButton close; 
-    private JTextField ingredientName; 
-    private JTextField amount; 
-    private JLabel amountLabel; 
-    private Ingredient ingredient; 
+    private final JTextField ingredientName; 
+    private final JTextField amount; 
+    private final JLabel amountLabel; 
+    private final Ingredient ingredient; 
     
     public IngredientPanel(Ingredient ingredient){
         super(); 
@@ -41,7 +42,8 @@ public class IngredientPanel extends JPanel {
         
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         this.setBackground(Color.white);
-        this.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
+        this.ingredientName.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        this.close.setMaximumSize(new Dimension(100, 35));
         
         amount.setColumns(3);
         amount.setMaximumSize(new Dimension(50,50));
@@ -59,11 +61,12 @@ public class IngredientPanel extends JPanel {
             }
         });
         
+        this.add(Box.createRigidArea(new Dimension(1, 20)));
         this.add(close);
         this.add(ingredientName);
         this.add(amount);
         this.add(amountLabel);
-        this.setVisible(true);
+        this.add(Box.createRigidArea(new Dimension(1, 20)));
         
     }
 }
