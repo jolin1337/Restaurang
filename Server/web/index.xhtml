@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="./page.xhtml">
+            <ui:define name="content">
+
+                <div class="post event">
+                    <c:set var="page" value="#{request.getParameter('page')}" />
+                    <c:choose>
+                        <c:when test="${page == null}" >
+                            Home
+                        </c:when>
+                        <c:when test="${page == 'menu'}" >
+                            A la carte
+                        </c:when>
+                        <c:when test="${page == 'bord'}" >
+                            Boka ditt bord här...
+                        </c:when>
+                        <c:when test="${page == 'archive'}" >
+                            Historiska evenemang...
+                        </c:when>
+                        <c:when test="${page == 'test'}" >
+                            {newSessionBean.setText("dsakfjlkdaj")}
+                            {newSessionBean.setText("dsakfjlkdaj")}
+                            {newSessionBean.setText("dsakfjlkdaj")}
+                            {newSessionBean.setText("dsakfjlkdaj")}
+                            {newSessionBean.setText("dsakfjlkdaj")}
+                            <br/>
+                            {newSessionBean.deleteRows(4)}
+                            <br/>
+                            <c:forEach items="#{newSessionBean.texts}" var="newEntity">
+                                #{newEntity.text}, #{newEntity.id}<br/>
+                            </c:forEach>
+                            #{infoSessionBean.getOpenings()}<br/>
+                        </c:when>
+                        <c:otherwise >
+                            No not a page sorry :/
+                        </c:otherwise>
+                    </c:choose>
+                    
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

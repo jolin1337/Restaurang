@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0" />
+        <meta name="author" content="Johannes Lindén" />
+        <title>Antons skafferi</title>
+        <h:outputStylesheet name="css/styles.css" />
+    </h:head>
+
+    <h:body>
+
+        <div id="content">
+            <a href="index.php" class="logo-container"><h:graphicImage  name="img/skafferiet.png" class="logo" alt="Antons skafferi"/></a>
+            <ul class="menu">
+                <li><a href="./">Hem</a></li>
+                <li><a href="?page=menu">À la carte</a></li>
+                <li><a href="?page=bord">Boka bord</a></li>
+                <li><a href="?page=archive">Arkiv</a></li>
+            </ul>
+            <div class="right-col">
+                <h2>Veckans meny</h2>
+                <pre><code></code></pre>
+                <hr/>
+                <h2>Kontakt</h2>
+                #{infoSessionBean.contactInfo}
+                <h2>Öppetider</h2>
+                #{infoSessionBean.openings}
+            </div>
+            <div id="page-home" class="page">
+                <div id="content" class="center_content">
+                    <ui:insert name="content">Content</ui:insert>
+                </div>
+            </div>
+        </div>
+    </h:body>
+
+</html>
