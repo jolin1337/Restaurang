@@ -15,7 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import miun.dt142g.data.Booking;
-import com.michaelbaranov.microba.calendar.DatePicker;
+//import com.michaelbaranov.microba.calendar.DatePicker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
@@ -63,9 +63,9 @@ public class NewBooking extends JPanel {
         addLabel("Datum: ");
         add(Box.createRigidArea(new Dimension(0, 10)));
 
-        final DatePicker datePicker = new DatePicker(new Date());
-        datePicker.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-        this.add(datePicker);
+        //final DatePicker datePicker = new DatePicker(new Date());
+        //datePicker.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        //this.add(datePicker);
                 
         add(Box.createRigidArea(new Dimension(0, 10)));
         addBookingBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
