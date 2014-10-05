@@ -45,16 +45,13 @@ public class GetTable extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             if (request.getParameter("key").equals("enroligtemporarnyckel")) {
+                String jsonString = "{\"data\": [";
                 switch (request.getParameter("table")) {
                     case "dish":
                         TypedQuery<Dish> query = em.createNamedQuery("Dish.findAll", Dish.class);
-                        String jsonString = "{[";
                         for(Dish d : query.getResultList()){
-                            jsonString+=d.toJsonString()+",";
+                            jsonString += d.toJsonString() + ",";
                         }
-                        jsonString = jsonString.substring(0, jsonString.length()-2);
-                        jsonString += "]}";
-                        out.print(jsonString);
                         break; 
                     case "booking":
                         
@@ -77,6 +74,10 @@ public class GetTable extends HttpServlet {
                     default: 
                         
                 }
+                if(jsonString.length() > "{'data': [".length())
+                    jsonString = jsonString.substring(0, jsonString.length()-2);
+                jsonString += "]}";
+                out.print(jsonString);
             }
         }
     }

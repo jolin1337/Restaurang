@@ -77,7 +77,9 @@ public class Dish implements Serializable {
     }
 
     public String getName() {
-        return name;
+        if(name != null)
+            return name;
+        return "";
     }
 
     public void setName(String name) {
@@ -85,7 +87,9 @@ public class Dish implements Serializable {
     }
 
     public Double getPrice() {
-        return price;
+        if(price != null)
+           return price;
+        return 0.0;
     }
 
     public void setPrice(Double price) {
