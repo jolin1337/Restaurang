@@ -26,11 +26,6 @@ import miun.dt142g.data.Booking;
 public class BookingPanel extends JPanel{
     private Booking bookings; 
     private JButton remove; 
-//    private JLabel name; 
-//    private JLabel persons; 
-//    private JLabel date; 
-//    private JLabel time; 
-//    private JLabel timeLength; 
     
     private JTextField nameField; 
     private JTextField personsField; 

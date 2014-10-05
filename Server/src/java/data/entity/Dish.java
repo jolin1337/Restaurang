@@ -7,6 +7,11 @@ package data.entity;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonValue;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,6 +40,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Dish.findByName", query = "SELECT d FROM Dish d WHERE d.name = :name"),
     @NamedQuery(name = "Dish.findByPrice", query = "SELECT d FROM Dish d WHERE d.price = :price")})
 public class Dish implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -128,5 +134,21 @@ public class Dish implements Serializable {
     public String toString() {
         return "data.entity.Dish[ id=" + id + " ]";
     }
-    
+
+    public String toJsonString() {
+        //System.out.println("InventoryList size: " + inventoryList.size());
+        JsonArrayBuilder ingredients = Json.createArrayBuilder();
+        for(Inventory i: inventoryList) {
+            JsonObject obj = Json.createObjectBuilder().add("as", i.getId()).build();
+            JsonValue val = obj.get("as");
+            ingredients.add(val);
+        }
+        JsonObject value = Json.createObjectBuilder()
+                .add("id", this.getId())
+                .add("name", this.getName())
+                .add("price", this.getPrice())
+                .add("ingredients", ingredients.build())
+                .build();
+        return value.toString();
+    }
 }
