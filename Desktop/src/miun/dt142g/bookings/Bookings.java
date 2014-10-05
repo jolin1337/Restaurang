@@ -33,6 +33,9 @@ public class Bookings extends DataSource implements Iterable<Booking> {
                 return b;
         return null; 
     }
+    public Booking getBookingByIndex(int index){
+        return bookings.get(bookings.size()-1);
+    }
     
    public void addBooking(Booking booking){
         bookings.add(booking);
@@ -49,9 +52,11 @@ public class Bookings extends DataSource implements Iterable<Booking> {
     @Override
     public void loadData() {
         Date date = new Date();
-        bookings.add(new Booking(0, "chocklad", date, 0, 0, 0));
-        bookings.add(new Booking(1, "majs", date, 0, 17, 44));
-        bookings.add(new Booking(2, "pannkaka", date, 0, 0, 0));
+        // Get time by user input in hours, minutes and date
+        // date.getTime() + 1000*3600*hours + 1000*60*minutes;
+        bookings.add(new Booking(0, "chocklad", date, 1, 1, 0));
+        bookings.add(new Booking(1, "majs", date, 0, 2, 3));
+        bookings.add(new Booking(2, "pannkaka", date, 1, 2, 0));
         
     }
 

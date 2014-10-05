@@ -116,6 +116,11 @@ public class SharedTabs extends JPanel {
             
             @Override
             public void stateChanged(ChangeEvent ce) {
+                for(JComponent j : panels) {
+                    j.revalidate();
+                }
+                if(tabbedPane.isAncestorOf(newBooking) && tabbedPane.getSelectedComponent() != newBooking)
+                    tabbedPane.remove(newBooking);
                 if(tabbedPane.isAncestorOf(dishDetailView) && tabbedPane.getSelectedComponent() != dishDetailView)
                     tabbedPane.remove(dishDetailView);
             }

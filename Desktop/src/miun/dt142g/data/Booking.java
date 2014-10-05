@@ -6,6 +6,8 @@
 
 package miun.dt142g.data;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
@@ -36,6 +38,10 @@ public class Booking {
      */
     public Date getDate() {
         return date;
+    }
+    public String getDateString() {
+        DateFormat df = new SimpleDateFormat("dd/MM-yy");
+        return df.format(this.date);
     }
 
     /**

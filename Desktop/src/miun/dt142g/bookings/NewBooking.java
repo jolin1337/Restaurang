@@ -6,8 +6,6 @@
 package miun.dt142g.bookings;
 
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -16,9 +14,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import miun.dt142g.data.Booking;
 import com.michaelbaranov.microba.calendar.DatePicker;
+import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyVetoException;
+import java.text.DateFormat;
 import java.util.Date;
 /**
  *
@@ -27,6 +26,10 @@ import java.util.Date;
 public class NewBooking extends JPanel {
     Booking booking=null;
     JButton addBookingBtn = new JButton("Godkänn bokning");
+    JTextField nameField;
+    JTextField personsField;
+    JTextField timeField;
+    JTextField durationField;
 
     private JLabel addLabel(String labelName) {
         JLabel label = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>" + labelName + "</div></html>");
@@ -43,26 +46,26 @@ public class NewBooking extends JPanel {
         return textField;
     }
     public final void newBooking(Booking b){
+        this.booking = b;
         removeAll();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        
         addLabel("Namn: ");
-        addTextField("Anders Svensson");
+        nameField = addTextField("Anders Svensson");
         
         addLabel("Antal personer: ");
-        addTextField("");
-        
-        addLabel("Antal personer: ");
-        addTextField("");
+        personsField = addTextField("");
         
         addLabel("Starttid: ");
-        addTextField("");
-        
+        timeField = addTextField("");
+                
         addLabel("Varaktighet: ");
-        addTextField("");
+        durationField = addTextField("");
         
         addLabel("Datum: ");
         add(Box.createRigidArea(new Dimension(0, 10)));
-
+        
+        
         final DatePicker datePicker = new DatePicker(new Date());
         datePicker.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         this.add(datePicker);
@@ -74,7 +77,20 @@ public class NewBooking extends JPanel {
         addBookingBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-               // NewBooking.this.add(new BookingPanel(new Booking(b.getUniqueId(), "", "1/3-37", 0, 0, 0)));
+                booking.setName(nameField.getText());
+                booking.setPersons(Integer.parseInt(personsField.getText()));
+                booking.setTime(Integer.parseInt(timeField.getText()));
+                booking.setDuration(Integer.parseInt(durationField.getText()));
+                booking.setDate(datePicker.getDate());
+                
+                if(ae.getSource().getClass() != JButton.class)
+                    return;
+                JButton btn = (JButton)ae.getSource();
+                if(btn.getParent() == null)
+                    return;
+                Container parent = btn.getParent().getParent();
+                parent.remove(btn.getParent());
+                parent.revalidate();
             }
         });
     }

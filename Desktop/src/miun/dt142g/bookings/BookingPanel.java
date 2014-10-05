@@ -58,6 +58,7 @@ public class BookingPanel extends JPanel{
             }
         });
         
+        
         nameField = new JTextField(booking.getName()); 
         personsField = new JTextField(Integer.toString(booking.getPersons())); 
         SimpleDateFormat ft = new SimpleDateFormat ("dd/MM-yy 'at' hh:mm");
@@ -67,12 +68,12 @@ public class BookingPanel extends JPanel{
         timeLengthField = new JTextField(booking.getDuration()); 
         
         //element layout
-        nameField.setMaximumSize(new Dimension(100,25));
-        personsField.setMaximumSize(new Dimension(50,25));
-        dateField.setMaximumSize(new Dimension(100,25));
-        timeField.setMaximumSize(new Dimension(50,25));
-        timeLengthField.setMaximumSize(new Dimension(50,25));
-        
+        nameField.setMaximumSize(new Dimension(Integer.MAX_VALUE,25));
+        personsField.setMaximumSize(new Dimension(Integer.MAX_VALUE,25));
+        dateField.setMaximumSize(new Dimension(Integer.MAX_VALUE,25));
+        timeField.setMaximumSize(new Dimension(Integer.MAX_VALUE,25));
+        timeLengthField.setMaximumSize(new Dimension(Integer.MAX_VALUE,25));
+
         this.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
         this.add(remove);
         this.add(nameField);
