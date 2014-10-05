@@ -5,6 +5,7 @@
  */
 package code.servlets;
 
+import data.Settings;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -13,6 +14,11 @@ import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.security.Key;
+import java.util.Date;
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  *
@@ -35,9 +41,29 @@ public class Authentication extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/plain;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            if(request.getParameter("key").equals("enrolignyckel")){
-                out.print("enroligtemporarnyckel");
+            String k = request.getParameter("key");
+            for (String key : Settings.allowedKeys) {
+                if (k.equals(key)) {
+                    String responseKey = Settings.tempPrefixKey + Long.toString(new Date().getTime());
+
+                    try {
+                        // Create key and cipher
+                        Key aesKey = new SecretKeySpec(Settings.cryptionValue.getBytes(), "AES");
+                        Cipher cipher;
+                        cipher = Cipher.getInstance("AES");
+                        // encrypt the text
+                        cipher.init(Cipher.ENCRYPT_MODE, aesKey);
+
+                        String encrypted = Settings.asHex(cipher.doFinal(responseKey.getBytes()));
+
+                        out.println(encrypted);
+                    } catch (Exception ex) {
+                        out.print("error");
+                    }
+                    return;
+                }
             }
+            out.print("Wrong key");
         }
     }
 
