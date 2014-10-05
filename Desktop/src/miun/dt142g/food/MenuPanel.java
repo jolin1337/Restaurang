@@ -20,6 +20,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import miun.dt142g.Controller;
+import miun.dt142g.DataSource;
 import miun.dt142g.data.Dish;
 
 /**
@@ -51,7 +52,7 @@ public class MenuPanel extends JPanel {
         }
     };
 
-    public MenuPanel(Controller c, String[] groupNames) {
+    public MenuPanel(Controller c, String[] groupNames) throws DataSource.WrongKeyException {
         this.fjarr = c;
         dishGroups.dbConnect();
         dishGroups.loadData();

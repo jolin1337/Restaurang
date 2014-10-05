@@ -18,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
+import miun.dt142g.DataSource;
 import miun.dt142g.data.AboutUs;
 import miun.dt142g.data.EventPost;
 
@@ -32,7 +33,7 @@ public class WebsitePanel extends JPanel {
     
     JButton newEventPostBtn = new JButton("Lägg till nytt evenemang");
     
-    public WebsitePanel() {
+    public WebsitePanel() throws DataSource.WrongKeyException {
         eventPosts.dbConnect();
         eventPosts.loadData();
         about.dbConnect();

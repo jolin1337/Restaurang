@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import miun.dt142g.DataSource;
 import miun.dt142g.data.Ingredient;
 import miun.dt142g.food.Inventory;
 
@@ -24,7 +25,7 @@ public class InventoryPanel extends JPanel {
     private JButton addIngredient;
     private Inventory inventory;
     
-    public InventoryPanel(){
+    public InventoryPanel() throws DataSource.WrongKeyException{
         super(); 
         
         //initiatilizing variables

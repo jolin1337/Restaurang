@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import miun.dt142g.DataSource;
 
 /**
  *
@@ -23,7 +24,7 @@ public class UsersPanel extends JPanel {
     private JButton addUserBtn;
     private Users usrs = new Users();
     
-    public UsersPanel(){
+    public UsersPanel() throws DataSource.WrongKeyException{
         usrs.dbConnect();
         usrs.loadData();
         //.addUser();

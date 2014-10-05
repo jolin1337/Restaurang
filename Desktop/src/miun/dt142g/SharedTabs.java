@@ -13,10 +13,13 @@ import java.awt.Font;
 import java.awt.ScrollPane;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
@@ -40,7 +43,7 @@ import miun.dt142g.website.WebsitePanel;
  * @author Tomas
  */
 public class SharedTabs extends JPanel {
-    DishDetailPanel dishDetailView = new DishDetailPanel(null);
+    DishDetailPanel dishDetailView;
     JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
     List<JComponent> panels = new ArrayList<>();
     NewBooking newBooking = new NewBooking();
@@ -84,7 +87,8 @@ public class SharedTabs extends JPanel {
         }
         
     };
-    public SharedTabs() {
+    public SharedTabs() throws DataSource.WrongKeyException {
+        dishDetailView = new DishDetailPanel(null);
         
         setLayout(new BorderLayout());
         DishesPanel panel1 = new DishesPanel(fjarr);
@@ -145,8 +149,13 @@ public class SharedTabs extends JPanel {
         ImageIcon img = new ImageIcon("res/graphics/logo.png");
         frame.setIconImage(img.getImage());
         
-        //Add content to the window.
-        frame.add(new SharedTabs(), BorderLayout.CENTER);
+        try {
+            SharedTabs st = new SharedTabs();
+            //Add content to the window.
+            frame.add(st, BorderLayout.CENTER);
+        } catch (DataSource.WrongKeyException ex) {
+            frame.add(new JLabel("Wrong authorization key"));
+        }
         
         //Display the window.
         frame.pack();
@@ -157,14 +166,19 @@ public class SharedTabs extends JPanel {
     public static void main(String[] args) {
         UIManager.put("Button.font", new Font("Calibri", Font.PLAIN, 22));
         UIManager.put("Button.background", new Color(255,120,110));
+        
         UIManager.put("Label.font", new Font("Calibri", Font.BOLD, 25));
+        
         UIManager.put("TextArea.font", new Font("Calibri", Font.PLAIN, 22));
         UIManager.put("TextArea.border", BorderFactory.createLoweredBevelBorder());
-        UIManager.put("TextField.font", new Font("Calibri", Font.PLAIN, 22));
+        
+        UIManager.put("TextField.font", new Font("Calibri", Font.PLAIN, 32));
         UIManager.put("TextField.background", Color.yellow);
         UIManager.put("TextField.selectionBackground", Color.ORANGE);
         UIManager.put("TextField.selectionForeground", Color.WHITE);
         UIManager.put("TextField.caretForeground", Color.pink);
+        
+        UIManager.put("Table.font", new Font("Calibri", Font.PLAIN, 22));
         //Schedule a job for the event dispatch thread:
         //creating and showing this application's GUI.
         SwingUtilities.invokeLater(new Runnable() {

@@ -46,7 +46,7 @@ public class DishGroups extends DataSource{
     }
 
     @Override
-    public void dbConnect(){
+    public void dbConnect() throws WrongKeyException{
         super.dbConnect();
         dishes.dbConnect();
     }

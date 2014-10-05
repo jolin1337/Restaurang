@@ -18,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 /**
@@ -28,7 +29,7 @@ public class UserPanel extends JPanel{
     
     private final JButton remove;
     private final JLabel name,tele, epost, password;
-    private final TextField user, pwd, mail, telenr;
+    private final JTextField user, pwd, mail, telenr;
     
     public UserPanel(User user){
         
@@ -53,13 +54,13 @@ public class UserPanel extends JPanel{
         epost = new JLabel("Mail:");
         tele = new JLabel("Tel:");
         
-        this.user = new TextField(user.getUsername());
+        this.user = new JTextField(user.getUsername());
         this.user.setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
-        pwd = new TextField(user.getPassword());
+        pwd = new JTextField(user.getPassword());
         pwd.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-        mail = new TextField(user.getUsername());
+        mail = new JTextField(user.getUsername());
         mail.setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
-        telenr = new TextField(user.getPhoneNumber());
+        telenr = new JTextField(user.getPhoneNumber());
         telenr.setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
 
         leftAlignLabel(name, inputs);

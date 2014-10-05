@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import miun.dt142g.Controller;
+import miun.dt142g.DataSource;
 import miun.dt142g.data.Dish;
 
 /**
@@ -27,7 +28,7 @@ public class DishesPanel extends JPanel {
     Dishes dishes = new Dishes();
     JButton addDishBtn = new JButton("Lägg till rätt");
     private Controller fjarr = null;
-    public DishesPanel(Controller c) {
+    public DishesPanel(Controller c) throws DataSource.WrongKeyException {
         this.fjarr = c;
         dishes.dbConnect();
         dishes.loadData();

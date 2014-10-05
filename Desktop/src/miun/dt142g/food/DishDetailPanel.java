@@ -18,6 +18,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import miun.dt142g.DataSource;
 import miun.dt142g.data.Dish;
 import miun.dt142g.data.Ingredient;
 
@@ -30,7 +31,7 @@ public class DishDetailPanel extends JPanel {
     Inventory inv = new Inventory();
     JButton addIngBtn = new JButton("Lägg till ingrediens");
     JPanel ingredientsPanel = new JPanel();
-    public DishDetailPanel(Dish dish) {
+    public DishDetailPanel(Dish dish) throws DataSource.WrongKeyException {
         inv.dbConnect();
         inv.loadData();
         setBackground(Color.white);

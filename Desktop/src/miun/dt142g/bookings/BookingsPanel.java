@@ -9,20 +9,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import miun.dt142g.Controller;
+import miun.dt142g.DataSource;
 import miun.dt142g.data.Booking;
 
 /**
@@ -42,14 +38,16 @@ public class BookingsPanel extends JPanel {
     private JLabel timeLabel;
     private JLabel timeLengthLabel;
     private final Controller fjarr;
-    
-    private final DefaultTableModel model = new DefaultTableModel(); 
-    
+
+    private final DefaultTableModel model = new DefaultTableModel();
+
     private boolean newBookingP = false;
 
     // End of variables declaration     
-
-    public BookingsPanel(Controller fjarr) {
+    public BookingsPanel(Controller fjarr) throws DataSource.WrongKeyException {
+        this.bookings = new Bookings();
+        this.bookings.dbConnect();
+        this.bookings.loadData();
         initComponents();
         this.fjarr = fjarr;
 
@@ -57,26 +55,23 @@ public class BookingsPanel extends JPanel {
 
     @SuppressWarnings("empty-statement")
     private void initComponents() {
-        this.bookings = new Bookings();
-        this.bookings.dbConnect();
-        this.bookings.loadData();
         labels.setVisible(true);
 
-        JTable table = new JTable(model); 
+        JTable table = new JTable(model);
 
         // Create a couple of columns 
-        model.addColumn("Col1"); 
-        model.addColumn("Col2"); 
-        model.addColumn("Col3"); 
-        model.addColumn("Col4"); 
-        model.addColumn("Col5"); 
+        model.addColumn("Col1");
+        model.addColumn("Col2");
+        model.addColumn("Col3");
+        model.addColumn("Col4");
+        model.addColumn("Col5");
 
         // Append a row 
         model.addRow(new Object[]{"Namn", "Antal", "Datum", "Tid", "Varaktighet"});
         for (Booking bok : bookings) {
-            
-            model.addRow(new Object[]{bok.getName(), bok.getPersons(), 
-                        bok.getDateString(), bok.getTime(), bok.getDuration()});
+
+            model.addRow(new Object[]{bok.getName(), bok.getPersons(),
+                bok.getDateString(), bok.getTime(), bok.getDuration()});
         }
         add(table);
 
@@ -98,11 +93,12 @@ public class BookingsPanel extends JPanel {
         this.add(addBooking);
         this.setVisible(true);
     }
+
     @Override
     public void revalidate() {
         super.revalidate();
-        if(newBookingP) {
-            Booking bok = bookings.getBookingByIndex(bookings.getRows()-1);
+        if (newBookingP) {
+            Booking bok = bookings.getBookingByIndex(bookings.getRows() - 1);
             model.addRow(new Object[]{
                 bok.getName(), bok.getPersons(), bok.getDateString(), bok.getTime(), bok.getDuration()
             });
