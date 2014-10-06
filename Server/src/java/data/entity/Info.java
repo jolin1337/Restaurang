@@ -6,6 +6,8 @@
 package data.entity;
 
 import java.io.Serializable;
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,6 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Info.findAll", query = "SELECT i FROM Info i"),
     @NamedQuery(name = "Info.findByWhat", query = "SELECT i FROM Info i WHERE i.what = :what")})
 public class Info implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -72,20 +75,26 @@ public class Info implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (object == null) {
+            return false;
+        }
         if (!(object instanceof Info)) {
             return false;
         }
         Info other = (Info) object;
-        if ((this.what == null && other.what != null) || (this.what != null && !this.what.equals(other.what))) {
-            return false;
-        }
-        return true;
+        return what.equals(other.what);
     }
 
     @Override
     public String toString() {
         return "data.entity.Info[ what=" + what + " ]";
     }
-    
+
+    public String toJsonString() {
+        JsonObject value = Json.createObjectBuilder()
+                .add("what", getWhat())
+                .add("data", getData())
+                .build();
+        return value.toString();
+    }
 }

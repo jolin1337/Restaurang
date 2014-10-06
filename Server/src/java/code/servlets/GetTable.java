@@ -5,10 +5,14 @@
  */
 package code.servlets;
 
+import data.Settings;
 import data.entity.Dish;
+import data.entity.Dishgroup;
+import data.entity.Event;
+import data.entity.Info;
+import data.entity.Inventory;
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.json.JsonObject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -44,12 +48,12 @@ public class GetTable extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            if (request.getParameter("key").equals("enroligtemporarnyckel")) {
+            if (Settings.isAutorised(request.getParameter("key"))) {
                 String jsonString = "{\"data\": [";
                 switch (request.getParameter("table")) {
                     case "dish":
-                        TypedQuery<Dish> query = em.createNamedQuery("Dish.findAll", Dish.class);
-                        for(Dish d : query.getResultList()){
+                        TypedQuery<Dish> dishQuery = em.createNamedQuery("Dish.findAll", Dish.class);
+                        for(Dish d : dishQuery.getResultList()){
                             jsonString += d.toJsonString() + ",";
                         }
                         break; 
@@ -58,15 +62,31 @@ public class GetTable extends HttpServlet {
                         break; 
                     case "dishdroup": 
                         
+                        TypedQuery<Dishgroup> dishGroupQuery = em.createNamedQuery("DishGroup.findAll", Dishgroup.class);
+                        for(Dishgroup d : dishGroupQuery.getResultList()){
+                            jsonString += d.toJsonString() + ",";
+                        }
                         break; 
                     case "event":
                         
+                        TypedQuery<Event> eventQuery = em.createNamedQuery("Event.findAll", Event.class);
+                        for(Event d : eventQuery.getResultList()){
+                            jsonString += d.toJsonString() + ",";
+                        }
                         break; 
                     case "info":
                         
+                        TypedQuery<Info> infoQuery = em.createNamedQuery("Info.findAll", Info.class);
+                        for(Info d : infoQuery.getResultList()){
+                            jsonString += d.toJsonString() + ",";
+                        }
                         break; 
                     case "inventory":
                         
+                        TypedQuery<Inventory> inventoryQuery = em.createNamedQuery("Inventory.findAll", Inventory.class);
+                        for(Inventory d : inventoryQuery.getResultList()){
+                            jsonString += d.toJsonString() + ",";
+                        }
                         break; 
                     case "scheme": 
                         

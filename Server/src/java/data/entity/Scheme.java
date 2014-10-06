@@ -6,6 +6,8 @@
 package data.entity;
 
 import java.io.Serializable;
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,6 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Scheme.findAll", query = "SELECT s FROM Scheme s"),
     @NamedQuery(name = "Scheme.findById", query = "SELECT s FROM Scheme s WHERE s.id = :id")})
 public class Scheme implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -58,20 +61,25 @@ public class Scheme implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (object == null) {
+            return false;
+        }
         if (!(object instanceof Scheme)) {
             return false;
         }
         Scheme other = (Scheme) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return id.equals(other.id);
     }
 
     @Override
     public String toString() {
         return "data.entity.Scheme[ id=" + id + " ]";
     }
-    
+
+    public String toJsonString() {
+        JsonObject value = Json.createObjectBuilder()
+                .add("id", getId())
+                .build();
+        return value.toString();
+    }
 }

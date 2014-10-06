@@ -8,7 +8,6 @@ package data.entity;
 import java.io.Serializable;
 import java.util.List;
 import javax.json.Json;
-import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
@@ -77,8 +76,9 @@ public class Dish implements Serializable {
     }
 
     public String getName() {
-        if(name != null)
+        if (name != null) {
             return name;
+        }
         return "";
     }
 
@@ -87,8 +87,9 @@ public class Dish implements Serializable {
     }
 
     public Double getPrice() {
-        if(price != null)
-           return price;
+        if (price != null) {
+            return price;
+        }
         return 0.0;
     }
 
@@ -123,15 +124,14 @@ public class Dish implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (object == null) {
+            return false;
+        }
         if (!(object instanceof Dish)) {
             return false;
         }
         Dish other = (Dish) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return name.equals(other.name);
     }
 
     @Override
@@ -140,17 +140,16 @@ public class Dish implements Serializable {
     }
 
     public String toJsonString() {
-        //System.out.println("InventoryList size: " + inventoryList.size());
         JsonArrayBuilder ingredients = Json.createArrayBuilder();
-        for(Inventory i: inventoryList) {
+        for (Inventory i : inventoryList) {
             JsonObject obj = Json.createObjectBuilder().add("as", i.getId()).build();
             JsonValue val = obj.get("as");
             ingredients.add(val);
         }
         JsonObject value = Json.createObjectBuilder()
-                .add("id", this.getId())
-                .add("name", this.getName())
-                .add("price", this.getPrice())
+                .add("id", getId())
+                .add("name", getName())
+                .add("price", getPrice())
                 .add("ingredients", ingredients.build())
                 .build();
         return value.toString();

@@ -40,22 +40,9 @@ public class AuthTest extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/plain;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            try {
-                System.out.println(request.getParameter("key"));
-                Key aesKey = new SecretKeySpec(Settings.cryptionValue.getBytes(), "AES");
-                Cipher cipher = Cipher.getInstance("AES");
-                cipher.init(Cipher.DECRYPT_MODE, aesKey);
-                String decrypted = new String(cipher.doFinal(Settings.fromHexString(request.getParameter("key"))));
-
-                String timeStr = decrypted.substring(Settings.tempPrefixKey.length());
-                if (decrypted.indexOf(Settings.tempPrefixKey) == 0 && Long.parseLong(timeStr) <= new Date().getTime()) {
-                    out.print("true");
-                    return;
-                }
-            } catch (Exception ex) {
-                System.out.println(ex.toString());
-            }
-            out.print("false");
+            if(Settings.isAutorised(request.getParameter("key")))
+                out.print("true");
+            else out.print("false");
         }
     }
 
