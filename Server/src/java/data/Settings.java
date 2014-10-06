@@ -16,10 +16,17 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class Settings {
 
-    static public String[] allowedKeys = new String[]{"dt142g-awesome"};
-    static public String cryptionValue = "dt142g!Key()##!3"; // 128 bit key
-    static public String tempPrefixKey = "enroligtemporarnyckel";
-
+    static final public String[] allowedKeys = new String[]{"dt142g-awesome"};
+    static final public String cryptionValue = "dt142g!Key()##!3"; // 128 bit key
+    static final public String tempPrefixKey = "enroligtemporarnyckel";
+    
+    static final public class AuthCode {
+        public static final int accept = 0;
+        public static final int deny = 1;
+        public static final int expired = 2;
+    }
+    
+    
     public static String asHex(byte buf[]) {
         StringBuilder strbuf = new StringBuilder(buf.length * 2);
         int i;
@@ -45,7 +52,7 @@ public class Settings {
         return data;
     }
 
-    public static boolean isAutorised(String parameter) {
+    public static int isAutorised(String parameter) {
         try {
             System.out.println(parameter);
             Key aesKey = new SecretKeySpec(Settings.cryptionValue.getBytes(), "AES");
@@ -54,12 +61,15 @@ public class Settings {
             String decrypted = new String(cipher.doFinal(Settings.fromHexString(parameter)));
 
             String timeStr = decrypted.substring(Settings.tempPrefixKey.length());
-            if (decrypted.indexOf(Settings.tempPrefixKey) == 0 && Long.parseLong(timeStr) <= new Date().getTime()) {
-                return true;
+            if (decrypted.indexOf(Settings.tempPrefixKey) == 0) {
+                if(Long.parseLong(timeStr) + 1000*3600 >= new Date().getTime())
+                    return AuthCode.accept;
+                else
+                    return AuthCode.expired;
             }
         } catch (Exception ex) {
             System.out.println(ex.toString());
         }
-        return false;
+        return AuthCode.deny;
     }
 }

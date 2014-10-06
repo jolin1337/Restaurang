@@ -40,9 +40,13 @@ public class AuthTest extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/plain;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            if(Settings.isAutorised(request.getParameter("key")))
+            int authCode = Settings.isAutorised(request.getParameter("key"));
+            if(authCode == Settings.AuthCode.accept)
                 out.print("true");
-            else out.print("false");
+            else if(authCode == Settings.AuthCode.expired)
+                out.print("expired_key");
+            else if(authCode == Settings.AuthCode.deny) 
+                out.print("false");
         }
     }
 
@@ -66,7 +70,7 @@ public class AuthTest extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        //processRequest(request, response);
     }
 
     /**
@@ -90,7 +94,7 @@ public class AuthTest extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "Testing the authentication with this servlet";
     }// </editor-fold>
 
 }

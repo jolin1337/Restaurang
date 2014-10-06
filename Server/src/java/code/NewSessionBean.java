@@ -9,12 +9,9 @@ import data.NewEntity;
 import java.util.List;
 import javax.ejb.Stateful;
 import javax.inject.Named;
-import javax.naming.Context;
-import javax.naming.InitialContext;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.transaction.UserTransaction;
 
 /**
  *

@@ -48,7 +48,8 @@ public class GetTable extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            if (Settings.isAutorised(request.getParameter("key"))) {
+            int authCode = Settings.isAutorised(request.getParameter("key"));
+            if (authCode == Settings.AuthCode.accept) {
                 String jsonString = "{\"data\": [";
                 switch (request.getParameter("table")) {
                     case "dish":
@@ -99,6 +100,10 @@ public class GetTable extends HttpServlet {
                 jsonString += "]}";
                 out.print(jsonString);
             }
+            else if(authCode == Settings.AuthCode.expired)
+                out.print("expired_key");
+            else if(authCode == Settings.AuthCode.deny) 
+                out.print("false");
         }
     }
 
@@ -138,7 +143,7 @@ public class GetTable extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "Displays information in a specified table";
     }// </editor-fold>
 
 }
