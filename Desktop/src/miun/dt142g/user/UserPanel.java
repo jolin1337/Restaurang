@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import miun.dt142g.data.ConfirmationBox;
 
 /**
  *
@@ -84,9 +85,12 @@ public class UserPanel extends JPanel{
             @Override
             public void actionPerformed(ActionEvent event)
             {
-                Container parent = UserPanel.this.getParent();
-                parent.remove(UserPanel.this);
-                parent.revalidate();
+                int n = ConfirmationBox.confirm(UserPanel.this, UserPanel.this.user.getText());
+                if(n == 0){
+                    Container parent = UserPanel.this.getParent();
+                    parent.remove(UserPanel.this);
+                    parent.revalidate();
+                }
             }
             
         });

@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import miun.dt142g.Controller;
+import miun.dt142g.data.ConfirmationBox;
 import miun.dt142g.data.Dish;
 
 /**
@@ -24,6 +25,7 @@ import miun.dt142g.data.Dish;
  */
 public class DishPanel extends JPanel {
     Dish dish;
+    JTextField name;
     public DishPanel(Dish dish, final Controller c) {
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(10,10,10,10));
@@ -34,7 +36,7 @@ public class DishPanel extends JPanel {
         item.setBackground(Color.white);
         JButton remove = new JButton("X");
         add(remove, BorderLayout.WEST);
-        JTextField name = new JTextField();
+        name = new JTextField();
         name.setText(dish.getName());
         name.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
         add(name, BorderLayout.CENTER);
@@ -51,9 +53,13 @@ public class DishPanel extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                Container parent = DishPanel.this.getParent();
-                parent.remove(DishPanel.this);
-                parent.revalidate();
+                int n = ConfirmationBox.confirm(DishPanel.this, name.getText());
+                if(n == 0)
+                {
+                    Container parent = DishPanel.this.getParent();
+                    parent.remove(DishPanel.this);
+                    parent.revalidate();
+                }
             }
         });
         //detail.setMaximumSize(new Dimension(Integer.MAX_VALUE, detail.getPreferredSize().height));

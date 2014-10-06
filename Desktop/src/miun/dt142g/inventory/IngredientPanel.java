@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import miun.dt142g.data.ConfirmationBox;
 import miun.dt142g.data.Ingredient;
 
 /**
@@ -52,12 +53,15 @@ public class IngredientPanel extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                Container parent = IngredientPanel.this.getParent(); 
-                parent.remove(IngredientPanel.this);
-                parent.revalidate();
-                parent.repaint();
+                int n = ConfirmationBox.confirm(IngredientPanel.this, ingredientName.getText());
+                if(n == 0){
+                    Container parent = IngredientPanel.this.getParent(); 
+                    parent.remove(IngredientPanel.this);
+                    parent.revalidate();
+                    parent.repaint();
                 //add remove from database
-
+                
+                }
             }
         });
         

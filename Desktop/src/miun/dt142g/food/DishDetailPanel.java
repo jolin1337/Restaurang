@@ -57,6 +57,7 @@ public class DishDetailPanel extends JPanel {
     }
     public final void setDish(Dish d) {
         removeAll();
+        addIngBtn = new JButton("Lägg till ingrediens");
         dish = d;
         addLabel("Namn");
         addTextField(dish.getName());

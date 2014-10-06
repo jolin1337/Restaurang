@@ -21,6 +21,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import miun.dt142g.Controller;
 import miun.dt142g.DataSource;
+import miun.dt142g.data.ConfirmationBox;
 import miun.dt142g.data.Dish;
 
 /**
@@ -103,7 +104,7 @@ public class MenuPanel extends JPanel {
     class SingleDishPanel extends JPanel {
 
         DishGroup dish;
-
+        JComboBox myComboBox;
         public SingleDishPanel(DishGroup dish, final Controller c) {
             this.dish = dish;
 
@@ -122,7 +123,7 @@ public class MenuPanel extends JPanel {
             /**
              * Create combobox - Inefficient to iterate through list every time
              */
-            JComboBox myComboBox = new JComboBox();
+            myComboBox = new JComboBox();
             for (Dish d : dishGroups.getDishes()) {
                 myComboBox.addItem(d);
             }
@@ -135,9 +136,12 @@ public class MenuPanel extends JPanel {
 
                 @Override
                 public void actionPerformed(ActionEvent ae) {
-                    Container parent = SingleDishPanel.this.getParent();
-                    parent.remove(SingleDishPanel.this);
-                    parent.revalidate();
+                    int n = ConfirmationBox.confirm(SingleDishPanel.this, myComboBox.getSelectedItem().toString());
+                    if(n == 0){
+                        Container parent = SingleDishPanel.this.getParent();
+                        parent.remove(SingleDishPanel.this);
+                        parent.revalidate();
+                    }
                 }
             });
         }
