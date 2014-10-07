@@ -7,6 +7,11 @@ package code.servlets;
 
 import data.Settings;
 import data.entity.Dish;
+import data.entity.Dishgroup;
+import data.entity.Event;
+import data.entity.Info;
+import data.entity.Inventory;
+import data.entity.JsonEntity;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
@@ -30,13 +35,13 @@ import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.RollbackException;
 import javax.transaction.UserTransaction;
 
 /**
  *
  * @author Johannes
  */
-
 @WebServlet(name = "UpdateRow", urlPatterns = {"/updaterow"}, initParams = {
     @WebInitParam(name = "key", value = ""),
     @WebInitParam(name = "table", value = ""),
@@ -44,13 +49,59 @@ import javax.transaction.UserTransaction;
     @WebInitParam(name = "data", value = "")})
 @Named
 @Stateful
-public class UpdateRow extends HttpServlet { 
+public class UpdateRow extends HttpServlet {
 
     // This injects the default persistence unit.
-    @PersistenceUnit(name = "WebApplication1") private EntityManagerFactory emf;
+    @PersistenceUnit(name = "WebApplication1")
+    private EntityManagerFactory emf;
     // This injects a user transaction object.
-    @Resource private UserTransaction utx; 
-    
+    @Resource
+    private UserTransaction utx;
+
+    <T> boolean updateTable(JsonObject obj, Object id,  Class<T> tableClass) {
+        boolean edited = false;
+        try {
+            utx.begin();
+            EntityManager em = emf.createEntityManager();
+            T dishEntity = em.find(tableClass, id);
+            T modEntity = dishEntity;
+            if (dishEntity == null) {
+                modEntity = tableClass.newInstance();
+                edited = true;
+            }
+            if (dishEntity != null && obj.containsKey("remove")) {
+                em.remove(dishEntity);
+                edited = true;
+            } else {
+                // Should always be true, but just in case!
+                if (modEntity instanceof JsonEntity) { 
+                    edited = ((JsonEntity)modEntity).setEntityByJson(obj, em);
+                    if(edited) {
+                        if (dishEntity == null) {
+                            em.persist(modEntity);
+                        } else {
+                            em.merge(modEntity);
+                        }
+                    }
+                }
+            }
+            try {
+                em.flush();
+            } catch (Exception e) {
+            } finally {
+                if(edited)
+                   utx.commit();
+                else
+                    utx.rollback();
+                em.clear();
+                em.close(); 
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(UpdateRow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return edited;
+    }
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -63,93 +114,48 @@ public class UpdateRow extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/plain;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        response.setContentType("text/plain;charset=UTF-8"); 
+        try (PrintWriter out = response.getWriter()) { 
             int authCode = Settings.isAutorised(request.getParameter("key"));
-            if(authCode == Settings.AuthCode.accept) {
+            if (authCode == Settings.AuthCode.accept) {
                 StringReader sr = new StringReader(request.getParameter("data"));
                 JsonReader rdr = Json.createReader(sr);
-                JsonArray data = rdr.readObject().getJsonArray("data"); 
-                switch (request.getParameter("table")) {
-                    case "dish":
-                        for(JsonValue objVal : data) {
-                            JsonObject obj = (JsonObject) objVal; 
-                            try {
-                                utx.begin();
-                                EntityManager em = emf.createEntityManager();
-                                Dish dishEntity = em.find(Dish.class, obj.getInt("id", -1));
-                                Dish modEntity = dishEntity;
-                                if(dishEntity == null) {
-                                    modEntity = new Dish();
-                                }
-                                if(dishEntity != null && obj.containsKey("remove"))
-                                    em.remove(dishEntity); 
-                                else {
-                                    modEntity.setName(obj.getString("name", null));
-                                    JsonNumber price = obj.getJsonNumber("price");
-                                    if(price != null)
-                                        modEntity.setPrice(price.doubleValue());
-                                    if(dishEntity == null)
-                                        em.persist(modEntity);
-                                    else  
-                                        em.merge(modEntity);
-                                }
-                                try {
-                                    em.flush();
-                                }catch(Exception e) {
-                                }
-                                finally {
-                                utx.commit();
-                                em.clear();
-                                em.close();
-                                }
-                            } catch (Exception ex) { 
-                                Logger.getLogger(UpdateRow.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        }
-                        break; /*
-                    case "booking":
-                        
-                        break; 
-                    case "dishdroup": 
-                        
-                        TypedQuery<Dishgroup> dishGroupQuery = em.createNamedQuery("DishGroup.findAll", Dishgroup.class);
-                        for(Dishgroup d : dishGroupQuery.getResultList()){
-                            jsonString += d.toJsonString() + ",";
-                        }
-                        break; 
-                    case "event":
-                        
-                        TypedQuery<Event> eventQuery = em.createNamedQuery("Event.findAll", Event.class);
-                        for(Event d : eventQuery.getResultList()){
-                            jsonString += d.toJsonString() + ",";
-                        }
-                        break; 
-                    case "info":
-                        
-                        TypedQuery<Info> infoQuery = em.createNamedQuery("Info.findAll", Info.class);
-                        for(Info d : infoQuery.getResultList()){
-                            jsonString += d.toJsonString() + ",";
-                        }
-                        break; 
-                    case "inventory":
-                        
-                        TypedQuery<Inventory> inventoryQuery = em.createNamedQuery("Inventory.findAll", Inventory.class);
-                        for(Inventory d : inventoryQuery.getResultList()){
-                            jsonString += d.toJsonString() + ",";
-                        }
-                        break; 
-                    case "scheme": 
-                        
-                        break; 
-                    default: 
-                        */
+                JsonArray data = rdr.readObject().getJsonArray("data");
+                boolean edited = false;
+                for (JsonValue objVal : data) {
+                    JsonObject obj = (JsonObject) objVal;
+                    switch (request.getParameter("table")) {
+                        case "dish":
+                            edited |= updateTable(obj, obj.getInt("id", -1), Dish.class);
+                            break; 
+                         case "booking":
+
+                         break; 
+                         case "dishdroup": 
+                            edited |= updateTable(obj, obj.getString("name", ""), Dishgroup.class);
+                         break; 
+                         case "event":
+                            edited |= updateTable(obj, obj.getInt("id", -1), Event.class);
+                         break; 
+                         case "info":
+                            edited |= updateTable(obj, obj.getString("what", ""), Info.class);
+                         break; 
+                         case "inventory":
+                            edited |= updateTable(obj, obj.getInt("id", -1), Inventory.class);
+                         break; 
+                         case "scheme": 
+
+                         break; 
+                    }
                 }
-            }
-            else if(authCode == Settings.AuthCode.expired)
+                if(edited)
+                    out.print("Success");
+                else out.print("Something wrong with the data");
+            } else if (authCode == Settings.AuthCode.expired) {
                 out.print("expired_key");
-            else if(authCode == Settings.AuthCode.deny)
+            } else if (authCode == Settings.AuthCode.deny) {
                 out.print("false");
+            }
         }
     }
 

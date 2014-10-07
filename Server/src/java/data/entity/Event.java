@@ -6,12 +6,18 @@
 package data.entity;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
@@ -36,7 +42,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Event.findByImgsrc", query = "SELECT e FROM Event e WHERE e.imgsrc = :imgsrc"),
     @NamedQuery(name = "Event.findByPubdate", query = "SELECT e FROM Event e WHERE e.pubdate = :pubdate"),
     @NamedQuery(name = "Event.findByTitle", query = "SELECT e FROM Event e WHERE e.title = :title")})
-public class Event implements Serializable {
+public class Event extends JsonEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -128,6 +134,7 @@ public class Event implements Serializable {
         return "data.entity.Event[ id=" + id + " ]";
     }
 
+    @Override
     public String toJsonString() {
         JsonObject value = Json.createObjectBuilder()
                 .add("id", getId())
@@ -137,5 +144,23 @@ public class Event implements Serializable {
                 .add("description", getDescription())
                 .build();
         return value.toString();
+    }
+
+    @Override
+    public boolean setEntityByJson(JsonObject obj, EntityManager em) {
+        try {
+            setDescription(obj.getString("description", null));
+            setImgsrc(obj.getString("img", null));
+
+            Date date = new SimpleDateFormat("dd/MM-yy 'at' hh:mm", Locale.getDefault()).parse(obj.getString("pubdate", ""));
+            setPubdate(date);
+
+            setTitle(obj.getString("title", null));
+        } catch (ParseException ex) {
+            setPubdate(null);
+        } catch(Exception exr){
+            return false;
+        }
+        return true;
     }
 }

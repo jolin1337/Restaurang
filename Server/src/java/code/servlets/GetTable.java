@@ -61,9 +61,9 @@ public class GetTable extends HttpServlet {
                     case "booking":
                         
                         break; 
-                    case "dishdroup": 
+                    case "dishgroup": 
                         
-                        TypedQuery<Dishgroup> dishGroupQuery = em.createNamedQuery("DishGroup.findAll", Dishgroup.class);
+                        TypedQuery<Dishgroup> dishGroupQuery = em.createNamedQuery("Dishgroup.findAll", Dishgroup.class);
                         for(Dishgroup d : dishGroupQuery.getResultList()){
                             jsonString += d.toJsonString() + ",";
                         }

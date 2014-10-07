@@ -9,11 +9,13 @@ import java.io.Serializable;
 import java.util.List;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
@@ -35,7 +37,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Inventory.findAll", query = "SELECT i FROM Inventory i"),
     @NamedQuery(name = "Inventory.findById", query = "SELECT i FROM Inventory i WHERE i.id = :id"),
     @NamedQuery(name = "Inventory.findByAmount", query = "SELECT i FROM Inventory i WHERE i.amount = :amount")})
-public class Inventory implements Serializable {
+public class Inventory extends JsonEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -90,6 +92,14 @@ public class Inventory implements Serializable {
     public void setDishList(List<Dish> dishList) {
         this.dishList = dishList;
     }
+    public void addToDish(Dish inv) {
+        if(inv != null && dishList != null && dishList.indexOf(inv) < 0)
+            dishList.add(inv);
+    }
+    public void removeDish(Dish inv) {
+        if(inv != null && dishList != null && dishList.indexOf(inv) > -1)
+            dishList.remove(inv);
+    }
 
     @Override
     public int hashCode() {
@@ -115,6 +125,7 @@ public class Inventory implements Serializable {
         return "data.entity.Inventory[ id=" + id + " ]";
     }
 
+    @Override
     public String toJsonString() {
         //System.out.println("InventoryList size: " + inventoryList.size());
         JsonArrayBuilder dishes = Json.createArrayBuilder();
@@ -130,5 +141,45 @@ public class Inventory implements Serializable {
                 .add("dishes", dishes.build())
                 .build();
         return value.toString();
+    }
+
+
+    @Override
+    public boolean setEntityByJson(JsonObject obj, EntityManager em) {
+        try {
+            JsonNumber jamount = obj.getJsonNumber("amount");
+            if (jamount != null) {
+                setAmount(jamount.intValueExact());
+            }
+            setName(obj.getString("name", null));
+            if(obj.containsKey("dishes") ) {
+                /*
+                 * Will not be supportet right??!?!?!
+                 *
+                JsonArray ingredients = obj.getJsonArray("dishes");
+
+                for(JsonValue ing : ingredients) {
+                    if(ing.getValueType() == JsonValue.ValueType.NUMBER) {
+                        int pk_inv = ((JsonNumber)ing).intValue();
+                        if(pk_inv >= 0) {
+                            Dish dish = em.find(Dish.class, pk_inv);
+                            if(dish != null) {
+                                addToDish(dish);
+                                // inv.getDishList().add(this);
+                            }
+                        } else {
+                            Dish dish = em.find(Dish.class, -(pk_inv+1));
+                            if(dish != null) {
+                                removeDish(dish);
+                                // inv.getDishList().remove(this);
+                            }
+                        }
+                    }
+                }*/
+            }
+        } catch(Exception ex) {
+            return false;
+        }
+        return true;
     }
 }

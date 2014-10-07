@@ -8,12 +8,15 @@ package data.entity;
 import java.io.Serializable;
 import java.util.List;
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -40,7 +43,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Dish.findById", query = "SELECT d FROM Dish d WHERE d.id = :id"),
     @NamedQuery(name = "Dish.findByName", query = "SELECT d FROM Dish d WHERE d.name = :name"),
     @NamedQuery(name = "Dish.findByPrice", query = "SELECT d FROM Dish d WHERE d.price = :price")})
-public class Dish implements Serializable {
+public class Dish extends JsonEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -117,6 +120,14 @@ public class Dish implements Serializable {
     public void setInventoryList(List<Inventory> inventoryList) {
         this.inventoryList = inventoryList;
     }
+    public void addToInventory(Inventory inv) {
+        if(inv != null && inventoryList != null && inventoryList.indexOf(inv) < 0)
+            inventoryList.add(inv);
+    }
+    public void removeIngredient(Inventory inv) {
+        if(inv != null && inventoryList != null && inventoryList.indexOf(inv) > -1)
+            inventoryList.remove(inv);
+    }
 
     @Override
     public int hashCode() {
@@ -141,7 +152,8 @@ public class Dish implements Serializable {
     public String toString() {
         return "data.entity.Dish[ id=" + id + " ]";
     }
-
+    
+    @Override
     public String toJsonString() {
         JsonArrayBuilder ingredients = Json.createArrayBuilder();
         for (Inventory i : inventoryList) {
@@ -149,12 +161,56 @@ public class Dish implements Serializable {
             JsonValue val = obj.get("as");
             ingredients.add(val);
         }
+        JsonArrayBuilder groups = Json.createArrayBuilder();
+        for (Dishgroup i : dishgroupList) {
+            JsonObject obj = Json.createObjectBuilder().add("as", i.getName()).build();
+            JsonValue val = obj.get("as");
+            groups.add(val);
+        }
         JsonObject value = Json.createObjectBuilder()
                 .add("id", getId())
                 .add("name", getName())
                 .add("price", getPrice())
                 .add("ingredients", ingredients.build())
+                .add("groups", groups.build())
                 .build();
         return value.toString();
     }
+    
+    @Override
+    public boolean setEntityByJson(JsonObject obj, EntityManager em) {
+        try {
+            if(obj.containsKey("ingredients") ) {
+                JsonArray ingredients = obj.getJsonArray("ingredients");
+
+                for(JsonValue ing : ingredients) {
+                    if(ing.getValueType() == JsonValue.ValueType.NUMBER) {
+                        int pk_inv = ((JsonNumber)ing).intValue();
+                        if(pk_inv >= 0) {
+                            Inventory inv = em.find(Inventory.class, pk_inv);
+                            if(inv != null) {
+                                addToInventory(inv);
+                                // inv.getDishList().add(this);
+                            }
+                        } else {
+                            Inventory inv = em.find(Inventory.class, -(pk_inv+1));
+                            if(inv != null) {
+                                removeIngredient(inv);
+                                // inv.getDishList().remove(this);
+                            }
+                        }
+                    }
+                }
+            }
+            JsonNumber jprice = obj.getJsonNumber("price");
+            if (jprice != null) {
+                setPrice(jprice.doubleValue());
+            }
+            setName(obj.getString("name", null));
+        } catch(Exception ex) {
+            return false;
+        }
+        return true;
+    }
+
 }

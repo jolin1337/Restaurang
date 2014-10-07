@@ -11,6 +11,7 @@ import javax.json.JsonObject;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
@@ -30,7 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Info.findAll", query = "SELECT i FROM Info i"),
     @NamedQuery(name = "Info.findByWhat", query = "SELECT i FROM Info i WHERE i.what = :what")})
-public class Info implements Serializable {
+public class Info extends JsonEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -89,12 +90,20 @@ public class Info implements Serializable {
     public String toString() {
         return "data.entity.Info[ what=" + what + " ]";
     }
-
+    
+    @Override
     public String toJsonString() {
         JsonObject value = Json.createObjectBuilder()
                 .add("what", getWhat())
                 .add("data", getData())
                 .build();
         return value.toString();
+    }
+
+    @Override
+    public boolean setEntityByJson(JsonObject obj, EntityManager em) {
+        setWhat(obj.getString("what", ""));
+        setData(obj.getString("data", ""));
+        return true;
     }
 }
