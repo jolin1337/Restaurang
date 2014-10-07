@@ -1,7 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This code is created for one purpose only. And should not be used for any 
+ * other purposes unless the author of this file has apporved. 
+ * 
+ * This code is a piece of a project in the course DT142G on Mid. Sweden university
+ * Created by students for this projekt only
  */
 package data.entity;
 
@@ -10,8 +12,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.persistence.Basic;
@@ -30,8 +30,11 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
+ * This entity describes an event on the restaurant
  *
- * @author jolin1337
+ * @author Johannes Lindén
+ * @since 2014-10-07
+ * @version 1.0
  */
 @Entity
 @Table(name = "EVENT", catalog = "", schema = "APP")
@@ -49,63 +52,136 @@ public class Event extends JsonEntity implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "ID")
+    /**
+     * The id (pk) of this entity
+     */
     private Integer id;
     @Size(max = 255)
     @Column(name = "IMGSRC")
+    /**
+     * The image url for this event
+     */
     private String imgsrc;
     @Column(name = "PUBDATE")
     @Temporal(TemporalType.DATE)
+    /**
+     * The date when this event take place
+     */
     private Date pubdate;
     @Size(max = 255)
     @Column(name = "TITLE")
+    /**
+     * The big title of this event
+     */
     private String title;
     @Lob
     @Column(name = "DESCRIPTION")
+    /**
+     * Detail description on how this event went afterwards
+     */
     private String description;
 
     public Event() {
     }
 
+    /**
+     * Initialize this event with an id
+     *
+     * @param id - the primary key identifier for this entity
+     */
     public Event(Integer id) {
         this.id = id;
     }
 
+    /**
+     * Getter for the primary key
+     *
+     * @return the id of this entity
+     */
     public Integer getId() {
         return id;
     }
 
+    /**
+     * Sets the id for this entity
+     *
+     * @param id - The id that this entity will get if possible
+     */
+    @Deprecated
     public void setId(Integer id) {
         this.id = id;
     }
 
+    /**
+     * Getter for the image url
+     *
+     * @return the url of the event poster
+     */
     public String getImgsrc() {
         return imgsrc;
     }
 
+    /**
+     * Setter of the image url
+     *
+     * @param imgsrc - The url of the event poster upploaded to the server
+     */
     public void setImgsrc(String imgsrc) {
         this.imgsrc = imgsrc;
     }
 
+    /**
+     * Getter for the startdate of this event
+     *
+     * @return the date object of the startdate
+     */
     public Date getPubdate() {
         return pubdate;
     }
 
+    /**
+     * Setter for the startdate of this event
+     *
+     * @param pubdate - The date this event will have when it takes place
+     */
     public void setPubdate(Date pubdate) {
         this.pubdate = pubdate;
     }
 
+    /**
+     * Getter for the big title of this event
+     *
+     * @return The title that is shown on the event
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Setter for the big title of this event
+     *
+     * @param title - The title you want this event to have
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /**
+     * Getter for the description of this event
+     *
+     * @return The description this event has. Before the event has taken place
+     * this will almost always be empty. Afterwards it describes the event
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Setter for the description of this event
+     *
+     * @param description - The descirption you want this event to have...
+     * Describe the event!
+     */
     public void setDescription(String description) {
         this.description = description;
     }
@@ -136,6 +212,7 @@ public class Event extends JsonEntity implements Serializable {
 
     @Override
     public String toJsonString() {
+        // Set all properties of this event here to export the event to a json object
         JsonObject value = Json.createObjectBuilder()
                 .add("id", getId())
                 .add("image", getImgsrc())
@@ -149,18 +226,22 @@ public class Event extends JsonEntity implements Serializable {
     @Override
     public boolean setEntityByJson(JsonObject obj, EntityManager em) {
         try {
-            setDescription(obj.getString("description", null));
-            setImgsrc(obj.getString("img", null));
+            // Get the properties of the json object and update this event.
+            setDescription(obj.getString("description", null)); // Set description
+            setImgsrc(obj.getString("img", null));              // Set the image url
 
+            // Get the date from json object
             Date date = new SimpleDateFormat("dd/MM-yy 'at' hh:mm", Locale.getDefault()).parse(obj.getString("pubdate", ""));
+            // Set the date
             setPubdate(date);
 
+            // Set the title 
             setTitle(obj.getString("title", null));
         } catch (ParseException ex) {
-            setPubdate(null);
-        } catch(Exception exr){
-            return false;
+            setPubdate(null);   // Something went wrong with the date property. Set it to null
+        } catch (Exception exr) {
+            return false;       // Something critical. return not edited
         }
-        return true;
+        return true;            // return that we have changed this entity
     }
 }

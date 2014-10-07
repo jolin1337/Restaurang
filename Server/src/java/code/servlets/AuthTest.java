@@ -1,17 +1,15 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This code is created for one purpose only. And should not be used for any 
+ * other purposes unless the author of this file has apporved. 
+ * 
+ * This code is a piece of a project in the course DT142G on Mid. Sweden university
+ * Created by students for this projekt only
  */
 package code.servlets;
 
 import data.Settings;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.security.Key;
-import java.util.Date;
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.annotation.WebInitParam;
@@ -20,8 +18,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * This class Authenticates the user with a unique key
+ * @TODO Fix loggin of logins to the database
  *
- * @author Johannes
+ * @author Johannes Lindén
+ * @since 2014-10-07
+ * @version 1.0
  */
 @WebServlet(name = "AuthTest", urlPatterns = {"/test"}, initParams = {
     @WebInitParam(name = "key", value = "")})
@@ -41,12 +43,13 @@ public class AuthTest extends HttpServlet {
         response.setContentType("text/plain;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             int authCode = Settings.isAutorised(request.getParameter("key"));
-            if(authCode == Settings.AuthCode.accept)
+            if (authCode == Settings.AuthCode.accept) {
                 out.print("true");
-            else if(authCode == Settings.AuthCode.expired)
+            } else if (authCode == Settings.AuthCode.expired) {
                 out.print("expired_key");
-            else if(authCode == Settings.AuthCode.deny) 
+            } else if (authCode == Settings.AuthCode.deny) {
                 out.print("false");
+            }
         }
     }
 

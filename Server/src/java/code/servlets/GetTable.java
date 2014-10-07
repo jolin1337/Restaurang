@@ -1,7 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This code is created for one purpose only. And should not be used for any 
+ * other purposes unless the author of this file has apporved. 
+ * 
+ * This code is a piece of a project in the course DT142G on Mid. Sweden university
+ * Created by students for this projekt only
  */
 package code.servlets;
 
@@ -24,8 +26,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * This class gets information about the table in json format
  *
- * @author ulf
+ * @author Johannes Lindén
+ * @since 2014-10-07
+ * @version 1.0
  */
 @WebServlet(name = "GetTable", urlPatterns = {"/gettable"}, initParams = {
     @WebInitParam(name = "key", value = ""),
@@ -36,8 +41,7 @@ public class GetTable extends HttpServlet {
     private EntityManager em;
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
+     * Processes requests for HTTP <code>POST</code> method.
      *
      * @param request servlet request
      * @param response servlet response

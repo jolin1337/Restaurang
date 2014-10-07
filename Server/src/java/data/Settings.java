@@ -1,7 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This code is created for one purpose only. And should not be used for any 
+ * other purposes unless the author of this file has apporved. 
+ * 
+ * This code is a piece of a project in the course DT142G on Mid. Sweden university
+ * Created by students for this projekt only
  */
 package data;
 
@@ -11,22 +13,25 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
+ * This class has the information about the server attached to it
  *
- * @author Johannes
+ * @author Johannes Lindén
+ * @since 2014-10-07
+ * @version 1.0
  */
 public class Settings {
 
     static final public String[] allowedKeys = new String[]{"dt142g-awesome"};
     static final public String cryptionValue = "dt142g!Key()##!3"; // 128 bit key
     static final public String tempPrefixKey = "enroligtemporarnyckel";
-    
+
     static final public class AuthCode {
+
         public static final int accept = 0;
         public static final int deny = 1;
         public static final int expired = 2;
     }
-    
-    
+
     public static String asHex(byte buf[]) {
         StringBuilder strbuf = new StringBuilder(buf.length * 2);
         int i;
@@ -62,10 +67,11 @@ public class Settings {
 
             String timeStr = decrypted.substring(Settings.tempPrefixKey.length());
             if (decrypted.indexOf(Settings.tempPrefixKey) == 0) {
-                if(Long.parseLong(timeStr) + 1000*3600 >= new Date().getTime())
+                if (Long.parseLong(timeStr) + 1000 * 3600 >= new Date().getTime()) {
                     return AuthCode.accept;
-                else
+                } else {
                     return AuthCode.expired;
+                }
             }
         } catch (Exception ex) {
             System.out.println(ex.toString());

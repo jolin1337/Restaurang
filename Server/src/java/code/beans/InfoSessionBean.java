@@ -30,7 +30,7 @@ public class InfoSessionBean {
             query.setParameter("what", what);
             List<Info> res = query.getResultList();
             if(res.size() > 0)
-                return res.get(0).getData();
+                return res.get(0).getDataInformation();
         }
         catch(javax.persistence.NoResultException e) {}
         //catch(Exception e) {}

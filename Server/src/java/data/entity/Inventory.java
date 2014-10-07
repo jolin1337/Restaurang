@@ -1,7 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This code is created for one purpose only. And should not be used for any 
+ * other purposes unless the author of this file has apporved. 
+ * 
+ * This code is a piece of a project in the course DT142G on Mid. Sweden university
+ * Created by students for this projekt only
  */
 package data.entity;
 
@@ -27,8 +29,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
+ * This entity describes an ingredient
  *
- * @author jolin1337
+ * @author Johannes Lindén
+ * @since 2014-10-07
+ * @version 1.0
  */
 @Entity
 @Table(name = "INVENTORY", catalog = "", schema = "APP")
@@ -44,61 +49,138 @@ public class Inventory extends JsonEntity implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "ID")
+    /**
+     * The pk of this entity
+     */
     private Integer id;
     @Lob
     @Column(name = "NAME")
+    /**
+     * The name of this ingredient
+     */
     private String name;
     @Column(name = "AMOUNT")
+    /**
+     * The count of how many you have of this ingredient
+     */
     private Integer amount;
     @ManyToMany(mappedBy = "inventoryList")
+    /**
+     * A list of all dishes that uses this ingredient
+     */
     private List<Dish> dishList;
 
     public Inventory() {
     }
 
+    /**
+     * Initializes this entity with an specified identifier
+     *
+     * @param id - the id this entity will have
+     */
     public Inventory(Integer id) {
         this.id = id;
     }
 
+    /**
+     * Getter of the identifier of this entity
+     *
+     * @return The id of this entity
+     */
     public Integer getId() {
         return id;
     }
 
+    /**
+     * This function sets the id on this ingredient. Notice not a good habit of
+     * changing this
+     *
+     * @param id - the id you want it to have
+     */
+    @Deprecated
     public void setId(Integer id) {
         this.id = id;
     }
 
+    /**
+     * Gets the name of this ingredient
+     *
+     * @return The current name of this ingredient
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Setter for this ingredient name.
+     *
+     * @param name - The name you want this ingredient to have
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Getter for the amount of this ingredient.
+     *
+     * @return How many portions of this ingredient do you have?
+     */
     public Integer getAmount() {
         return amount;
     }
 
+    /**
+     * Setter for the amount of this ingredient.
+     *
+     * @param amount - Have you bought new ones of this ingredient? shure lets
+     * add them to the amount propery
+     */
     public void setAmount(Integer amount) {
         this.amount = amount;
     }
 
+    /**
+     * Getter of the dishes that uses this ingredient.
+     *
+     * @return The list of dishes
+     */
     @XmlTransient
     public List<Dish> getDishList() {
         return dishList;
     }
 
+    /**
+     * Setter of the dishlist. This method sets all the dishes that uses this
+     * ingredient.
+     *
+     * @param dishList The list you want this ingredient to have
+     */
     public void setDishList(List<Dish> dishList) {
         this.dishList = dishList;
     }
-    public void addToDish(Dish inv) {
-        if(inv != null && dishList != null && dishList.indexOf(inv) < 0)
-            dishList.add(inv);
+
+    /**
+     * Adds an signle dish to this ingredient dishlist. Means a dish require
+     * this dish.
+     *
+     * @param dish- The dish to add in the ingredient (or reverse =))
+     */
+    public void addToDish(Dish dish) {
+        if (dish != null && dishList != null && dishList.indexOf(dish) < 0) {
+            dishList.add(dish);
+        }
     }
-    public void removeDish(Dish inv) {
-        if(inv != null && dishList != null && dishList.indexOf(inv) > -1)
-            dishList.remove(inv);
+
+    /**
+     * Remove a single dish from this ingredient dishlist. Means a dish does not
+     * anymore require this ingredient.
+     *
+     * @param dish -The dish to remove in the ingredient (or reverse =))
+     */
+    public void removeDish(Dish dish) {
+        if (dish != null && dishList != null && dishList.indexOf(dish) > -1) {
+            dishList.remove(dish);
+        }
     }
 
     @Override
@@ -127,59 +209,67 @@ public class Inventory extends JsonEntity implements Serializable {
 
     @Override
     public String toJsonString() {
-        //System.out.println("InventoryList size: " + inventoryList.size());
+        // Create the json object to get the json string representation of this
+        // entity
+
+        // Create a dish JsonArray
         JsonArrayBuilder dishes = Json.createArrayBuilder();
         for (Dish i : dishList) {
             JsonObject obj = Json.createObjectBuilder().add("as", i.getId()).build();
             JsonValue val = obj.get("as");
-            dishes.add(val);
+            dishes.add(val); // add a dish pk from this inventory to json object
         }
+
+        // Create the main json object for the result
         JsonObject value = Json.createObjectBuilder()
                 .add("id", getId())
                 .add("name", getName())
                 .add("amount", getAmount())
                 .add("dishes", dishes.build())
                 .build();
-        return value.toString();
+        return value.toString(); // return the representation
     }
-
 
     @Override
     public boolean setEntityByJson(JsonObject obj, EntityManager em) {
         try {
+            // Parse the json object to set this entity 
+
+            // Get the amount of this ingredient from json object
             JsonNumber jamount = obj.getJsonNumber("amount");
             if (jamount != null) {
                 setAmount(jamount.intValueExact());
             }
+            // Get the name from json object
             setName(obj.getString("name", null));
-            if(obj.containsKey("dishes") ) {
+            if (obj.containsKey("dishes")) {
                 /*
                  * Will not be supportet right??!?!?!
                  *
-                JsonArray ingredients = obj.getJsonArray("dishes");
+                 JsonArray ingredients = obj.getJsonArray("dishes");
 
-                for(JsonValue ing : ingredients) {
-                    if(ing.getValueType() == JsonValue.ValueType.NUMBER) {
-                        int pk_inv = ((JsonNumber)ing).intValue();
-                        if(pk_inv >= 0) {
-                            Dish dish = em.find(Dish.class, pk_inv);
-                            if(dish != null) {
-                                addToDish(dish);
-                                // inv.getDishList().add(this);
-                            }
-                        } else {
-                            Dish dish = em.find(Dish.class, -(pk_inv+1));
-                            if(dish != null) {
-                                removeDish(dish);
-                                // inv.getDishList().remove(this);
-                            }
-                        }
-                    }
-                }*/
+                 for(JsonValue ing : ingredients) {
+                 if(ing.getValueType() == JsonValue.ValueType.NUMBER) {
+                 int pk_inv = ((JsonNumber)ing).intValue();
+                 if(pk_inv >= 0) {
+                 Dish dish = em.find(Dish.class, pk_inv);
+                 if(dish != null) {
+                 addToDish(dish);
+                 // inv.getDishList().add(this);
+                 }
+                 } else {
+                 Dish dish = em.find(Dish.class, -(pk_inv+1));
+                 if(dish != null) {
+                 removeDish(dish);
+                 // inv.getDishList().remove(this);
+                 }
+                 }
+                 }
+                 }*/
             }
-        } catch(Exception ex) {
-            return false;
+        } catch (Exception ex) {
+            return false; // something went wrong...
         }
-        return true;
+        return true; // succeded to edit this inventory
     }
 }
