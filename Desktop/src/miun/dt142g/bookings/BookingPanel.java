@@ -14,25 +14,26 @@ import java.text.SimpleDateFormat;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import miun.dt142g.data.Booking;
 
+// !important
+// This complete class might not be necessary to keep.
 /**
  *
  * @author ulf
  */
 public class BookingPanel extends JPanel{
     private Booking bookings; 
-    private JButton remove; 
+    private final JButton remove; 
     
-    private JTextField nameField; 
-    private JTextField personsField; 
-    private JTextField dateField; 
-    private JTextField timeField;
-    private JTextField timeLengthField;
-    private Booking booking; 
+    private final JTextField nameField; 
+    private final JTextField personsField; 
+    private final JTextField dateField; 
+    private final JTextField timeField;
+    private final JTextField timeLengthField;
+    private final Booking booking; 
     
     public BookingPanel(Booking booking){
         this.booking = booking; 

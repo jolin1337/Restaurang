@@ -31,28 +31,20 @@ import miun.dt142g.data.Booking;
 public class BookingsPanel extends JPanel {
 
     // Variables declaration - do not modify                     
-    private Bookings bookings;
-    private JPanel labels = new JPanel();
-    private JPanel thisPanel = this;
-
+    private final Bookings bookings;
+    private final JPanel thisPanel = this;
     private JButton addBooking;
-    private JLabel nameLabel;
-    private JLabel personsLabel;
-    private JLabel dateLabel;
-    private JLabel timeLabel;
-    private JLabel timeLengthLabel;
     private JButton remove; 
     private final Controller fjarr;
-    final JComboBox removeList = new JComboBox();
-
-    private final DefaultTableModel model = new DefaultTableModel();
-
+    private final JComboBox removeList = new JComboBox();
     private boolean newBookingP = false;
     private boolean removeBooking = false;
     private int removeIndex = 0;
-
+    private final DefaultTableModel model = new DefaultTableModel();
+    JTable table = new JTable(model);
+    // End of variables declaration  
     
-    // End of variables declaration     
+    
     public BookingsPanel(Controller fjarr) throws DataSource.WrongKeyException {
         this.bookings = new Bookings();
         this.bookings.dbConnect();
@@ -62,13 +54,12 @@ public class BookingsPanel extends JPanel {
 
     }
 
-    @SuppressWarnings("empty-statement")
+    /*@SuppressWarnings("empty-statement")*/
     private void initComponents() {
-        labels.setVisible(true);
 
-        JTable table = new JTable(model);
         table.setRowHeight(33);
         remove = new JButton("Ta bort");
+        addLabel("Ta bort bokning");
         removeList.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         remove.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         this.add(removeList);
@@ -87,11 +78,9 @@ public class BookingsPanel extends JPanel {
         
         
         // Create a couple of columns 
-        model.addColumn("Col1");
-        model.addColumn("Col2");
-        model.addColumn("Col3");
-        model.addColumn("Col4");
-        model.addColumn("Col5");
+        for (int i = 0; i < 5; i++) {
+            model.addColumn("Col"+i);
+        }
 
         // Append a row 
         model.addRow(new Object[]{"Namn", "Antal", "Datum", "Tid", "Varaktighet"});
@@ -110,8 +99,7 @@ public class BookingsPanel extends JPanel {
         this.addBooking.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Date date = new Date();
-                Booking b = new Booking(bookings.getUniqueId(), "", date, 0, 0, 0);
+                Booking b = new Booking(bookings.getUniqueId(), "", new Date(), 0, 0, 0);
                 bookings.addBooking(b);
                 fjarr.setViewNewBooking(b);
                 newBookingP = true;
@@ -122,6 +110,15 @@ public class BookingsPanel extends JPanel {
         this.setVisible(true);
     }
 
+    private JLabel addLabel(String labelName) {
+        JLabel label = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>" + labelName + "</div></html>");
+        Box  fixHeight = Box.createHorizontalBox();
+        fixHeight.add( label );
+        fixHeight.add( Box.createHorizontalGlue() );
+        add(fixHeight); 
+        return label;
+    }
+        
     @Override
     public void revalidate() {
         super.revalidate();
