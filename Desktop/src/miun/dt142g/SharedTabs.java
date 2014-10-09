@@ -13,8 +13,6 @@ import java.awt.Font;
 import java.awt.ScrollPane;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -154,7 +152,7 @@ public class SharedTabs extends JPanel {
             //Add content to the window.
             frame.add(st, BorderLayout.CENTER);
         } catch (DataSource.WrongKeyException ex) {
-            frame.add(new JLabel("Wrong authorization key"));
+            frame.getContentPane().add(new LoginPage());
         }
         
         //Display the window.
