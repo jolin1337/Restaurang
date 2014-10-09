@@ -99,8 +99,8 @@ public class GetTable extends HttpServlet {
                     default: 
                         
                 }
-                if(jsonString.length() > "{'data': [".length())
-                    jsonString = jsonString.substring(0, jsonString.length()-2);
+                if(jsonString.length() > "{\"data\": [".length())
+                    jsonString = jsonString.substring(0, jsonString.length()-1);
                 jsonString += "]}";
                 out.print(jsonString);
             }
