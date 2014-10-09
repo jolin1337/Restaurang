@@ -43,12 +43,13 @@ public class BookingsPanel extends JPanel {
     private JLabel timeLengthLabel;
     private JButton remove; 
     private final Controller fjarr;
+    final JComboBox removeList = new JComboBox();
 
     private final DefaultTableModel model = new DefaultTableModel();
 
     private boolean newBookingP = false;
     private boolean removeBooking = false;
-    private int removeIndex = -1;
+    private int removeIndex = 0;
 
     
     // End of variables declaration     
@@ -68,7 +69,6 @@ public class BookingsPanel extends JPanel {
         JTable table = new JTable(model);
         table.setRowHeight(33);
         remove = new JButton("Ta bort");
-        final JComboBox removeList = new JComboBox();
         removeList.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         remove.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         this.add(removeList);
@@ -130,10 +130,19 @@ public class BookingsPanel extends JPanel {
             model.addRow(new Object[]{
                 bok.getName(), bok.getPersons(), bok.getDateString(), bok.getTime(), bok.getDuration()
             });
+            removeList.addItem(bok.getName());
             newBookingP = false;
         }else if (removeBooking){
-            model.removeRow(removeIndex);
-            removeBooking = false;
+            try {
+                if (removeList.getItemCount() == 0)
+                    return;
+                model.removeRow(removeIndex+1);
+                removeList.removeItemAt(removeIndex);
+                removeBooking = false;
+            } catch (IndexOutOfBoundsException e) {
+                System.err.println("BookingsPanel(removeBooking) IndexOutOfBoundsException: " + e.getMessage());
+            }
+
         }
     }
 }
