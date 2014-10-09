@@ -6,13 +6,16 @@
 package miun.dt142g.bookings;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -30,6 +33,7 @@ public class BookingsPanel extends JPanel {
     // Variables declaration - do not modify                     
     private Bookings bookings;
     private JPanel labels = new JPanel();
+    private JPanel thisPanel = this;
 
     private JButton addBooking;
     private JLabel nameLabel;
@@ -37,12 +41,16 @@ public class BookingsPanel extends JPanel {
     private JLabel dateLabel;
     private JLabel timeLabel;
     private JLabel timeLengthLabel;
+    private JButton remove; 
     private final Controller fjarr;
 
     private final DefaultTableModel model = new DefaultTableModel();
 
     private boolean newBookingP = false;
+    private boolean removeBooking = false;
+    private int removeIndex = -1;
 
+    
     // End of variables declaration     
     public BookingsPanel(Controller fjarr) throws DataSource.WrongKeyException {
         this.bookings = new Bookings();
@@ -58,7 +66,26 @@ public class BookingsPanel extends JPanel {
         labels.setVisible(true);
 
         JTable table = new JTable(model);
-
+        table.setRowHeight(33);
+        remove = new JButton("Ta bort");
+        final JComboBox removeList = new JComboBox();
+        removeList.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        remove.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        this.add(removeList);
+        this.add(Box.createRigidArea(new Dimension(0, 15)));
+        this.add(remove);
+        this.remove.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Delete row
+                removeIndex = removeList.getSelectedIndex();
+                removeBooking = true;
+                thisPanel.revalidate();
+            }
+        });
+        this.add(Box.createRigidArea(new Dimension(0, 30)));
+        
+        
         // Create a couple of columns 
         model.addColumn("Col1");
         model.addColumn("Col2");
@@ -69,11 +96,12 @@ public class BookingsPanel extends JPanel {
         // Append a row 
         model.addRow(new Object[]{"Namn", "Antal", "Datum", "Tid", "Varaktighet"});
         for (Booking bok : bookings) {
-
             model.addRow(new Object[]{bok.getName(), bok.getPersons(),
                 bok.getDateString(), bok.getTime(), bok.getDuration()});
+            removeList.addItem(bok.getName());
         }
         add(table);
+
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.add(Box.createRigidArea(new Dimension(1, 10)));
@@ -103,6 +131,9 @@ public class BookingsPanel extends JPanel {
                 bok.getName(), bok.getPersons(), bok.getDateString(), bok.getTime(), bok.getDuration()
             });
             newBookingP = false;
+        }else if (removeBooking){
+            model.removeRow(removeIndex);
+            removeBooking = false;
         }
     }
 }
