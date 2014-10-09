@@ -6,12 +6,10 @@
 package miun.dt142g.bookings;
 
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -36,10 +34,8 @@ public class BookingsPanel extends JPanel {
     private JButton addBooking;
     private JButton remove; 
     private final Controller fjarr;
-    private final JComboBox removeList = new JComboBox();
     private boolean newBookingP = false;
     private boolean removeBooking = false;
-    private int removeIndex = 0;
     private final DefaultTableModel model = new DefaultTableModel();
     JTable table = new JTable(model);
     // End of variables declaration  
@@ -51,31 +47,25 @@ public class BookingsPanel extends JPanel {
         this.bookings.loadData();
         initComponents();
         this.fjarr = fjarr;
-
     }
 
     /*@SuppressWarnings("empty-statement")*/
     private void initComponents() {
 
         table.setRowHeight(33);
-        remove = new JButton("Ta bort");
-        addLabel("Ta bort bokning");
-        removeList.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        remove = new JButton("Ta bort selekterad rad");
         remove.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-        this.add(removeList);
         this.add(Box.createRigidArea(new Dimension(0, 15)));
         this.add(remove);
         this.remove.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Delete row
-                removeIndex = removeList.getSelectedIndex();
                 removeBooking = true;
                 thisPanel.revalidate();
             }
         });
         this.add(Box.createRigidArea(new Dimension(0, 30)));
-        
         
         // Create a couple of columns 
         for (int i = 0; i < 5; i++) {
@@ -87,7 +77,6 @@ public class BookingsPanel extends JPanel {
         for (Booking bok : bookings) {
             model.addRow(new Object[]{bok.getName(), bok.getPersons(),
                 bok.getDateString(), bok.getTime(), bok.getDuration()});
-            removeList.addItem(bok.getName());
         }
         add(table);
 
@@ -107,7 +96,6 @@ public class BookingsPanel extends JPanel {
         });
         addBooking.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         this.add(addBooking);
-        this.setVisible(true);
     }
 
     private JLabel addLabel(String labelName) {
@@ -124,18 +112,20 @@ public class BookingsPanel extends JPanel {
         super.revalidate();
         if (newBookingP) {
             Booking bok = bookings.getBookingByIndex(bookings.getRows() - 1);
+            if (bok.getName() == "" || bok.getPersons() == 0 || bok.getDuration() == 0){
+                    newBookingP = false;
+                    return;
+            }
             model.addRow(new Object[]{
                 bok.getName(), bok.getPersons(), bok.getDateString(), bok.getTime(), bok.getDuration()
             });
-            removeList.addItem(bok.getName());
             newBookingP = false;
-        }else if (removeBooking){
+        }
+        else if (removeBooking){
+            removeBooking = false;
             try {
-                if (removeList.getItemCount() == 0)
-                    return;
-                model.removeRow(removeIndex+1);
-                removeList.removeItemAt(removeIndex);
-                removeBooking = false;
+                if (table.getSelectedRow() > 0 )
+                    model.removeRow(table.getSelectedRow());
             } catch (IndexOutOfBoundsException e) {
                 System.err.println("BookingsPanel(removeBooking) IndexOutOfBoundsException: " + e.getMessage());
             }

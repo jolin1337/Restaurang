@@ -29,6 +29,8 @@ public class NewBooking extends JPanel {
     JTextField personsField;
     JTextField timeField;
     JTextField durationField;
+    private JLabel missingBookingInput;
+    private JLabel invalidBookingInput;
 
     private JLabel addLabel(String labelName) {
         JLabel label = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>" + labelName + "</div></html>");
@@ -73,9 +75,25 @@ public class NewBooking extends JPanel {
         addBookingBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         add(addBookingBtn);
         
+        missingBookingInput = addLabel("Vänligen fyll i alla fält för att godkänna bokningen.");
+        invalidBookingInput = addLabel("Vänligen ange endast heltal.");
+        add(missingBookingInput);
+        add(invalidBookingInput);
+        missingBookingInput.setVisible(false);
+        invalidBookingInput.setVisible(false);
+        
         addBookingBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
+                missingBookingInput.setVisible(false);
+                if (nameField.getText().isEmpty() || personsField.getText().isEmpty() || durationField.getText().isEmpty() || timeField.getText().isEmpty()){
+                    missingBookingInput.setVisible(true);
+                    return;
+                }
+                if (!( isInteger(personsField.getText()) && isInteger(durationField.getText()) && isInteger(timeField.getText())  )){
+                    invalidBookingInput.setVisible(true);
+                    return;
+                }
                 booking.setName(nameField.getText());
                 booking.setPersons(Integer.parseInt(personsField.getText()));
                 booking.setTime(Integer.parseInt(timeField.getText()));
@@ -92,5 +110,13 @@ public class NewBooking extends JPanel {
                 parent.revalidate();
             }
         });
+    }
+    private boolean isInteger(String s) {
+        try {
+            Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
     }
 }
