@@ -11,6 +11,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -19,9 +20,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import miun.dt142g.Settings;
 import miun.dt142g.data.EventPost;
 
 /**
@@ -48,7 +51,7 @@ public class EventPostPanel extends JPanel {
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
                 eventPost.setImgSrc(file.getAbsolutePath());
-                imgBtn.setLabel("Vald Poster: " + file.getName());
+                imgBtn.setText("Vald Poster: " + file.getName());
             }
         }
     };
@@ -56,15 +59,15 @@ public class EventPostPanel extends JPanel {
     public EventPostPanel(EventPost eventPost) {
         this.eventPost = eventPost;
 
-        setBorder(new EmptyBorder(10, 10, 10, 10));
+        setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        setBackground(Color.LIGHT_GRAY);
+        setBackground(Settings.Styles.darkBg);
         imgBtn.addActionListener(imageEvent);
         int index = eventPost.getImgSrc().lastIndexOf("/");
         if (index > -1) {
-            imgBtn.setLabel(eventPost.getImgSrc().substring(index + 1));
+            imgBtn.setText(eventPost.getImgSrc().substring(index + 1));
         } else if (!eventPost.getImgSrc().isEmpty()) {
-            imgBtn.setLabel(eventPost.getImgSrc());
+            imgBtn.setText(eventPost.getImgSrc());
         }
         add(imgBtn);
 
@@ -93,6 +96,7 @@ public class EventPostPanel extends JPanel {
         add(leftJustify);
         editDesc.setText(eventPost.getDescription());
         add(editDesc, BorderLayout.WEST);
+        
     }
 
 }

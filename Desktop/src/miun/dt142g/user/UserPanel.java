@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import miun.dt142g.Settings;
 import miun.dt142g.data.ConfirmationBox;
 
 /**
@@ -46,7 +47,7 @@ public class UserPanel extends JPanel{
         
         JPanel inputs = new JPanel();
         inputs.setLayout(new BoxLayout(inputs, BoxLayout.Y_AXIS));
-        //inputs.setBackground(Color.LIGHT_GRAY);
+        inputs.setBackground(Color.WHITE);
         
         name = new JLabel("Namn:");
         name.setMaximumSize(new Dimension(60,25));

@@ -20,6 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.Painter;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
@@ -35,6 +36,7 @@ import miun.dt142g.food.MenuPanel;
 import miun.dt142g.inventory.InventoryPanel;
 import miun.dt142g.user.UsersPanel;
 import miun.dt142g.website.WebsitePanel;
+import miun.dt142g.Settings.Styles;
 
 /**
  *
@@ -157,26 +159,33 @@ public class SharedTabs extends JPanel {
         
         //Display the window.
         frame.pack();
-        frame.setMinimumSize(new Dimension(600,600));
+        frame.setMinimumSize(new Dimension(700,700));
         frame.setVisible(true);
     }
     
     public static void main(String[] args) {
+        
         UIManager.put("Button.font", new Font("Calibri", Font.PLAIN, 22));
-        UIManager.put("Button.background", new Color(255,120,110));
+        UIManager.put("Button.background", Styles.btnBackground);
+        UIManager.put("Button.foreground", Styles.btnForeground);
         
         UIManager.put("Label.font", new Font("Calibri", Font.BOLD, 25));
         
         UIManager.put("TextArea.font", new Font("Calibri", Font.PLAIN, 22));
+        UIManager.put("TextArea.background", Styles.fieldColor);
         UIManager.put("TextArea.border", BorderFactory.createLoweredBevelBorder());
         
         UIManager.put("TextField.font", new Font("Calibri", Font.PLAIN, 32));
-        UIManager.put("TextField.background", Color.yellow);
-        UIManager.put("TextField.selectionBackground", Color.ORANGE);
+        UIManager.put("TextField.background", Styles.fieldColor);
+        UIManager.put("TextField.selectionBackground", Color.RED);
         UIManager.put("TextField.selectionForeground", Color.WHITE);
         UIManager.put("TextField.caretForeground", Color.pink);
         
         UIManager.put("Table.font", new Font("Calibri", Font.PLAIN, 22));
+        UIManager.put("Table.selectionBackground", Styles.fieldColor);
+        
+        UIManager.put("ComboBox.background", Styles.fieldColor);
+        UIManager.put("ComboBox.selectionBackground", Color.RED);
         //Schedule a job for the event dispatch thread:
         //creating and showing this application's GUI.
         SwingUtilities.invokeLater(new Runnable() {

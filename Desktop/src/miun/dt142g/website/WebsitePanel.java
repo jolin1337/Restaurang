@@ -41,6 +41,17 @@ public class WebsitePanel extends JPanel {
         
         setBackground(Color.WHITE);
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        JButton submitBtn = new JButton("Submit");
+        submitBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        submitBtn.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                eventPosts.update();
+            }
+        });
+        add(submitBtn);
+        
         JLabel open = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>Öppetider</div></html>");
         Box  leftJustify = Box.createHorizontalBox();
         leftJustify.add( open );

@@ -1,7 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This code is created for one purpose only. And should not be used for any 
+ * other purposes unless the author of this file has apporved. 
+ * 
+ * This code is a piece of a project in the course DT142G on Mid. Sweden university
+ * Created by students for this projekt only
  */
 package miun.dt142g;
 
@@ -15,18 +17,33 @@ import java.util.logging.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 /**
+ * This class connects us to the server and is a base class of data objects
  *
- * @author Johannes
+ * @author Johannes Lindén
+ * @since 2014-10-09
+ * @version 1.2
  */
 public abstract class DataSource {
-    static String safeKey = "dt142g-awesomee";
-    // TODO: Implement loadData funktion in each inherited class
+    static String safeKey = "dt142g-awesome";
+    /**
+     * An abstract method for loading data to its datasource
+     */
     public abstract void loadData();
+    /**
+     * A key for authorization
+     */
     protected static String key = "";
+    /**
+     * The url to the java ee server
+     */
     private static final String serverUrl = "http://localhost:8080/Server/";
 
-    // TODO: create db connection
+    /**
+     * This method connects us with key to the server
+     * @throws miun.dt142g.DataSource.WrongKeyException 
+     */
     public void dbConnect() throws WrongKeyException {
         if(!key.equals("")) {
             if(!getRequest("test", "key=" + key).equals("true"))
@@ -41,8 +58,16 @@ public abstract class DataSource {
             throw new WrongKeyException("Not correct key");
         }
     }
-
-    private static String getRequest(String url, String params) {
+    
+    /**
+     * Send a post request to server with a suburl of url and some optional
+     * specifik params
+     * @param url    - The sub url to request from the base url 
+     * DataSource.serverUrl
+     * @param params - The specifik params to send with the url to the server
+     * @return A string of the requested information (the result of the request)
+     */
+    protected static String getRequest(String url, String params) {
         try {
             URL obj = new URL(serverUrl + url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
