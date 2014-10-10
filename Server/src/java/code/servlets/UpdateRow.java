@@ -89,8 +89,10 @@ public class UpdateRow extends HttpServlet {
         // Set the json mimetype
         response.setContentType("application/json;charset=UTF-8");
 
-        // Try to access output stream
+        // Try to access output stream 
         try (PrintWriter out = response.getWriter()) {
+            out.println("SOmething hapend!");
+
             int authCode = Settings.isAutorised(request.getParameter("key"));
             if (authCode == Settings.AuthCode.accept) {
                 // Parse the json object
@@ -105,6 +107,7 @@ public class UpdateRow extends HttpServlet {
                 for (JsonValue objVal : data) {
                     JsonObject obj = (JsonObject) objVal;
                     // get the table to alter
+
                     switch (request.getParameter("table")) {
                         case "dish": // if dish is the table we want to alter
                             // try to alter the table
