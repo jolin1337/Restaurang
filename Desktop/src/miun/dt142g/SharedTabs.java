@@ -37,6 +37,7 @@ import miun.dt142g.inventory.InventoryPanel;
 import miun.dt142g.user.UsersPanel;
 import miun.dt142g.website.WebsitePanel;
 import miun.dt142g.Settings.Styles;
+import miun.dt142g.schedule.SchedulesPanel;
 
 /**
  *
@@ -106,7 +107,9 @@ public class SharedTabs extends JPanel {
         panels.add(panel6);
         BookingsPanel panel7 = new BookingsPanel(fjarr);
         panels.add(panel7);
-        String[] titles = {"Rätter", "Hemsida","Inventarie", "Användare", "A La Carté","Veckans Meny", "Bokningar"};
+        SchedulesPanel panel8 = new SchedulesPanel();
+        panels.add(panel8);
+        String[] titles = {"Rätter", "Hemsida","Inventarie", "Användare", "A La Carté","Veckans Meny", "Bokningar", "Schema"};
         int i = 0;
         for(JComponent panel : panels) {
             ScrollPane sp = new ScrollPane(ScrollPane.SCROLLBARS_AS_NEEDED);
@@ -192,7 +195,7 @@ public class SharedTabs extends JPanel {
             public void run() {
 		createAndShowGUI();
             }
-        });
+        });        
     } 
 }
 

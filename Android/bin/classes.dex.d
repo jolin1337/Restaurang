@@ -3,6 +3,8 @@ C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\d
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\BuildConfig.class \
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\Menu.class \
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\Menus.class \
+C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\Reservation.class \
+C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\Reservations.class \
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\kitchen\ExpandableListAdapter$1.class \
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\kitchen\ExpandableListAdapter.class \
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\kitchen\Orders$1.class \
@@ -21,9 +23,13 @@ C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\d
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\R$string.class \
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\R$style.class \
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\R.class \
+C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\reservations\ReservationFragment.class \
+C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\reservations\ReservationsActivity$1.class \
+C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\reservations\ReservationsActivity$ScreenSlidePagerAdapter.class \
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\reservations\ReservationsActivity.class \
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\waiter\OrdersActivity$1.class \
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\waiter\OrdersActivity$2.class \
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\waiter\OrdersActivity.class \
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\waiter\OrdersListView.class \
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\waiter\WaiterActivity.class \
+C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\bin\dexedLibs\android-support-v13-8411038ffb88ddfeb86ff950cc8af7c4.jar \

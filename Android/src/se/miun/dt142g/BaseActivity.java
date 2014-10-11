@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import se.miun.dt142g.reservations.ReservationsActivity;
 
 /**
  *
@@ -37,25 +38,36 @@ public class BaseActivity extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+        if (!onOptionsItemSelectedStatic(item, this))
+            return super.onOptionsItemSelected(item);
+        return true; 
+    }
+    
+    public static boolean onOptionsItemSelectedStatic(MenuItem item, Activity act) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.waiter && !(this instanceof se.miun.dt142g.waiter.WaiterActivity)) {
+        if (id == R.id.waiter && !(act instanceof se.miun.dt142g.waiter.WaiterActivity)) {
             System.out.println("Waiter loading view...");
-            Intent ordersActivity = new Intent(getApplicationContext(), se.miun.dt142g.waiter.WaiterActivity.class);
-            startActivity(ordersActivity);
+            Intent ordersActivity = new Intent(act.getApplicationContext(), se.miun.dt142g.waiter.WaiterActivity.class);
+            act.startActivity(ordersActivity);
             return true;
         }
-        if (id == R.id.kitchen && !(this instanceof se.miun.dt142g.kitchen.Orders)) {
+        if (id == R.id.kitchen && !(act instanceof se.miun.dt142g.kitchen.Orders)) {
             System.out.println("Kitchen loading view...");
-            Intent ordersActivity = new Intent(getApplicationContext(), se.miun.dt142g.kitchen.Orders.class);
-            startActivity(ordersActivity);
+            Intent ordersActivity = new Intent(act.getApplicationContext(), se.miun.dt142g.kitchen.Orders.class);
+            act.startActivity(ordersActivity);
             return true;
         }
-        if (id == R.id.reservations && !(this instanceof se.miun.dt142g.reservations.ReservationsActivity)) {
+        if (id == R.id.reservations && 
+                !(act.getClass() == ReservationsActivity.class &&
+                ( (ReservationsActivity) act ) instanceof ReservationsActivity)) {
             System.out.println("Reservations loading view...");
-            Intent reservationsActivity = new Intent(getApplicationContext(), se.miun.dt142g.reservations.ReservationsActivity.class);
-            startActivity(reservationsActivity);
+            Intent reservationsActivity = new Intent(act.getApplicationContext(), se.miun.dt142g.reservations.ReservationsActivity.class);
+            act.startActivity(reservationsActivity);
             return true;
         }
-        return super.onOptionsItemSelected(item);
+        return false; 
     }
 }
