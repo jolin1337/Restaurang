@@ -103,7 +103,7 @@ public class UpdateRow extends HttpServlet {
 
                 // Iterate the rows to modify
                 for (JsonValue objVal : data) {
-                    JsonObject obj = (JsonObject) objVal;
+                    JsonObject obj = ((JsonObject) objVal).getJsonObject("data");
                     // get the table to alter
 
                     switch (request.getParameter("table")) {
@@ -173,10 +173,7 @@ public class UpdateRow extends HttpServlet {
                 modEntity = tableClass.newInstance(); // create a new instance of the entity
                 edited = true;      // now we have edited the table
             }
-            if (dishEntity != null && obj.containsKey("remove")) {
-                em.remove(dishEntity); // remove the table and it exists? sure why not?
-                edited = true;      // well then we set the edit falg to true
-            } else {
+            if (dishEntity == null || !obj.containsKey("remove")) {
                 // Should always be true, but just in case!
                 if (modEntity instanceof JsonEntity) {
 
@@ -190,6 +187,9 @@ public class UpdateRow extends HttpServlet {
                         }
                     }
                 }
+            } else {
+                em.remove(dishEntity); // remove the table and it exists? sure why not?
+                edited = true;      // well then we set the edit falg to true
             }
             try {
                 em.flush();

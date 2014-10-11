@@ -76,7 +76,6 @@ public class PDFGenreateDishesMenu {
                 contentStream.close();
                 try {
                     doc.save(out);
-                    doc.save(logoPath + "/sample.pdf");
                 } catch (COSVisitorException ex) {
                     Logger.getLogger(PDFGenreateDishesMenu.class.getName()).log(Level.SEVERE, null, ex);
                 }

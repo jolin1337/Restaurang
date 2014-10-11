@@ -36,19 +36,33 @@ public class EventPosts extends DataSource implements Iterable<EventPost> {
     public void update() {
         List<EventPost> evs = getDataList();
         String str = "&table=event&data={\"data\":[";
-        for (EventPost ev : evs) {
-            if (!events.contains(ev)) {
-                str += "{\"remove\":true,\"data\":{\"id\":" + ev.getId() + "}},";
+        String strRm = "&table=event&data={\"data\":[";
+        for (EventPost ev : events) {
+            if (evs.contains(ev)) {
+                strRm += "{\"data\":{\"remove\":true,\"id\":" + ev.getId() + "}},";
+                evs.remove(ev);
             }
+            int id = ev.getId();
+            ev.setId(-1);
             str += "{\"data\":" + ev.toJsonString() + "},";
+            ev.setId(id);
         }
-        getRequest("updaterow", "key=" + key + str.substring(0, str.length()-1) + "]}");
+        for(EventPost ev : evs)
+            strRm += "{\"data\":{\"remove\":true,\"id\":" + ev.getId() + "}},";
+        if(events.isEmpty())
+            str += ",";
+        if(evs.isEmpty())
+            strRm += ",";
+        // System.out.println(str.substring(0, str.length()-1) + "]}");
+        System.out.println(strRm.substring(0, strRm.length()-1) + "]}");
+        System.out.println("Updatestatus: " + getRequest("updaterow", "key=" + key + strRm.substring(0, strRm.length()-1) + "]}"));
+        System.out.println("Updatestatus: " + getRequest("updaterow", "key=" + key + str.substring(0, str.length()-1) + "]}"));
     }
 
     private List<EventPost> getDataList() {
         List<EventPost> currentEvents = new ArrayList<>();
         JSONObject json;
-        String jsonStr = getRequest("gettable", "?key=" + key + "&table=event");
+        String jsonStr = getRequest("gettable", "key=" + key + "&table=event");
         try {
             json = new JSONObject(jsonStr);
         } catch (JSONException ex) {
@@ -66,18 +80,19 @@ public class EventPosts extends DataSource implements Iterable<EventPost> {
             JSONObject obj;
             EventPost p = null;
             try {
-                obj = jsonArr.getJSONObject(i);
+                obj = jsonArr.getJSONObject(i-1);
 
                 p = new EventPost(obj.getInt("id"));
                 // Get the properties of the json object and update this event.
                 p.setDescription(obj.getString("description")); // Set description
-                p.setImgSrc(obj.getString("img"));              // Set the image url
+                p.setImgSrc(obj.getString("image"));              // Set the image url
 
                 // Set the date
-                p.setPubDate(obj.getString("pubdate"));
+                p.setPubDate(obj.getString("pubDate"));
 
                 // Set the title 
                 p.setTitle(obj.getString("title"));
+                currentEvents.add(p);
             } catch (JSONException ex) {
                 Logger.getLogger(EventPosts.class.getName()).log(Level.SEVERE, null, ex);
             } catch (Exception exr) {
@@ -97,6 +112,9 @@ public class EventPosts extends DataSource implements Iterable<EventPost> {
 
     public void addEvent(int id, String pubDate, String imgSrc, String title, String desc) {
         events.add(new EventPost(id, pubDate, imgSrc, title, desc));
+    }
+    void addEvent(EventPost ep) {
+        events.add(ep);
     }
 
     public void editEvent(int id, String pubDate, String imgSrc, String title, String desc) {
@@ -122,6 +140,12 @@ public class EventPosts extends DataSource implements Iterable<EventPost> {
 
     @Override
     public int getUniqueId() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int id = 0;
+        for(EventPost e : events) {
+            if(e.getId() > id)
+                id = e.getId() + 1;
+        }
+        return id;
     }
+
 }

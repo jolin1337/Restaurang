@@ -99,4 +99,9 @@ public class EventPostPanel extends JPanel {
         
     }
 
+    public void updateEvent() {
+        eventPost.setDescription(editDesc.getText());
+        eventPost.setPubDate(editDate.getText());
+        eventPost.setTitle(editTitle.getText());
+    }
 }

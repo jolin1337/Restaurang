@@ -14,10 +14,13 @@ import java.util.Date;
 import java.util.Locale;
 import javax.json.Json;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
@@ -50,6 +53,7 @@ public class Event extends JsonEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
     @Column(name = "ID")
     /**
@@ -118,7 +122,9 @@ public class Event extends JsonEntity implements Serializable {
      * @return the url of the event poster
      */
     public String getImgsrc() {
-        return imgsrc;
+        if(imgsrc != null)
+            return imgsrc;
+        return "";
     }
 
     /**
@@ -136,7 +142,9 @@ public class Event extends JsonEntity implements Serializable {
      * @return the date object of the startdate
      */
     public Date getPubdate() {
-        return pubdate;
+        if(pubdate != null)
+            return pubdate;
+        return null;
     }
 
     /**
@@ -154,7 +162,9 @@ public class Event extends JsonEntity implements Serializable {
      * @return The title that is shown on the event
      */
     public String getTitle() {
-        return title;
+        if(title != null)
+            return title;
+        return "";
     }
 
     /**
@@ -173,7 +183,9 @@ public class Event extends JsonEntity implements Serializable {
      * this will almost always be empty. Afterwards it describes the event
      */
     public String getDescription() {
-        return description;
+        if(description != null)
+            return description;
+        return "";
     }
 
     /**
@@ -213,14 +225,16 @@ public class Event extends JsonEntity implements Serializable {
     @Override
     public String toJsonString() {
         // Set all properties of this event here to export the event to a json object
-        JsonObject value = Json.createObjectBuilder()
+        JsonObjectBuilder valueBuilder = Json.createObjectBuilder()
                 .add("id", getId())
-                .add("image", getImgsrc())
-                .add("pubDate", getPubdate().getTime())
-                .add("title", getTitle())
+                .add("image", getImgsrc());
+        if(getPubdate() != null)
+            valueBuilder.add("pubDate", getPubdate().getTime());
+        else
+            valueBuilder.add("pubDate", "-1");
+        return valueBuilder.add("title", getTitle())
                 .add("description", getDescription())
-                .build();
-        return value.toString();
+                .build().toString();
     }
 
     @Override
@@ -228,10 +242,10 @@ public class Event extends JsonEntity implements Serializable {
         try {
             // Get the properties of the json object and update this event.
             setDescription(obj.getString("description", null)); // Set description
-            setImgsrc(obj.getString("img", null));              // Set the image url
+            setImgsrc(obj.getString("image", null));              // Set the image url
 
             // Get the date from json object
-            Date date = new SimpleDateFormat("dd/MM-yy 'at' hh:mm", Locale.getDefault()).parse(obj.getString("pubdate", ""));
+            Date date = new SimpleDateFormat("dd/MM-yy 'at' hh:mm", Locale.getDefault()).parse(obj.getString("pubDate", ""));
             // Set the date
             setPubdate(date);
 

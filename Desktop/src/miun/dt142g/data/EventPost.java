@@ -18,7 +18,7 @@ import org.json.JSONObject;
  * @author Johannes
  */
 public class EventPost {
-    private final int id;
+    private int id;
 
     private String pubDate="";
     private String imgSrc="";
@@ -116,5 +116,9 @@ public class EventPost {
         } catch (JSONException ex) {
         }
         return value.toString();
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

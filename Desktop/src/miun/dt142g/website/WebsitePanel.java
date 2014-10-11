@@ -56,7 +56,9 @@ public class WebsitePanel extends JPanel {
             public void actionPerformed(ActionEvent ae) {
                 about.setDataOpen(openEdit.getText());
                 about.setDataContacts(contactEdit.getText());
-                // eventPosts.update();
+                for(EventPostPanel evPostPanel : eventPostPanels) 
+                    evPostPanel.updateEvent();
+                eventPosts.update();
                 about.update();
             }
         });
@@ -90,11 +92,12 @@ public class WebsitePanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 remove(newEventPostBtn);
-                EventPost ep = new EventPost(eventPosts.getRows());
+                EventPost ep = new EventPost(eventPosts.getUniqueId());
                 add(Box.createRigidArea(new Dimension(1, 10)));
                 EventPostPanel ep1 = new EventPostPanel(ep);
                 add(ep1);
                 eventPostPanels.add(ep1);
+                eventPosts.addEvent(ep);
                 add(newEventPostBtn);
                 WebsitePanel.this.revalidate();
             }

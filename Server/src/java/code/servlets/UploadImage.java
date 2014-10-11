@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -29,6 +30,7 @@ import javax.servlet.http.Part;
  */
 @WebServlet(name = "UploadImage", urlPatterns = {"/upload"}, initParams = {
     @WebInitParam(name = "key", value = "")})
+@MultipartConfig
 public class UploadImage extends HttpServlet {
 
     /**
@@ -49,7 +51,7 @@ public class UploadImage extends HttpServlet {
                 response.setContentType("text/html;charset=UTF-8");
 
                 // Create path components to save the file
-                final String path = getServletConfig().getServletContext().getResource("/").getPath();
+                final String path = Settings.imagePath;
                 final Part filePart = request.getPart("file");
                 final String fileName = getFileName(filePart);
 
@@ -58,8 +60,8 @@ public class UploadImage extends HttpServlet {
                 final PrintWriter writer = response.getWriter();
 
                 try {
-                    imgOut = new FileOutputStream(new File(path + File.separator
-                            + fileName));
+                    imgOut = new FileOutputStream(new File(path
+                            , fileName));
                     filecontent = filePart.getInputStream();
 
                     int read = 0;
