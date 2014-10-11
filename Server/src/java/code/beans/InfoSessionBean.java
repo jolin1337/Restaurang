@@ -40,6 +40,6 @@ public class InfoSessionBean {
         return getInfo("openings");
     }
     public String getContactInfo() {
-        return getInfo("contact");
+        return getInfo("contacts");
     }
 }

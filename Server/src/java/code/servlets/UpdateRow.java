@@ -91,9 +91,9 @@ public class UpdateRow extends HttpServlet {
 
         // Try to access output stream 
         try (PrintWriter out = response.getWriter()) {
-            out.println("SOmething hapend!");
 
             int authCode = Settings.isAutorised(request.getParameter("key"));
+            System.out.println("kajkdja: " + request.getParameter("key"));
             if (authCode == Settings.AuthCode.accept) {
                 // Parse the json object
                 StringReader sr = new StringReader(request.getParameter("data"));
@@ -224,7 +224,7 @@ public class UpdateRow extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // processRequest(request, response);
+        processRequest(request, response);
     }
 
     /**

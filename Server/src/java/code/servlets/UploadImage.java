@@ -49,7 +49,7 @@ public class UploadImage extends HttpServlet {
                 response.setContentType("text/html;charset=UTF-8");
 
                 // Create path components to save the file
-                final String path = "./";
+                final String path = getServletConfig().getServletContext().getResource("/").getPath();
                 final Part filePart = request.getPart("file");
                 final String fileName = getFileName(filePart);
 
