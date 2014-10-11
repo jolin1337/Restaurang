@@ -23,14 +23,18 @@ public class InfoSessionBean {
 
     @PersistenceContext(unitName = "WebApplication1PU")
     private EntityManager em;
-
+    
+    
     private String getInfo(String what) {
         try {
             TypedQuery<Info> query = em.createNamedQuery("Info.findByWhat", Info.class);
             query.setParameter("what", what);
             List<Info> res = query.getResultList();
-            if(res.size() > 0)
-                return res.get(0).getDataInformation();
+            if(res.size() > 0) {
+                String resStr = res.get(0).getDataInformation();
+                resStr = resStr.replace("\n", "\\n").replace("\"", "'");
+                return resStr;
+            }
         }
         catch(javax.persistence.NoResultException e) {}
         //catch(Exception e) {}

@@ -9,6 +9,7 @@ package code.servlets;
 
 import data.entity.Dishgroup;
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -50,9 +51,9 @@ public class GetPDFDishes extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("application/pdf;charset=UTF-8");
         response.setHeader("Content-Disposition", "attachment; filename=\"dishes_menu.pdf\"");
-        System.out.println(getServletConfig().getServletContext().getResource("/").getPath() + "/resiyrces/fest.jpg");
+        System.out.println( new File("").getAbsolutePath() + "/resources/fest.jpg");
         TypedQuery<Dishgroup> dishQuery = em.createNamedQuery("Dishgroup.findAll", Dishgroup.class);
-        PDFGenreateDishesMenu.generatePDFTo(response.getOutputStream(), getServletConfig().getServletContext().getResource("/").getPath() + "/resources/fest.jpg", dishQuery.getResultList());
+        PDFGenreateDishesMenu.generatePDFTo(response.getOutputStream(),  new File("").getAbsolutePath(), dishQuery.getResultList());
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

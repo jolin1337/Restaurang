@@ -88,12 +88,10 @@ public class UpdateRow extends HttpServlet {
             throws ServletException, IOException {
         // Set the json mimetype
         response.setContentType("application/json;charset=UTF-8");
-
         // Try to access output stream 
         try (PrintWriter out = response.getWriter()) {
 
             int authCode = Settings.isAutorised(request.getParameter("key"));
-            System.out.println("kajkdja: " + request.getParameter("key"));
             if (authCode == Settings.AuthCode.accept) {
                 // Parse the json object
                 StringReader sr = new StringReader(request.getParameter("data"));

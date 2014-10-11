@@ -28,9 +28,15 @@
                 <pre><code></code></pre>
                 <hr/>
                 <h2>Kontakt</h2>
-                #{infoSessionBean.contactInfo}
+                <script>
+                    var str = "#{infoSessionBean.contactInfo}";
+                    document.write(str.replace("\n", "<br/>"));
+                </script>
                 <h2>Öppetider</h2>
-                #{infoSessionBean.openings}
+                <script>
+                    var str = "#{infoSessionBean.openings}";
+                    document.write(str.replace("\n", "<br/>"));
+                </script>
             </div>
             <div id="page-home" class="page">
                 <div id="content" class="center_content">
