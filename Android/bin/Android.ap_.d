@@ -12,11 +12,13 @@ C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\res\drawable-ldpi\spe
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\res\drawable-mdpi\ic_launcher.png \
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\res\drawable-xhdpi\ic_launcher.png \
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\res\layout\activity_orders.xml \
+C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\res\layout\main_menu.xml \
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\res\layout\orderdetail.xml \
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\res\layout\orders.xml \
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\res\layout\order_list_item.xml \
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\res\layout\order_menu.xml \
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\res\layout\reservations.xml \
+C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\res\layout\reservations_fragment.xml \
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\res\layout\table_menu.xml \
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\res\menu\orders.xml \
 C:\Users\Ulf\Documents\NetBeansProjects\Restaurang\Android\res\values\dimens.xml \
