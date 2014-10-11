@@ -8,6 +8,10 @@ package miun.dt142g.data;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -75,5 +79,42 @@ public class EventPost {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final EventPost other = (EventPost) obj;
+        return other.getDescription().equals(getDescription()) && 
+                other.getId() == getId() &&
+                other.getImgSrc().equals(getImgSrc()) && 
+                other.getPubDate().equals(getPubDate()) &&
+                other.getTitle().equals(getTitle());
+    }
+
+    public String toJsonString() {
+        
+        // Set all properties of this event here to export the event to a json object
+        JSONObject value = new JSONObject();
+        try {
+            value.put("id", getId())
+                    .put("image", getImgSrc())
+                    .put("pubDate", getPubDate())
+                    .put("title", getTitle())
+                    .put("description", getDescription());
+        } catch (JSONException ex) {
+        }
+        return value.toString();
     }
 }

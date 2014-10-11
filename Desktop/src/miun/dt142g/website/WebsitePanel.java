@@ -18,6 +18,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import miun.dt142g.DataSource;
 import miun.dt142g.data.AboutUs;
 import miun.dt142g.data.EventPost;
@@ -33,6 +37,9 @@ public class WebsitePanel extends JPanel {
     
     JButton newEventPostBtn = new JButton("Lägg till nytt evenemang");
     
+    JTextArea openEdit = new JTextArea();
+    JTextArea contactEdit = new JTextArea();
+    
     public WebsitePanel() throws DataSource.WrongKeyException {
         eventPosts.dbConnect();
         eventPosts.loadData();
@@ -47,7 +54,10 @@ public class WebsitePanel extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                eventPosts.update();
+                about.setDataOpen(openEdit.getText());
+                about.setDataContacts(contactEdit.getText());
+                // eventPosts.update();
+                about.update();
             }
         });
         add(submitBtn);
@@ -57,7 +67,6 @@ public class WebsitePanel extends JPanel {
         leftJustify.add( open );
         leftJustify.add( Box.createHorizontalGlue() );
         add(leftJustify);     
-        JTextArea openEdit = new JTextArea();
         openEdit.setText(about.getDataOpen());
         add(openEdit);
    
@@ -66,7 +75,6 @@ public class WebsitePanel extends JPanel {
         leftJustify.add( contact );
         leftJustify.add( Box.createHorizontalGlue() );
         add(leftJustify);
-        JTextArea contactEdit = new JTextArea();
         contactEdit.setText(about.getDataContacts());
         add(contactEdit);
         
