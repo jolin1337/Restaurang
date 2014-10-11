@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import miun.dt142g.Controller;
-import miun.dt142g.data.ConfirmationBox;
+import miun.dt142g.ConfirmationBox;
 import miun.dt142g.data.Dish;
 
 /**

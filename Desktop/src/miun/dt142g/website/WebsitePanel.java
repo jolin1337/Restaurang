@@ -11,10 +11,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
@@ -36,6 +39,7 @@ public class WebsitePanel extends JPanel {
     AboutUs about = new AboutUs();
     
     JButton newEventPostBtn = new JButton("Lägg till nytt evenemang");
+    JButton submitBtn = new JButton("Syncronizera med server");
     
     JTextArea openEdit = new JTextArea();
     JTextArea contactEdit = new JTextArea();
@@ -48,7 +52,6 @@ public class WebsitePanel extends JPanel {
         
         setBackground(Color.WHITE);
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        JButton submitBtn = new JButton("Submit");
         submitBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         submitBtn.addActionListener(new ActionListener() {
 
@@ -58,11 +61,18 @@ public class WebsitePanel extends JPanel {
                 about.setDataContacts(contactEdit.getText());
                 for(EventPostPanel evPostPanel : eventPostPanels) 
                     evPostPanel.updateEvent();
-                eventPosts.update();
+                try {
+                    eventPosts.update();
+                } catch (DataSource.WrongKeyException ex) {
+                    
+                    JOptionPane.showMessageDialog(WebsitePanel.this,
+                        "There is an error in the authentication to the server or the server is down. Please check this out before do any changes!",
+                        "Server error",
+                        JOptionPane.ERROR_MESSAGE);
+                }
                 about.update();
             }
         });
-        add(submitBtn);
         
         JLabel open = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>Öppetider</div></html>");
         Box  leftJustify = Box.createHorizontalBox();
@@ -92,6 +102,7 @@ public class WebsitePanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 remove(newEventPostBtn);
+                remove(submitBtn);
                 EventPost ep = new EventPost(eventPosts.getUniqueId());
                 add(Box.createRigidArea(new Dimension(1, 10)));
                 EventPostPanel ep1 = new EventPostPanel(ep);
@@ -99,9 +110,11 @@ public class WebsitePanel extends JPanel {
                 eventPostPanels.add(ep1);
                 eventPosts.addEvent(ep);
                 add(newEventPostBtn);
+                add(submitBtn);
                 WebsitePanel.this.revalidate();
             }
         });
         add(newEventPostBtn);
+        add(submitBtn);
     }
 }

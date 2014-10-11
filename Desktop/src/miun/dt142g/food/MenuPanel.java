@@ -21,7 +21,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import miun.dt142g.Controller;
 import miun.dt142g.DataSource;
-import miun.dt142g.data.ConfirmationBox;
+import miun.dt142g.ConfirmationBox;
 import miun.dt142g.data.Dish;
 
 /**

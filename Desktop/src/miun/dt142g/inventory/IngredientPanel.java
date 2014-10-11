@@ -16,7 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import miun.dt142g.data.ConfirmationBox;
+import miun.dt142g.ConfirmationBox;
 import miun.dt142g.data.Ingredient;
 
 /**

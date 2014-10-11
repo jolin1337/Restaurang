@@ -8,6 +8,7 @@
 package miun.dt142g.website;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -27,42 +28,47 @@ public class EventPosts extends DataSource implements Iterable<EventPost> {
     private final List<EventPost> events = new ArrayList<>();
 
     @Override
-    public void loadData() {
-        events.add(new EventPost(0, "20141001", "path/to/image/poster.png", "Fest med Anders", "Kul va?"));
-        events.add(new EventPost(1, "Fest med Anders 2", "Kul va?"));
+    public void loadData() throws WrongKeyException{
+        events.clear();
+        List<EventPost> evs = getDataList();
+        for(EventPost ev : evs) {
+            events.add(ev);
+        }
+        Collections.sort(events);
     }
 
     @Override
-    public void update() {
+    public void update() throws WrongKeyException {
         List<EventPost> evs = getDataList();
         String str = "&table=event&data={\"data\":[";
         String strRm = "&table=event&data={\"data\":[";
+        for(EventPost ev : evs)
+            strRm += "{\"data\":{\"remove\":true,\"id\":" + ev.getId() + "}},";
         for (EventPost ev : events) {
-            if (evs.contains(ev)) {
-                strRm += "{\"data\":{\"remove\":true,\"id\":" + ev.getId() + "}},";
-                evs.remove(ev);
-            }
             int id = ev.getId();
             ev.setId(-1);
             str += "{\"data\":" + ev.toJsonString() + "},";
             ev.setId(id);
         }
-        for(EventPost ev : evs)
-            strRm += "{\"data\":{\"remove\":true,\"id\":" + ev.getId() + "}},";
         if(events.isEmpty())
             str += ",";
         if(evs.isEmpty())
             strRm += ",";
-        // System.out.println(str.substring(0, str.length()-1) + "]}");
+        System.out.println(str.substring(0, str.length()-1) + "]}");
         System.out.println(strRm.substring(0, strRm.length()-1) + "]}");
         System.out.println("Updatestatus: " + getRequest("updaterow", "key=" + key + strRm.substring(0, strRm.length()-1) + "]}"));
         System.out.println("Updatestatus: " + getRequest("updaterow", "key=" + key + str.substring(0, str.length()-1) + "]}"));
+        loadData();
     }
 
-    private List<EventPost> getDataList() {
+    private List<EventPost> getDataList() throws WrongKeyException {
         List<EventPost> currentEvents = new ArrayList<>();
         JSONObject json;
         String jsonStr = getRequest("gettable", "key=" + key + "&table=event");
+        if(jsonStr.equals("expired_key")) {
+            dbConnect();
+            jsonStr = getRequest("gettable", "key=" + key + "&table=event");
+        }
         try {
             json = new JSONObject(jsonStr);
         } catch (JSONException ex) {
@@ -85,16 +91,16 @@ public class EventPosts extends DataSource implements Iterable<EventPost> {
                 p = new EventPost(obj.getInt("id"));
                 // Get the properties of the json object and update this event.
                 p.setDescription(obj.getString("description")); // Set description
+
+                // Set the title 
+                p.setTitle(obj.getString("title"));
+                
                 p.setImgSrc(obj.getString("image"));              // Set the image url
 
                 // Set the date
                 p.setPubDate(obj.getString("pubDate"));
-
-                // Set the title 
-                p.setTitle(obj.getString("title"));
                 currentEvents.add(p);
             } catch (JSONException ex) {
-                Logger.getLogger(EventPosts.class.getName()).log(Level.SEVERE, null, ex);
             } catch (Exception exr) {
                 if (p != null) {
                     System.out.println("Unable to parse json object: " + p);

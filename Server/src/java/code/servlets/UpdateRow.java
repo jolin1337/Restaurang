@@ -103,7 +103,11 @@ public class UpdateRow extends HttpServlet {
 
                 // Iterate the rows to modify
                 for (JsonValue objVal : data) {
-                    JsonObject obj = ((JsonObject) objVal).getJsonObject("data");
+                    if(objVal.getValueType() != JsonValue.ValueType.OBJECT) 
+                        continue;
+                    JsonObject obj = (JsonObject) objVal;
+                    if(obj.get("data") != null && obj.get("data") instanceof JsonObject)
+                        obj = obj.getJsonObject("data");
                     // get the table to alter
 
                     switch (request.getParameter("table")) {

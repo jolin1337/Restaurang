@@ -26,11 +26,11 @@ import org.json.JSONObject;
  * @version 1.2
  */
 public abstract class DataSource {
-    static String safeKey = "dt142g-awesome";
+    private static String safeKey = "dt142g-awesome";
     /**
      * An abstract method for loading data to its datasource
      */
-    public abstract void loadData();
+    public abstract void loadData() throws WrongKeyException;
     /**
      * A key for authorization
      */
@@ -131,7 +131,7 @@ public abstract class DataSource {
         // TODO: Update data
     }
 
-    public abstract void update();
+    public abstract void update() throws WrongKeyException;
 
     public abstract int getUniqueId();
 

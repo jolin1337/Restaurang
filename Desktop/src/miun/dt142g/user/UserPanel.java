@@ -21,7 +21,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import miun.dt142g.Settings;
-import miun.dt142g.data.ConfirmationBox;
+import miun.dt142g.ConfirmationBox;
 
 /**
  *

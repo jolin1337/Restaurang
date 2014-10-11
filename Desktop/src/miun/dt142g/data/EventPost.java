@@ -17,7 +17,7 @@ import org.json.JSONObject;
  *
  * @author Johannes
  */
-public class EventPost {
+public class EventPost implements Comparable<EventPost> {
     private int id;
 
     private String pubDate="";
@@ -120,5 +120,15 @@ public class EventPost {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public int compareTo(EventPost t) {
+        try {
+            Long l = Long.parseLong(t.getPubDate());
+            return l.compareTo(Long.parseLong(getPubDate()));
+        } catch(NullPointerException | NumberFormatException ex) {
+            return 0;
+        }
     }
 }

@@ -228,8 +228,10 @@ public class Event extends JsonEntity implements Serializable {
         JsonObjectBuilder valueBuilder = Json.createObjectBuilder()
                 .add("id", getId())
                 .add("image", getImgsrc());
-        if(getPubdate() != null)
-            valueBuilder.add("pubDate", getPubdate().getTime());
+        if(getPubdate() != null) {
+            String date = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(pubdate);
+            valueBuilder.add("pubDate", date);
+        }
         else
             valueBuilder.add("pubDate", "-1");
         return valueBuilder.add("title", getTitle())
@@ -242,15 +244,15 @@ public class Event extends JsonEntity implements Serializable {
         try {
             // Get the properties of the json object and update this event.
             setDescription(obj.getString("description", null)); // Set description
-            setImgsrc(obj.getString("image", null));              // Set the image url
-
-            // Get the date from json object
-            Date date = new SimpleDateFormat("dd/MM-yy 'at' hh:mm", Locale.getDefault()).parse(obj.getString("pubDate", ""));
-            // Set the date
-            setPubdate(date);
+            setImgsrc(obj.getString("image",    null));              // Set the image url
 
             // Set the title 
             setTitle(obj.getString("title", null));
+
+            // Get the date from json object
+            Date date = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).parse(obj.getString("pubDate", ""));
+            // Set the date
+            setPubdate(date);
         } catch (ParseException ex) {
             setPubdate(null);   // Something went wrong with the date property. Set it to null
         } catch (Exception exr) {
