@@ -6,10 +6,16 @@
 package miun.dt142g.food;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import miun.dt142g.DataSource;
 import miun.dt142g.data.Ingredient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -30,6 +36,26 @@ public class Inventory extends DataSource implements Iterable<Ingredient> {
     
     public void addIngredient(Ingredient ingredient){
         ingredients.add(ingredient);
+        
+    }
+    
+    public boolean addJsonIngredient(JSONObject jsonIngredient){
+
+        int id;
+        String name;
+        int amount;
+        Ingredient ingredient;
+        
+        try {
+            id = jsonIngredient.getInt("id");
+            name = jsonIngredient.getString("name");
+            amount = jsonIngredient.getInt("amount");    
+            ingredients.add(new Ingredient(id, name, amount));
+        } catch (JSONException ex) {
+            Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return false;
     }
     
     public void remove(int id){
@@ -42,7 +68,23 @@ public class Inventory extends DataSource implements Iterable<Ingredient> {
 
     @Override
     public void loadData() {
-        ingredients.add(new Ingredient(0, "Fisk", 10));
+        JSONObject response = null;
+        JSONArray data = null; 
+        try {
+            response = getJsonRequest("inventory");
+            data = response.getJSONArray("data");
+        } catch (JSONException ex) {
+            Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        for(int i = 0;i<data.length();i++){
+            try {
+                addJsonIngredient(data.getJSONObject(i));
+            } catch (JSONException ex) {
+                Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        Collections.sort(ingredients);
+        //ingredients.add(new Ingredient(getUniqueId(), "Fisk", 10));
         //ingredients.add(new Ingredient(0, "Potatis", 10));
         //ingredients.add(new Ingredient(0, "Gurka", 10));
     }
