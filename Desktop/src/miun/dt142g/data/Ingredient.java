@@ -9,7 +9,7 @@ package miun.dt142g.data;
  *
  * @author Ulf
  */
-public class Ingredient {
+public class Ingredient implements Comparable<Ingredient>{
     private int id; 
     private String name; 
     private int amount; 
@@ -66,5 +66,10 @@ public class Ingredient {
     @Override
     public String toString() {
         return this.name;
+    }
+
+    @Override
+    public int compareTo(Ingredient t) {
+        return this.getName().compareTo(t.getName());
     }
 }
