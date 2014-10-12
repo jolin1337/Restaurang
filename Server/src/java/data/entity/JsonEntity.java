@@ -19,7 +19,14 @@ import javax.persistence.EntityManager;
  * @version 1.0
  */
 public abstract class JsonEntity {
-
+    /**
+     * Retrieves the PK name related to this entity
+     * @return 
+     */
+    public static String getPK() {
+        return "id";
+    }
+    
     /**
      * This function is used to set the data of an entity
      *

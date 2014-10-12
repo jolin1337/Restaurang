@@ -14,6 +14,7 @@ import data.entity.Event;
 import data.entity.Info;
 import data.entity.Inventory;
 import data.entity.JsonEntity;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
@@ -113,27 +114,27 @@ public class UpdateRow extends HttpServlet {
                     switch (request.getParameter("table")) {
                         case "dish": // if dish is the table we want to alter
                             // try to alter the table
-                            edited |= updateTable(obj, obj.getInt("id", -1), Dish.class);
+                            edited |= updateTable(obj, obj.getInt(Dish.getPK(), -1), Dish.class);
                             break;
                         case "booking":
 
                             break;
                         case "dishgroup":
                             // try to alter the table
-                            edited |= updateTable(obj, obj.getString("name", ""), Dishgroup.class);
+                            edited |= updateTable(obj, obj.getString(Dishgroup.getPK(), ""), Dishgroup.class);
                             break;
                         case "event":
                             // try to alter the table
-                            edited |= updateTable(obj, obj.getInt("id", -1), Event.class);
+                            edited |= updateTable(obj, obj.getInt(Event.getPK(), -1), Event.class);
                             break;
                         case "info":
                             // try to alter the table
-                            edited |= updateTable(obj, obj.getString("what", ""), Info.class);
+                            edited |= updateTable(obj, obj.getString(Info.getPK(), ""), Info.class);
                             break;
                         // try to alter the table
                         case "inventory":
                             // try to alter the table
-                            edited |= updateTable(obj, obj.getInt("id", -1), Inventory.class);
+                            edited |= updateTable(obj, obj.getInt(Inventory.getPK(), -1), Inventory.class);
                             break;
                         case "scheme":
 

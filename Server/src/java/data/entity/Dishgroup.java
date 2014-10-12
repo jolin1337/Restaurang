@@ -77,6 +77,14 @@ public class Dishgroup extends JsonEntity implements Serializable {
     public Dishgroup(String name) {
         this.name = name;
     }
+    
+    /**
+     * Retrieves the PK name related to this entity
+     * @return 
+     */
+    public static String getPK() {
+        return "name";
+    }
 
     /**
      * Getter for the pk(name) of this group

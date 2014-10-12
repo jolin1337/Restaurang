@@ -67,6 +67,10 @@ public class Info extends JsonEntity implements Serializable {
     public Info(String what) {
         this.what = what;
     }
+    
+    public static String getPK() {
+        return "what";
+    }
 
     /**
      * Getter for the type of information of this entity

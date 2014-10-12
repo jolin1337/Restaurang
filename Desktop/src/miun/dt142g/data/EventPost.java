@@ -108,8 +108,11 @@ public class EventPost implements Comparable<EventPost> {
         // Set all properties of this event here to export the event to a json object
         JSONObject value = new JSONObject();
         try {
+            String imgName = getImgSrc();
+            if(imgName.lastIndexOf("/") > -1)
+                imgName = imgName.substring(getImgSrc().lastIndexOf("/"));
             value.put("id", getId())
-                    .put("image", getImgSrc())
+                    .put("image", imgName)
                     .put("pubDate", getPubDate())
                     .put("title", getTitle())
                     .put("description", getDescription());

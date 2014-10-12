@@ -7,6 +7,15 @@
  */
 package miun.dt142g.website;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -18,6 +27,7 @@ import miun.dt142g.data.EventPost;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import sun.net.www.http.HttpClient;
 
 /**
  *
@@ -26,6 +36,8 @@ import org.json.JSONObject;
 public class EventPosts extends DataSource implements Iterable<EventPost> {
 
     private final List<EventPost> events = new ArrayList<>();
+    
+    private final int BUFFER_SIZE = 255;
 
     @Override
     public void loadData() throws WrongKeyException{
@@ -49,15 +61,18 @@ public class EventPosts extends DataSource implements Iterable<EventPost> {
             ev.setId(-1);
             str += "{\"data\":" + ev.toJsonString() + "},";
             ev.setId(id);
+            upploadImg(ev.getId(), ev.getImgSrc());
         }
         if(events.isEmpty())
             str += ",";
         if(evs.isEmpty())
             strRm += ",";
-        System.out.println(str.substring(0, str.length()-1) + "]}");
-        System.out.println(strRm.substring(0, strRm.length()-1) + "]}");
+        // System.out.println(str.substring(0, str.length()-1) + "]}");
+        // System.out.println(strRm.substring(0, strRm.length()-1) + "]}");
         System.out.println("Updatestatus: " + getRequest("updaterow", "key=" + key + strRm.substring(0, strRm.length()-1) + "]}"));
         System.out.println("Updatestatus: " + getRequest("updaterow", "key=" + key + str.substring(0, str.length()-1) + "]}"));
+        
+        // To make sure that we have the correct id:s/pk:s
         loadData();
     }
 
@@ -112,6 +127,56 @@ public class EventPosts extends DataSource implements Iterable<EventPost> {
         return currentEvents;            // return that we have changed this entity
     }
 
+    private boolean upploadImg(int id, String url) {
+        try {
+            File uploadFile = new File(url);
+            
+            System.out.println("File to upload: " + url);
+            
+            // creates a HTTP connection
+            URL httpUrl = new URL(serverUrl + "upload");
+            HttpURLConnection httpConn = (HttpURLConnection) httpUrl.openConnection();
+            httpConn.setUseCaches(false);
+            httpConn.setDoOutput(true);
+            httpConn.setRequestMethod("POST");
+            // sets file name as a HTTP header
+            httpConn.setRequestProperty("fileName", uploadFile.getName());
+            httpConn.setRequestProperty("eventId", Integer.toString(id));
+            
+            FileInputStream inputStream;
+            // Opens input stream of the file for reading data
+            try ( // opens output stream of the HTTP connection for writing data
+                    OutputStream outputStream = httpConn.getOutputStream()) {
+                // Opens input stream of the file for reading data
+                inputStream = new FileInputStream(uploadFile);
+                byte[] buffer = new byte[BUFFER_SIZE];
+                int bytesRead;
+                System.out.println("Start writing data...");
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }   System.out.println("Data was written.");
+            }
+            inputStream.close();
+            
+            // always check HTTP response code from server
+            int responseCode = httpConn.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                // reads server's response
+                BufferedReader reader = new BufferedReader(new InputStreamReader(
+                        httpConn.getInputStream()));
+                String response = reader.readLine();
+                System.out.println("Server's response: " + response);
+                return true;
+            } else {
+                System.out.println("Server returned non-OK code: " + responseCode);
+            }
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(EventPosts.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(EventPosts.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
     public EventPost getEvent(int i) {
         return events.get(i);
     }

@@ -38,7 +38,7 @@ public abstract class DataSource {
     /**
      * The url to the java ee server
      */
-    private static final String serverUrl = "http://localhost:8080/Server/";
+    protected static final String serverUrl = "http://localhost:8080/Server/";
 
     /**
      * This method connects us with key to the server

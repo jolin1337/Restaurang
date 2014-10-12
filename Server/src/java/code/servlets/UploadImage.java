@@ -8,6 +8,8 @@
 package code.servlets;
 
 import data.Settings;
+import data.entity.Dish;
+import data.entity.Event;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -15,6 +17,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebInitParam;
@@ -29,10 +34,14 @@ import javax.servlet.http.Part;
  * @author Johannes
  */
 @WebServlet(name = "UploadImage", urlPatterns = {"/upload"}, initParams = {
-    @WebInitParam(name = "key", value = "")})
+    @WebInitParam(name = "key", value = ""),
+    @WebInitParam(name = "oldImgSrc", value = "")})
 @MultipartConfig
 public class UploadImage extends HttpServlet {
 
+    @PersistenceContext(unitName = "WebApplication1PU")
+    private EntityManager em;
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -47,8 +56,26 @@ public class UploadImage extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             if(Settings.isAutorised(request.getParameter("key")) == Settings.AuthCode.accept) {
+                
+                String pkId = request.getParameter("eventId");
+                if(!pkId.equals("")) {
 
-                response.setContentType("text/html;charset=UTF-8");
+                    TypedQuery<Event> eventQuery = em.createNamedQuery("Event.findById", Event.class);
+                    eventQuery.setParameter("id", Integer.parseInt(pkId));
+                    String oldImg = eventQuery.getSingleResult().getImgsrc();
+                    if(!oldImg.equals("") && !oldImg.contains("/")) {
+                        eventQuery = em.createNamedQuery("Event.findByImgsrc", Event.class);
+                        eventQuery.setParameter("imgsrc", oldImg);
+                        
+                        //Is this image used by any other event??
+                        if(eventQuery.getResultList().size() > 1) {
+                            try {
+                                File file = new File(Settings.imagePath, oldImg);
+                                file.delete();
+                            } catch(SecurityException ex) {}
+                        }
+                    }
+                }
 
                 // Create path components to save the file
                 final String path = Settings.imagePath;
