@@ -19,7 +19,7 @@ public class Booking {
     private int id;
     
     // Variables for adding a table
-    private int time, duration, persons = 1;
+    private int duration, persons = 1;
     private String name;
     private Date date;
     
@@ -48,20 +48,6 @@ public class Booking {
      */
     public void setDate(Date date) {
         this.date = date;
-    }
-
-    /**
-     * @return the time
-     */
-    public int getTime() {
-        return time;
-    }
-
-    /**
-     * @param time the time to set
-     */
-    public void setTime(int time) {
-        this.time = time;
     }
 
     /**
