@@ -17,7 +17,10 @@ import com.michaelbaranov.microba.calendar.DatePicker;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Calendar;
 import java.util.Date;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerDateModel;
 /**
  *
  * @author Simple
@@ -31,6 +34,8 @@ public class NewBooking extends JPanel {
     JTextField durationField;
     private JLabel missingBookingInput;
     private JLabel invalidBookingInput;
+    private JSpinner spinner;
+    Date bookingTime;
 
     private JLabel addLabel(String labelName) {
         JLabel label = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>" + labelName + "</div></html>");
@@ -57,9 +62,16 @@ public class NewBooking extends JPanel {
         addLabel("Antal personer: ");
         personsField = addTextField("");
         
-        addLabel("Starttid: ");
-        timeField = addTextField("");
-                
+        /* Time spinner */
+        addLabel("Tid: ");
+        SpinnerDateModel model = new SpinnerDateModel();
+        model.setCalendarField(Calendar.MINUTE);
+        spinner = new JSpinner();
+        spinner.setModel(model);
+        spinner.setEditor(new JSpinner.DateEditor(spinner, "h:mm a"));
+        add(spinner);
+        /* Time spinner */
+
         addLabel("Varaktighet: ");
         durationField = addTextField("");
         
@@ -86,19 +98,31 @@ public class NewBooking extends JPanel {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 missingBookingInput.setVisible(false);
-                if (nameField.getText().isEmpty() || personsField.getText().isEmpty() || durationField.getText().isEmpty() || timeField.getText().isEmpty()){
+
+                Object date = spinner.getValue();
+                bookingTime = new Date();
+                bookingTime = (Date)date;
+    
+                
+                if (nameField.getText().isEmpty() || personsField.getText().isEmpty() || durationField.getText().isEmpty()){
                     missingBookingInput.setVisible(true);
                     return;
                 }
-                if (!( isInteger(personsField.getText()) && isInteger(durationField.getText()) && isInteger(timeField.getText())  )){
+                if (!( isInteger(personsField.getText()) && isInteger(durationField.getText()) )){
                     invalidBookingInput.setVisible(true);
                     return;
                 }
+                
+                // Merge datePicker with timePicker
                 booking.setName(nameField.getText());
                 booking.setPersons(Integer.parseInt(personsField.getText()));
-                booking.setTime(Integer.parseInt(timeField.getText()));
+                bookingTime.setYear(datePicker.getDate().getYear());
+                bookingTime.setMonth(datePicker.getDate().getMonth());
+                bookingTime.setDate(datePicker.getDate().getDate());
+                System.out.println(bookingTime);
+
+                booking.setDate(bookingTime);
                 booking.setDuration(Integer.parseInt(durationField.getText()));
-                booking.setDate(datePicker.getDate());
                 
                 if(ae.getSource().getClass() != JButton.class)
                     return;

@@ -28,7 +28,6 @@ public class Booking {
         this.id = id;
         this.name = name;
         this.date = date;
-        this.time = time;
         this.duration = duration; 
         this.persons = persons;
     }
@@ -40,7 +39,7 @@ public class Booking {
         return date;
     }
     public String getDateString() {
-        DateFormat df = new SimpleDateFormat("dd/MM-yy");
+        DateFormat df = new SimpleDateFormat("dd/MM-yy 'kl:' HH:mm");
         return df.format(this.date);
     }
 
