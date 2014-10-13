@@ -67,6 +67,6 @@ public class EventSessionBean {
     }
     
     public String getUploadUrl() {
-        return Settings.imagePath.replace("/", "\\");
+        return Settings.imagePath;//.replace("/", "\\");
     }
 }
