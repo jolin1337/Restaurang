@@ -110,7 +110,9 @@ public class EventPost implements Comparable<EventPost> {
         try {
             String imgName = getImgSrc();
             if(imgName.lastIndexOf("/") > -1)
-                imgName = imgName.substring(getImgSrc().lastIndexOf("/"));
+                imgName = imgName.substring(getImgSrc().lastIndexOf("/")+1);
+            if(imgName.lastIndexOf("\\") > -1)
+                imgName = imgName.substring(getImgSrc().lastIndexOf("\\")+1);
             value.put("id", getId())
                     .put("image", imgName)
                     .put("pubDate", getPubDate())

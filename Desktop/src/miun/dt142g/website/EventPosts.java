@@ -10,6 +10,7 @@ package miun.dt142g.website;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -143,7 +144,7 @@ public class EventPosts extends DataSource implements Iterable<EventPost> {
             httpConn.setRequestProperty("fileName", uploadFile.getName());
             httpConn.setRequestProperty("eventId", Integer.toString(id));
             
-            FileInputStream inputStream;
+            FileInputStream inputStream = null;
             // Opens input stream of the file for reading data
             try ( // opens output stream of the HTTP connection for writing data
                     OutputStream outputStream = httpConn.getOutputStream()) {
@@ -156,7 +157,12 @@ public class EventPosts extends DataSource implements Iterable<EventPost> {
                     outputStream.write(buffer, 0, bytesRead);
                 }   System.out.println("Data was written.");
             }
-            inputStream.close();
+            catch(FileNotFoundException ex) {}
+            finally {
+                if(inputStream != null)
+                    inputStream.close();
+                else return false;
+            }
             
             // always check HTTP response code from server
             int responseCode = httpConn.getResponseCode();

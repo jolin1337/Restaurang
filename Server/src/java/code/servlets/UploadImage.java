@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.Enumeration;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -33,15 +34,14 @@ import javax.servlet.http.Part;
  *
  * @author Johannes
  */
-@WebServlet(name = "UploadImage", urlPatterns = {"/upload"}, initParams = {
-    @WebInitParam(name = "key", value = ""),
-    @WebInitParam(name = "oldImgSrc", value = "")})
-@MultipartConfig
+@WebServlet(name = "UploadImage", urlPatterns = {"/upload"})
 public class UploadImage extends HttpServlet {
+
+    final int BUFFER_SIZE = 4096;
 
     @PersistenceContext(unitName = "WebApplication1PU")
     private EntityManager em;
-    
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -53,84 +53,66 @@ public class UploadImage extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            if(Settings.isAutorised(request.getParameter("key")) == Settings.AuthCode.accept) {
-                
-                String pkId = request.getParameter("eventId");
-                if(!pkId.equals("")) {
 
-                    TypedQuery<Event> eventQuery = em.createNamedQuery("Event.findById", Event.class);
-                    eventQuery.setParameter("id", Integer.parseInt(pkId));
-                    String oldImg = eventQuery.getSingleResult().getImgsrc();
-                    if(!oldImg.equals("") && !oldImg.contains("/")) {
-                        eventQuery = em.createNamedQuery("Event.findByImgsrc", Event.class);
-                        eventQuery.setParameter("imgsrc", oldImg);
-                        
-                        //Is this image used by any other event??
-                        if(eventQuery.getResultList().size() > 1) {
-                            try {
-                                File file = new File(Settings.imagePath, oldImg);
-                                file.delete();
-                            } catch(SecurityException ex) {}
-                        }
-                    }
-                }
+        String pkId = request.getParameter("eventId");
+        /**
+         * This code could be used later for detecting multiple uses of same image...
+        if (!pkId.equals("")) {
 
-                // Create path components to save the file
-                final String path = Settings.imagePath;
-                final Part filePart = request.getPart("file");
-                final String fileName = getFileName(filePart);
+            TypedQuery<Event> eventQuery = em.createNamedQuery("Event.findById", Event.class);
+            eventQuery.setParameter("id", Integer.parseInt(pkId));
+            String oldImg = eventQuery.getSingleResult().getImgsrc();
+            if (!oldImg.equals("") && !oldImg.contains("/")) {
+                eventQuery = em.createNamedQuery("Event.findByImgsrc", Event.class);
+                eventQuery.setParameter("imgsrc", oldImg);
 
-                OutputStream imgOut;
-                InputStream filecontent = null;
-                final PrintWriter writer = response.getWriter();
-
-                try {
-                    imgOut = new FileOutputStream(new File(path
-                            , fileName));
-                    filecontent = filePart.getInputStream();
-
-                    int read = 0;
-                    final byte[] bytes = new byte[1024];
-
-                    while ((read = filecontent.read(bytes)) != -1) {
-                        imgOut.write(bytes, 0, read);
-                    }
-                    writer.println("New file " + fileName + " created at " + path);
-                    System.out.println("File " + fileName + " being uploaded to " + path);
-                } catch (FileNotFoundException fne) {
-                    writer.println("You either did not specify a file to upload or are "
-                            + "trying to upload a file to a protected or nonexistent "
-                            + "location.");
-                    writer.println("<br/> ERROR: " + fne.getMessage());
-
-                    System.out.println("Problems during file upload. Error: " + fne.getMessage());
-                } finally {
-                    if (out != null) {
-                        out.close();
-                    }
-                    if (filecontent != null) {
-                        filecontent.close();
-                    }
-                    if (writer != null) {
-                        writer.close();
+                //Is this image used by any other event??
+                if (eventQuery.getResultList().size() > 1) {
+                    try {
+                        File file = new File(Settings.imagePath, oldImg);
+                        file.delete();
+                    } catch (SecurityException ex) {
                     }
                 }
             }
         }
-    }
-    
-    private String getFileName(final Part part) {
-        final String partHeader = part.getHeader("content-disposition");
-        System.out.println("Part Header = " + partHeader);
-        for (String content : part.getHeader("content-disposition").split(";")) {
-            if (content.trim().startsWith("filename")) {
-                return content.substring(
-                        content.indexOf('=') + 1).trim().replace("\"", "");
-            }
+        */
+
+        // Gets file name for HTTP header
+        String fileName = request.getHeader("fileName");
+        File saveFile = new File(Settings.imagePath + fileName);
+
+        // prints out all header values
+        System.out.println("===== Begin headers =====");
+        Enumeration<String> names = request.getHeaderNames();
+        while (names.hasMoreElements()) {
+            String headerName = names.nextElement();
+            System.out.println(headerName + " = " + request.getHeader(headerName));
         }
-        return null;
+        System.out.println("===== End headers =====\n");
+
+        // opens input stream of the request for reading data
+        InputStream inputStream = request.getInputStream();
+
+        // opens an output stream for writing file
+        FileOutputStream outputStream = new FileOutputStream(saveFile);
+
+        byte[] buffer = new byte[BUFFER_SIZE];
+        int bytesRead = -1;
+        System.out.println("Receiving data...");
+
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+
+        System.out.println("Data received.");
+        outputStream.close();
+        inputStream.close();
+
+        System.out.println("File written to: " + saveFile.getAbsolutePath());
+
+        // sends response to client
+        response.getWriter().print("UPLOAD DONE");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
