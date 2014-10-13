@@ -15,38 +15,55 @@
                     <c:choose> 
                         <c:when test="${page == null || page == 'home'}" >
                             
-                            <c:forEach items="#{eventSessionBean.getEvents(eventSessionBean.showAll)}" var="event">
+                            <c:forEach items="#{eventSessionBean.getEvents(eventSessionBean.showAfter)}" var="event">
                                 <div class="post event">
                                     <h2>#{event.title}</h2>
                                     <!--<div class="hidden-event"><h:graphicImage  url="/getimage?img=#{event.imgsrc}" alt="#{event.title}" style="width: 100%"/></div>-->
                                     <div class="hidden-event"><h:graphicImage  url="/getimage?img=#{event.imgsrc}" alt="#{event.title}" style="width: 100%"/></div>
                                 </div>
                             </c:forEach>
-                            <div class="post event">
-                                    <h2>Fira in i gryningen med Anders</h2>
-                                    <div class="hidden-event"><h:graphicImage  name="img/fest.JPG" alt="Evenemang Fest med Anders" style="width: 100%"/></div>
-                            </div>
                         </c:when>
                         <c:when test="${page == 'menu'}" >
                             <div class="post event">
-                                A la carte
+                                <h1>A la carte</h1>
                             </div>
+                                
+                            <c:forEach items="#{dishGroupSessionBean.alaCarte}" var="dishGroup">
+                                <div class="post event">
+                                    <h2>#{dishGroup.name}</h2>
+
+                                    <c:forEach items="#{dishGroup.dishList}" var="dish">
+                                        <p>#{dish.name}</p>
+                                    </c:forEach>
+                                </div>
+                            </c:forEach>
                         </c:when>
                         <c:when test="${page == 'bord'}" >
                             <div class="post event">
                                 <h3>Boka ditt bord här!</h3>
-                                <form action="index.php" method="GET">
-                                    <label>Namn: <br/><input class="long" type="text" /></label><br/>
-                                    <label>Telefon: <br/><input class="long" type="text" /></label><br/>
-                                    <label>Datum/tid: <br/><input type="text" /></label><br/>
+                                <p>
+                                    <c:set var="page" value="#{request.getParameter('state')}" />
+                                    <c:choose> 
+                                        <c:when test="${state == 'true'}">
+                                            Vi lyckades att hitta ett bord till er, tack för att du väljer att äta på vår restaurang.
+                                        </c:when>
+                                        <c:when test="${state == 'false'}">
+                                            Tyvärr så gick det inte att boka ett bord just nu. Det kan bero på att det är fullbokat eller att du matat in fel värden i formuläret nedan.
+                                        </c:when>
+                                    </c:choose>
+                                </p>
+                                <form action="newbooking" method="POST">
+                                    <label>Namn: <br/><input name="name" class="long" type="text" /></label><br/>
+                                    <label>Telefon: <br/><input name="tel" class="long" type="text" /></label><br/>
+                                    <label>Datum/tid: <br/><input name="sdate" type="text" /></label><br/>
                                     <label>Antal: 
-                                        <select>
-                                            <option>1</option> 
-                                            <option>2</option> 
-                                            <option>3</option> 
-                                            <option>4</option> 
-                                            <option>5</option> 
-                                            <option>6</option> 
+                                        <select name="count">
+                                            <option value="1">1</option> 
+                                            <option value="2">2</option> 
+                                            <option value="3">3</option> 
+                                            <option value="4">4</option> 
+                                            <option value="5">5</option> 
+                                            <option value="6">6</option> 
                                         </select>
                                     </label><br/>
                                     <span style="color: #999;font-style: italic;">Om ni är mer än 6 personer var god kontakta oss per telefon.</span>
@@ -57,8 +74,15 @@
                         </c:when>
                         <c:when test="${page == 'archive'}" >
                             <div class="post event">
-                                Historiska evenemang...
-                            </div>
+                            <h1>Historiska evenemang</h1>
+                            </div>    
+                            <c:forEach items="#{eventSessionBean.getEvents(eventSessionBean.showAll)}" var="event">
+                                <div class="post event">
+                                    <h2>#{event.title}</h2>
+                                    <!--<div class="hidden-event"><h:graphicImage  url="/getimage?img=#{event.imgsrc}" alt="#{event.title}" style="width: 100%"/></div>-->
+                                    <div class="hidden-event"><h:graphicImage  url="/getimage?img=#{event.imgsrc}" alt="#{event.title}" style="width: 100%"/></div>
+                                </div>
+                            </c:forEach>
                         </c:when>
                         <c:when test="${page == 'test'}" >
                             <div class="post event">

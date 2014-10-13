@@ -9,11 +9,8 @@ package code.beans;
 
 import data.Settings;
 import data.entity.Event;
-import data.entity.Info;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.SimpleFormatter;
 import javax.ejb.Stateful;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -46,11 +43,11 @@ public class EventSessionBean {
             query = em.createNamedQuery("Event.findAll", Event.class);
         else if( toShow == SHOW_EVENTS.SHOW_AFTER) {
             query = em.createNamedQuery("Event.findByPubdateAfter", Event.class);
-            query.setParameter("pubdate", new SimpleDateFormat("yyyyMMdd").format(new Date()));
+            query.setParameter("pubdate", new Date());
         }
         else if( toShow == SHOW_EVENTS.SHOW_BEFORE) {
             query = em.createNamedQuery("Event.findByPubdateBefore", Event.class);
-            query.setParameter("pubdate", new SimpleDateFormat("yyyyMMdd").format(new Date()));
+            query.setParameter("pubdate", new Date());
         }
         else return null;
         return query.getResultList();

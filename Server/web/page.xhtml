@@ -2,7 +2,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -25,7 +26,15 @@
             </ul>
             <div class="right-col">
                 <h2>Veckans meny</h2>
-                <pre><code></code></pre>
+                <pre><code>
+<c:forEach items="#{dishGroupSessionBean.weekMenu}" var="dishGroup">
+#{dishGroup.name}
+
+<c:forEach items="#{dishGroup.dishList}" var="dish">
+#{dish.name}
+</c:forEach>
+</c:forEach>
+</code></pre>
                 <hr/>
                 <h2>Kontakt</h2>
                 <script>

@@ -43,12 +43,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "EVENT", catalog = "", schema = "APP")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Event.findAll", query = "SELECT e FROM Event e WHERE e.imgsrc != ''"),
+    @NamedQuery(name = "Event.findAll", query = "SELECT e FROM Event e WHERE e.imgsrc != '' ORDER BY e.pubdate DESC"),
     @NamedQuery(name = "Event.findById", query = "SELECT e FROM Event e WHERE e.id = :id"),
-    @NamedQuery(name = "Event.findByImgsrc", query = "SELECT e FROM Event e WHERE e.imgsrc = :imgsrc"),
-    @NamedQuery(name = "Event.findByPubdate", query = "SELECT e FROM Event e WHERE e.pubdate = :pubdate"),
-    @NamedQuery(name = "Event.findByPubdateBefore", query = "SELECT e FROM Event e WHERE e.pubdate <= :pubdate"),
-    @NamedQuery(name = "Event.findByPubdateAfter", query = "SELECT e FROM Event e WHERE e.pubdate >= :pubdate"),
+    @NamedQuery(name = "Event.findByImgsrc", query = "SELECT e FROM Event e WHERE e.imgsrc = :imgsrc ORDER BY e.pubdate DESC"),
+    @NamedQuery(name = "Event.findByPubdate", query = "SELECT e FROM Event e WHERE e.pubdate = :pubdate ORDER BY e.pubdate DESC"),
+    @NamedQuery(name = "Event.findByPubdateBefore", query = "SELECT e FROM Event e WHERE e.pubdate <= :pubdate ORDER BY e.pubdate DESC"),
+    @NamedQuery(name = "Event.findByPubdateAfter", query = "SELECT e FROM Event e WHERE e.pubdate >= :pubdate ORDER BY e.pubdate DESC"),
     @NamedQuery(name = "Event.findByTitle", query = "SELECT e FROM Event e WHERE e.title = :title")})
 public class Event extends JsonEntity implements Serializable {
 
