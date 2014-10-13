@@ -3,10 +3,8 @@
  */
 package miun.dt142g;
 
-import java.awt.BorderLayout;
 import java.awt.ScrollPane;
 import javax.swing.JFrame;
-import miun.dt142g.bookings.BookingsPanel;
 /**
  *
  * @author jolin1337

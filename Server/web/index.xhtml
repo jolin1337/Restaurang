@@ -18,7 +18,8 @@
                             <c:forEach items="#{eventSessionBean.getEvents(eventSessionBean.showAll)}" var="event">
                                 <div class="post event">
                                     <h2>#{event.title}</h2>
-                                    <div class="hidden-event"><h:graphicImage  name="C:#{eventSessionBean.uploadUrl}\\#{event.imgsrc}" alt="#{event.title}" style="width: 100%"/></div>
+                                    <!--<div class="hidden-event"><h:graphicImage  url="/getimage?img=#{event.imgsrc}" alt="#{event.title}" style="width: 100%"/></div>-->
+                                    <div class="hidden-event"><h:graphicImage  url="/getimage?img=#{event.imgsrc}" alt="#{event.title}" style="width: 100%"/></div>
                                 </div>
                             </c:forEach>
                             <div class="post event">

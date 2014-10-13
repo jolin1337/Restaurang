@@ -43,7 +43,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "EVENT", catalog = "", schema = "APP")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Event.findAll", query = "SELECT e FROM Event e"),
+    @NamedQuery(name = "Event.findAll", query = "SELECT e FROM Event e WHERE e.imgsrc != ''"),
     @NamedQuery(name = "Event.findById", query = "SELECT e FROM Event e WHERE e.id = :id"),
     @NamedQuery(name = "Event.findByImgsrc", query = "SELECT e FROM Event e WHERE e.imgsrc = :imgsrc"),
     @NamedQuery(name = "Event.findByPubdate", query = "SELECT e FROM Event e WHERE e.pubdate = :pubdate"),

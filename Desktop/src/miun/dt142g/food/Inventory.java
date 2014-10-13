@@ -91,17 +91,41 @@ public class Inventory extends DataSource implements Iterable<Ingredient> {
 
     @Override
     public void update() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        JSONArray data = new JSONArray(); 
+        for(Ingredient ing : this.ingredients){
+            try {
+                JSONObject jsonDataElement = new JSONObject();
+                JSONObject jsonIngredient = new JSONObject();
+                jsonIngredient.put("id", ing.getId());
+                jsonIngredient.put("name", ing.getName());
+                jsonIngredient.put("amount", ing.getAmount());
+                jsonDataElement.put("data", jsonIngredient);
+                data.put(jsonDataElement);
+            } catch (JSONException ex) {
+                Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        JSONObject send = new JSONObject(); 
+        try {
+            send.put("data", data);
+        } catch (JSONException ex) {
+            Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("Json object to send: " + send.toString());
+        String urlParams = "key=" + key + "&table=inventory&data="+send.toString();
+        System.out.println("Update status: " +getRequest("updaterow", urlParams));
     }
 
     @Override
     public int getUniqueId() {
-        int id  = 0;
-        for(Ingredient ing : ingredients){
-            if(ing.getId() > id)
-                id = ing.getId()+1;
-        }
-        return id; 
+        return -1;
+//        int id  = 0;
+//        for(Ingredient ing : ingredients){
+//            if(ing.getId() >= id)
+//                id = ing.getId()+1;
+//        }
+//        return id; 
     }
 
     @Override

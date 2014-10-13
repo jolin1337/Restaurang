@@ -128,12 +128,12 @@ public class BookingsPanel extends JPanel {
         super.revalidate();
         if (newBookingP) {
             Booking bok = bookings.getBookingByIndex(bookings.getRows() - 1);
-            if (bok.getName() == "" || bok.getPersons() == 0 || bok.getDuration() == 0){
+            if (bok.getName().isEmpty() || bok.getPersons() == 0 || bok.getDuration() == 0){
                     newBookingP = false;
                     return;
             }
             model.addRow(new Object[]{
-                bok.getName(), bok.getPersons(), bok.getDateString(), bok.getTime(), bok.getDuration()
+                bok.getName(), bok.getPersons(), bok.getDateString(), bok.getDate().getTime(), bok.getDuration()
             });
             resizeColumnWidth(table);
             newBookingP = false;
