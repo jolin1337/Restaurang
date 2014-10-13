@@ -68,7 +68,7 @@ public class Bookings extends DataSource implements Iterable<Booking> {
     public int getUniqueId() {
         int id  = 0;
         for(Booking bok : bookings){
-            if(bok.getId() > id)
+            if(bok.getId() >= id)
                 id = bok.getId()+1;
         }
         return id; 

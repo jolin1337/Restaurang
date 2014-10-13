@@ -31,7 +31,6 @@ public class BookingPanel extends JPanel{
     private final JTextField nameField; 
     private final JTextField personsField; 
     private final JTextField dateField; 
-    private final JTextField timeField;
     private final JTextField timeLengthField;
     private final Booking booking; 
     
@@ -60,14 +59,12 @@ public class BookingPanel extends JPanel{
         SimpleDateFormat ft = new SimpleDateFormat ("dd/MM-yy 'at' hh:mm");
         
         dateField = new JTextField(ft.format(booking.getDate())); 
-        timeField = new JTextField(Integer.toString(booking.getTime())); 
         timeLengthField = new JTextField(booking.getDuration()); 
         
         //element layout
         nameField.setMaximumSize(new Dimension(Integer.MAX_VALUE,25));
         personsField.setMaximumSize(new Dimension(Integer.MAX_VALUE,25));
         dateField.setMaximumSize(new Dimension(Integer.MAX_VALUE,25));
-        timeField.setMaximumSize(new Dimension(Integer.MAX_VALUE,25));
         timeLengthField.setMaximumSize(new Dimension(Integer.MAX_VALUE,25));
 
         this.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
@@ -75,7 +72,6 @@ public class BookingPanel extends JPanel{
         this.add(nameField);
         this.add(personsField);
         this.add(dateField);
-        this.add(timeField);
         this.add(timeLengthField);
         this.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         this.setVisible(true);
