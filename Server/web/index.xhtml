@@ -12,8 +12,15 @@
             <ui:define name="content">
 
                     <c:set var="page" value="#{request.getParameter('page')}" />
-                    <c:choose>
+                    <c:choose> 
                         <c:when test="${page == null || page == 'home'}" >
+                            
+                            <c:forEach items="#{eventSessionBean.getEvents(eventSessionBean.showAll)}" var="event">
+                                <div class="post event">
+                                    <h2>#{event.title}</h2>
+                                    <div class="hidden-event"><h:graphicImage  name="#{eventSessionBean.uploadUrl}/#{event.imgsrc}" alt="#{event.title}" style="width: 100%"/></div>
+                                </div>
+                            </c:forEach>
                             <div class="post event">
                                     <h2>Fira in i gryningen med Anders</h2>
                                     <div class="hidden-event"><h:graphicImage  name="img/fest.JPG" alt="Evenemang Fest med Anders" style="width: 100%"/></div>
@@ -70,7 +77,7 @@
                         </c:when>
                         <c:otherwise >
                             <div class="post event">
-                                No not a page sorry :/
+                                <h2>No page found at this adress, we are sorry :/</h2>
                             </div>
                         </c:otherwise>
                     </c:choose>

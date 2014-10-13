@@ -47,6 +47,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Event.findById", query = "SELECT e FROM Event e WHERE e.id = :id"),
     @NamedQuery(name = "Event.findByImgsrc", query = "SELECT e FROM Event e WHERE e.imgsrc = :imgsrc"),
     @NamedQuery(name = "Event.findByPubdate", query = "SELECT e FROM Event e WHERE e.pubdate = :pubdate"),
+    @NamedQuery(name = "Event.findByPubdateBefore", query = "SELECT e FROM Event e WHERE e.pubdate <= :pubdate"),
+    @NamedQuery(name = "Event.findByPubdateAfter", query = "SELECT e FROM Event e WHERE e.pubdate >= :pubdate"),
     @NamedQuery(name = "Event.findByTitle", query = "SELECT e FROM Event e WHERE e.title = :title")})
 public class Event extends JsonEntity implements Serializable {
 
