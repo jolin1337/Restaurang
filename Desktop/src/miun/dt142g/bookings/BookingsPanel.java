@@ -133,7 +133,7 @@ public class BookingsPanel extends JPanel {
                     return;
             }
             model.addRow(new Object[]{
-                bok.getName(), bok.getPersons(), bok.getDateString(), bok.getTime(), bok.getDuration()
+                bok.getName(), bok.getPersons(), bok.getDateString(), bok.getDate().getTime(), bok.getDuration()
             });
             resizeColumnWidth(table);
             newBookingP = false;
