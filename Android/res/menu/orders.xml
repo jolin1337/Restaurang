@@ -14,4 +14,8 @@
         android:title="@string/reservations"
         android:orderInCategory="100"
         android:showAsAction="never" />
+    <item android:id="@+id/loginActivity"
+        android:title="@string/login"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
 </menu>
