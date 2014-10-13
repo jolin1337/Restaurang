@@ -9,6 +9,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -22,8 +24,10 @@ import miun.dt142g.food.Inventory;
  */
 public class InventoryPanel extends JPanel {
     
+    private JButton submit; 
     private JButton addIngredient;
     private Inventory inventory;
+    private List<IngredientPanel> panels = new ArrayList<IngredientPanel>();
     
     public InventoryPanel() throws DataSource.WrongKeyException{
         super(); 
@@ -31,6 +35,8 @@ public class InventoryPanel extends JPanel {
         //initiatilizing variables
         this.inventory = new Inventory(); 
         this.addIngredient = new JButton("Lägg till ingrediens");
+        this.submit = new JButton("Synkronisera");
+        
         
         //connecting to database and loading inventory
         this.inventory.dbConnect();
@@ -44,19 +50,41 @@ public class InventoryPanel extends JPanel {
         }
         
         this.add(addIngredient); 
+        this.add(submit);
         addIngredient.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        submit.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         
         
         //adding button event listener to add IngredientPanel
         this.addIngredient.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
+                Ingredient ing = new Ingredient(inventory.getUniqueId(), "", 0);
+                IngredientPanel panel = new IngredientPanel(ing);
+                panels.add(panel);
+                inventory.addIngredient(ing);
+                
                 remove(addIngredient);
-                add(new IngredientPanel(new Ingredient(inventory.getUniqueId(),"",0)));
+                remove(submit);
+                
+                add(panel);
                 add(addIngredient);
+                add(submit);
                 revalidate();   
             }  
         });
         
+        //adding button event listener to add submit
+        this.submit.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                remove(addIngredient);
+                remove(submit);
+                inventory.update();
+                add(addIngredient);
+                add(submit);
+                revalidate();   
+            }  
+        });   
     }
 }
