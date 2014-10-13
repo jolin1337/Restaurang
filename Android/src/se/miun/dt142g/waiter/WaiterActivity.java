@@ -1,6 +1,5 @@
 package se.miun.dt142g.waiter;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;

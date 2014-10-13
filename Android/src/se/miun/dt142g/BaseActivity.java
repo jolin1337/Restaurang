@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import se.miun.dt142g.reservations.ReservationsActivity;
-
 /**
  *
  * @author Johannes
@@ -66,6 +65,12 @@ public class BaseActivity extends Activity {
             System.out.println("Reservations loading view...");
             Intent reservationsActivity = new Intent(act.getApplicationContext(), se.miun.dt142g.reservations.ReservationsActivity.class);
             act.startActivity(reservationsActivity);
+            return true;
+        }  
+        if (id == R.id.loginActivity && !(act instanceof se.miun.dt142g.LoginActivity)) {
+            System.out.println("Login loading view...");
+            Intent loginActivity = new Intent(act.getApplicationContext(), se.miun.dt142g.LoginActivity.class);
+            act.startActivity(loginActivity);
             return true;
         }
         return false; 
