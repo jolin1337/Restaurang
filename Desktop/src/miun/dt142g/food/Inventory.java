@@ -90,7 +90,8 @@ public class Inventory extends DataSource implements Iterable<Ingredient> {
      */
     @Override
     public void loadData() {
-
+        
+        ingredients.clear();
         JSONObject response = null;
         JSONArray data = null; 
         try {
