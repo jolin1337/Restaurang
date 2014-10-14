@@ -24,19 +24,21 @@ import miun.dt142g.data.Dish;
  * @author Johannes
  */
 public class DishesPanel extends JPanel {
+
     List<DishPanel> dishPanels = new ArrayList<>();
     Dishes dishes = new Dishes();
     JButton addDishBtn = new JButton("Lägg till rätt");
-    private Controller fjarr = null;
+    private Controller remote = null;
+
     public DishesPanel(Controller c) throws DataSource.WrongKeyException {
-        this.fjarr = c;
+        this.remote = c;
         dishes.dbConnect();
         dishes.loadData();
-        
+
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.white);
-        for(Dish dish : dishes) {
-            DishPanel dp = new DishPanel(dish, fjarr);
+        for (Dish dish : dishes) {
+            DishPanel dp = new DishPanel(dish, remote);
             add(dp);
             dishPanels.add(dp);
         }
@@ -44,7 +46,7 @@ public class DishesPanel extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                DishPanel dp = new DishPanel(new Dish(dishes.getUniqueId(), "", 0.0f, null), fjarr);
+                DishPanel dp = new DishPanel(new Dish(dishes.getUniqueId(), "", 0.0f, null), remote);
                 remove(addDishBtn);
                 add(dp);
                 add(addDishBtn);
@@ -55,8 +57,14 @@ public class DishesPanel extends JPanel {
         add(addDishBtn);
         addDishBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
     }
-    
+
     public void setViewSwitch(Controller c) {
-        this.fjarr = c;
+        this.remote = c;
+    }
+
+    public void updateTextFieldContents(){
+        for(DishPanel d: dishPanels){
+            d.updateTextFieldContent();
+        }
     }
 }

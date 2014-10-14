@@ -24,11 +24,13 @@ import miun.dt142g.data.Dish;
  * @author Johannes
  */
 public class DishPanel extends JPanel {
+
     Dish dish;
     JTextField name;
+
     public DishPanel(Dish dish, final Controller c) {
         setLayout(new BorderLayout());
-        setBorder(new EmptyBorder(10,10,10,10));
+        setBorder(new EmptyBorder(10, 10, 10, 10));
         setBackground(Color.white);
         setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
         this.dish = dish;
@@ -45,8 +47,9 @@ public class DishPanel extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                if(c != null)
+                if (c != null) {
                     c.setViewDishDetail(DishPanel.this.dish);
+                }
             }
         });
         remove.addActionListener(new ActionListener() {
@@ -54,11 +57,11 @@ public class DishPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 int n = ConfirmationBox.confirm(DishPanel.this, name.getText());
-                if(n == 0)
-                {
+                if (n == 0) {
                     Container parent = DishPanel.this.getParent();
                     parent.remove(DishPanel.this);
                     parent.revalidate();
+                    parent.repaint();
                 }
             }
         });
@@ -66,5 +69,10 @@ public class DishPanel extends JPanel {
         add(detail, BorderLayout.EAST);
        // item.setBorder(new EmptyBorder(10,10,10,10));
         //add(item);
+
     }
+    public void updateTextFieldContent(){
+        name.setText(dish.getName());
+    }
+
 }

@@ -46,11 +46,13 @@ public class SharedTabs extends JPanel {
     JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
     List<JComponent> panels = new ArrayList<>();
     NewBooking newBooking = new NewBooking();
+    DishesPanel dishesPanel;
     
-    Controller fjarr = new Controller() {
+    Controller remote = new Controller() {
 
         @Override
         public void setViewDishes() {
+            dishesPanel.updateTextFieldContents();
             tabbedPane.setSelectedIndex(0);
         }
 
@@ -87,23 +89,23 @@ public class SharedTabs extends JPanel {
         
     };
     public SharedTabs() throws DataSource.WrongKeyException {
-        dishDetailView = new DishDetailPanel(null);
+        dishDetailView = new DishDetailPanel(null, remote);
+        dishesPanel = new DishesPanel(remote);
         
         setLayout(new BorderLayout());
-        DishesPanel panel1 = new DishesPanel(fjarr);
-        panel1.setViewSwitch(fjarr);
-        panels.add(panel1);
+        dishesPanel.setViewSwitch(remote);
+        panels.add(dishesPanel);
         JComponent panel2 = new WebsitePanel();
         panels.add(panel2);
         InventoryPanel panel3 = new InventoryPanel(); 
         panels.add(panel3);
         UsersPanel panel4 = new UsersPanel();
         panels.add(panel4);
-        MenuPanel panel5 = new MenuPanel(fjarr, new String[]{"A la Carte"});
+        MenuPanel panel5 = new MenuPanel(remote, new String[]{"A la Carte"});
         panels.add(panel5);
-        MenuPanel panel6 = new MenuPanel(fjarr, new String[]{"Måndag","Tisdag","Onsdag","Torsdag","Fredag"});
+        MenuPanel panel6 = new MenuPanel(remote, new String[]{"Måndag","Tisdag","Onsdag","Torsdag","Fredag"});
         panels.add(panel6);
-        BookingsPanel panel7 = new BookingsPanel(fjarr);
+        BookingsPanel panel7 = new BookingsPanel(remote);
         panels.add(panel7);
         SchedulesPanel panel8 = new SchedulesPanel();
         panels.add(panel8);
