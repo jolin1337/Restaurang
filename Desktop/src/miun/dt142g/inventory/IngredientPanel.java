@@ -22,21 +22,33 @@ import miun.dt142g.ConfirmationBox;
 import miun.dt142g.data.Ingredient;
 
 /**
- *
+ * JPanel for a single Ingredient. Fields update when their focus is lost. 
+ * Remove button "X" removes the panel and ingredient after confirmation from 
+ * user. 
+ * 
  * @author ulf
+ * @see Jpanel
+ * @see FocusListener
  */
 public class IngredientPanel extends JPanel implements FocusListener{
     
-    private JButton close; 
+    private final JButton close; 
     private final JTextField ingredientName; 
     private final JTextField amount; 
     private final JLabel amountLabel; 
-    private Ingredient ingredient; 
+    private final Ingredient ingredient; 
     
-    public IngredientPanel(Ingredient ingredient){
+    /**
+     * Constructor initializes the panel and adds focus listeners and 
+     * click listeners
+     * 
+     * @param ingredient The Ingredient to represent in the panel
+     */
+    public IngredientPanel(final Ingredient ingredient){
         super(); 
 
         this.ingredient = ingredient; 
+        
         this.ingredientName = new JTextField(ingredient.getName()); 
         this.amount = new JTextField(Integer.toString(ingredient.getAmount()));
         this.close = new JButton("X");
@@ -54,6 +66,10 @@ public class IngredientPanel extends JPanel implements FocusListener{
         ingredientName.addFocusListener(this);
         close.addActionListener(new ActionListener() {
 
+            /**
+             * Event listener for close button with confirmation
+             * @param ae 
+             */
             @Override
             public void actionPerformed(ActionEvent ae) {
                 int n = ConfirmationBox.confirm(IngredientPanel.this, ingredientName.getText());
@@ -62,8 +78,7 @@ public class IngredientPanel extends JPanel implements FocusListener{
                     parent.remove(IngredientPanel.this);
                     parent.revalidate();
                     parent.repaint();
-                //add remove from database
-                
+                    ingredient.setFlaggedForRemoval(true);
                 }
             }
         });
@@ -77,15 +92,27 @@ public class IngredientPanel extends JPanel implements FocusListener{
         
     }
     
+    /**
+     * Returns the ingredient associated with this panel
+     * @return The ingredient associated with this panel
+     */
     public Ingredient getIngredient(){
         return this.ingredient;
     } 
 
+    /**
+     * Required abstract method implementation (not used)
+     * @param e 
+     */
     @Override
     public void focusGained(FocusEvent e) {
         //do nothing
     }
 
+    /**
+     * Updates ingredients with data from fields when focus is lost
+     * @param e 
+     */
     @Override
     public void focusLost(FocusEvent e) {
         if (isInteger(this.amount.getText()))
@@ -94,6 +121,11 @@ public class IngredientPanel extends JPanel implements FocusListener{
         System.out.println("apor");
     }
     
+    /**
+     * checks to see if Integer.parseInt(String s) is possible
+     * @param s String to check
+     * @return true if the parameter s is numeric
+     */
     private boolean isInteger(String s) {
         try {
             Integer.parseInt(s);

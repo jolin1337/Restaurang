@@ -19,8 +19,11 @@ import miun.dt142g.data.Ingredient;
 import miun.dt142g.food.Inventory;
 
 /**
- *
+ * Inventory administration panel. Keeps track of ingredients and allows user to
+ * add ingredients and syncronize ingredients with server. 
  * @author ulf
+ * @see JPanel
+ * @see IngredientPanel
  */
 public class InventoryPanel extends JPanel {
     
@@ -29,20 +32,21 @@ public class InventoryPanel extends JPanel {
     private Inventory inventory;
     private List<IngredientPanel> panels = new ArrayList<IngredientPanel>();
     
+    /**
+     * Constructor sets up layout and adds event listeners to buttons. Also 
+     * loads ingredients from database into local list of ingredients.
+     * @throws miun.dt142g.DataSource.WrongKeyException 
+     */
     public InventoryPanel() throws DataSource.WrongKeyException{
         super(); 
         
-        //initiatilizing variables
         this.inventory = new Inventory(); 
         this.addIngredient = new JButton("Lägg till ingrediens");
         this.submit = new JButton("Synkronisera");
         
-        
-        //connecting to database and loading inventory
         this.inventory.dbConnect();
         this.inventory.loadData();
         
-        //setting up layout an adding existing inventory items 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(Color.white); 
         for(Ingredient ingredient: inventory) {
@@ -54,9 +58,14 @@ public class InventoryPanel extends JPanel {
         addIngredient.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         submit.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         
-        
-        //adding button event listener to add IngredientPanel
         this.addIngredient.addActionListener(new ActionListener(){
+            
+            /**
+             * Event listener for addIngredient button, adds a IngredientPanel 
+             * to layout and adds the ingredient for that IngredientPanel to 
+             * local list of ingredients
+             * @param e 
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 Ingredient ing = new Ingredient(inventory.getUniqueId(), "", 0);
@@ -74,7 +83,10 @@ public class InventoryPanel extends JPanel {
             }  
         });
         
-        //adding button event listener to add submit
+        /**
+         * Event listener for submit button, synchronizes the local ingredient 
+         * list with server
+         */
         this.submit.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {

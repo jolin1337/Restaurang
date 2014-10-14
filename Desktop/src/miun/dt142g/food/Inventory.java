@@ -18,15 +18,33 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- *
+ * This class is a container class for se.miun.dt142g.data.Ingredient
+ * 
+ * An instance of the class stores Ingredients in an ArrayList and uses superclass
+ * DataSource methods for server interaction. 
+ * 
  * @author Ulf
+ * @see Iterable
+ * @see Datasource
+ * 
  */
 public class Inventory extends DataSource implements Iterable<Ingredient> {
     private final List<Ingredient> ingredients = new ArrayList<>();
     
+    /**
+     * Constructor does nothing. Class relies on it's other methods for explicit
+     * interaction through DataSource. 
+     */
     public Inventory(){
     }
     
+    /**
+     * Searches list of ingredients for an Ingredient with the given id and
+     * if it's found returns that Ingredient
+     * @param id the id of the Ingredient object to get. 
+     * @return returns Ingredient object if an Ingredient with correct id is 
+     * in the list of ingredients, else returns null
+     */
     public Ingredient getIngredient(int id){
         for(Ingredient ing : ingredients)
             if(ing.getId() == id)
@@ -34,11 +52,20 @@ public class Inventory extends DataSource implements Iterable<Ingredient> {
         return null;
     }
     
+    /**
+     * Adds Ingredient to list of ingredients. 
+     * @param ingredient The Ingredient to add to list of ingredients
+     */
     public void addIngredient(Ingredient ingredient){
         ingredients.add(ingredient);
         
     }
     
+    /**
+     * Adds Ingredient from json object to list of ingredients
+     * @param jsonIngredient json object representing an Ingredient to add
+     * @return returns true if the ingredient was successfully added
+     */
     public boolean addJsonIngredient(JSONObject jsonIngredient){
 
         int id;
@@ -58,16 +85,16 @@ public class Inventory extends DataSource implements Iterable<Ingredient> {
         return false;
     }
     
-    public void remove(int id){
-        ingredients.remove(this.getIngredient(id)); 
-    }
-    
-    public void editIngredient(int id, Ingredient ingredient){
-        ingredients.set(ingredients.indexOf(id), ingredient);
-    }
-
+    /**
+     * Loads ingredients list from database. 
+     */
     @Override
     public void loadData() {
+        try {
+            this.dbConnect();
+        } catch (WrongKeyException ex) {
+            return; 
+        }
         JSONObject response = null;
         JSONArray data = null; 
         try {
@@ -84,23 +111,37 @@ public class Inventory extends DataSource implements Iterable<Ingredient> {
             }
         }
         Collections.sort(ingredients);
-        //ingredients.add(new Ingredient(getUniqueId(), "Fisk", 10));
-        //ingredients.add(new Ingredient(0, "Potatis", 10));
-        //ingredients.add(new Ingredient(0, "Gurka", 10));
     }
 
+    /**
+     * Updates ingredients list in database
+     */
     @Override
     public void update() {
         JSONArray data = new JSONArray(); 
-        for(Ingredient ing : this.ingredients){
+        for(Ingredient ing : this.ingredients) {
             try {
                 JSONObject jsonDataElement = new JSONObject();
                 JSONObject jsonIngredient = new JSONObject();
+                if (ing.isFlaggedForRemoval()) {
+                    if(canBeRemoved(ing.getId())){
+                        jsonIngredient.put("id", ing.getId());
+                        jsonIngredient.put("remove", true);
+                        jsonDataElement.put("data", jsonIngredient);
+                        data.put(jsonDataElement);
+                    }
+                    else {
+                        // Do something like popup indicating ingredient couldn't be removed.
+                    }
+                }
+                else {
                 jsonIngredient.put("id", ing.getId());
                 jsonIngredient.put("name", ing.getName());
                 jsonIngredient.put("amount", ing.getAmount());
                 jsonDataElement.put("data", jsonIngredient);
                 data.put(jsonDataElement);
+                }
+
             } catch (JSONException ex) {
                 Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -117,6 +158,11 @@ public class Inventory extends DataSource implements Iterable<Ingredient> {
         System.out.println("Update status: " +getRequest("updaterow", urlParams));
     }
 
+    /**
+     * Possibly deprecated. Unique ingredient id is handled in database, id of 
+     * -1 sent to database means the ingredient is new. 
+     * @return -1
+     */
     @Override
     public int getUniqueId() {
         return -1;
@@ -128,8 +174,38 @@ public class Inventory extends DataSource implements Iterable<Ingredient> {
 //        return id; 
     }
 
+    /**
+     * to enable iteration 
+     * @return returns iterator of List<Ingredient> object
+     */
     @Override
     public Iterator<Ingredient> iterator() {
         return ingredients.iterator();
+    }
+    
+    /**
+     * Checks if ingredient currently is in any dish_has_ingredient entry
+     * @param id the id of ingredient to check
+     * @return returns true if it's safe to remove ingredient. 
+     */
+    private boolean canBeRemoved(int id){
+        JSONObject dishHasInventory = null;
+        JSONArray data = null; 
+        try {
+            dishHasInventory = getJsonRequest("dish_has_inventory");
+            data = dishHasInventory.getJSONArray("data");
+        } catch (JSONException ex) {
+            Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        for(int i = 0;i<data.length();i++){
+            try {
+                if(id == data.getJSONObject(i).getInt("inventory_id")){
+                    return false; 
+                }
+            } catch (JSONException ex) {
+                Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return true; 
     }
 }
