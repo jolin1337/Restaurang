@@ -8,6 +8,7 @@
 package code.servlets;
 
 import data.Settings;
+import data.entity.Booking;
 import data.entity.Dish;
 import data.entity.Dishgroup;
 import data.entity.Event;
@@ -117,7 +118,8 @@ public class UpdateRow extends HttpServlet {
                             edited |= updateTable(obj, obj.getInt(Dish.getPK(), -1), Dish.class);
                             break;
                         case "booking":
-
+                            // try to alter the table
+                            edited |= updateTable(obj, obj.getInt(Booking.getPK(), -1), Booking.class);
                             break;
                         case "dishgroup":
                             // try to alter the table
@@ -181,7 +183,6 @@ public class UpdateRow extends HttpServlet {
             if (dishEntity == null || !obj.containsKey("remove")) {
                 // Should always be true, but just in case!
                 if (modEntity instanceof JsonEntity) {
-
                     // update the entity to for new values
                     edited = ((JsonEntity) modEntity).setEntityByJson(obj, em);
                     if (edited) { // if we succeded to edit them

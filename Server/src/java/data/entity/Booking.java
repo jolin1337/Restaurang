@@ -35,14 +35,18 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Booking.findAll", query = "SELECT b FROM Booking b"),
     @NamedQuery(name = "Booking.findById", query = "SELECT b FROM Booking b WHERE b.id = :id"),
     @NamedQuery(name = "Booking.findByName", query = "SELECT b FROM Booking b WHERE b.name = :name"),
-    @NamedQuery(name = "Booking.findByDate", query = "SELECT b FROM Booking b WHERE b.startDate = :date")})
+    @NamedQuery(name = "Booking.findByDate", query = "SELECT b FROM Booking b WHERE b.startDate = :date"),
+    @NamedQuery(name = "Booking.findByPhone", query = "SELECT b FROM Booking b WHERE b.phone = :phone")})
 public class Booking extends JsonEntity implements Serializable {
+
+    public Booking() {
+    }
     private static final long serialVersionUID = 1L;
-    @Column(name = "ID")
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @NotNull
+    @Column(name = "ID")
+    private Integer id;
     @Column(name = "DURATION")
     private int duration;
     @Column(name = "PERSONS")
@@ -50,14 +54,17 @@ public class Booking extends JsonEntity implements Serializable {
     @Column(name = "NAME")
     private String name;
     @Column(name = "STARTDATE")
-    private String startDate;
+    private long startDate;
+    @Column(name = "phone")
+    private int phone;
 
 
-    public Long getId() {
+    
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -92,9 +99,8 @@ public class Booking extends JsonEntity implements Serializable {
             this.duration = obj.getInt("duration", 2);
             this.persons = obj.getInt("persons", 1);
             this.name = obj.getString("name", "Anders Svensson");
-            Date d = new Date();
-            SimpleDateFormat ft = new SimpleDateFormat ("dd/MM-yy 'at' hh:mm");
-            this.startDate = ft.format(d);
+            this.phone = obj.getInt("phone", 070000000);
+            this.startDate = new Date(obj.getInt("date")).getTime();
         }catch(NullPointerException | ClassCastException ex){
             return false;
         }
@@ -107,6 +113,7 @@ public class Booking extends JsonEntity implements Serializable {
                 .add("id", getId())
                 .add("name", getName())
                 .add("persons", getPersons())
+                .add("phone", getPhone())
                 .add("duration", getDuration())
                 .add("date", getStartDate())
                 .build();
@@ -158,15 +165,29 @@ public class Booking extends JsonEntity implements Serializable {
     /**
      * @return the startDate
      */
-    public String getStartDate() {
+    public long getStartDate() {
         return startDate;
     }
 
     /**
      * @param startDate the startDate to set
      */
-    public void setStartDate(String startDate) {
+    public void setStartDate(long startDate) {
         this.startDate = startDate;
+    }
+
+    /**
+     * @return the phone
+     */
+    public int getPhone() {
+        return phone;
+    }
+
+    /**
+     * @param phone the phone to set
+     */
+    public void setPhone(int phone) {
+        this.phone = phone;
     }
     
 }

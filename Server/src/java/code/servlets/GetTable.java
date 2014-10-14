@@ -8,6 +8,7 @@
 package code.servlets;
 
 import data.Settings;
+import data.entity.Booking;
 import data.entity.Dish;
 import data.entity.Dishgroup;
 import data.entity.Event;
@@ -63,7 +64,10 @@ public class GetTable extends HttpServlet {
                         }
                         break; 
                     case "booking":
-                        
+                        TypedQuery<Booking> bookingQuery = em.createNamedQuery("Booking.findAll", Booking.class);
+                        for(Booking d : bookingQuery.getResultList()){
+                            jsonString += d.toJsonString() + ",";
+                        }
                         break; 
                     case "dishgroup": 
                         
