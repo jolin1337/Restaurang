@@ -11,6 +11,16 @@ import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.ExpandableListView.OnGroupCollapseListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.Toast;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import se.miun.dt142g.BaseActivity;
 import se.miun.dt142g.R;
 
@@ -134,6 +144,44 @@ public class Orders extends BaseActivity {
         listDataChild.put(listDataHeader.get(0), bord1);
         listDataChild.put(listDataHeader.get(1), bord2);
         listDataChild.put(listDataHeader.get(2), bord3);
+        
+        String url = ""; 
+        try{
+            URL obj = new URL("http://localhost:8080/Server/" + url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            
+            con.setRequestMethod("POST");
+            con.setRequestProperty("User-Agent", "User-Agent");
+            con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+            
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes("params- What is this? What format?");
+            wr.flush();
+                        
+            int responseCode = con.getResponseCode();
+            if(!url.equals("test")) {
+                System.out.println("\nSending 'POST' request to URL : " + url);
+                //System.out.println("Post parameters : " + params);
+                System.out.println("Response Code : " + responseCode);
+            }
+            
+            StringBuilder response;
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            response = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+
+            //print result
+            //response.toString();
+            
+        } catch (Exception e){
+            Logger.getLogger(Orders.class.getName()).log(Level.SEVERE, null, e);
+        }
+        
     }
 
 }
