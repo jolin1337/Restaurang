@@ -95,6 +95,7 @@ public class Inventory extends DataSource implements Iterable<Ingredient> {
         } catch (WrongKeyException ex) {
             return; 
         }
+        ingredients.clear();
         JSONObject response = null;
         JSONArray data = null; 
         try {

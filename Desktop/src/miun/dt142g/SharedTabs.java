@@ -5,14 +5,16 @@
  */
 package miun.dt142g;
 
-
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.ScrollPane;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -42,12 +44,13 @@ import miun.dt142g.schedule.SchedulesPanel;
  * @author Tomas
  */
 public class SharedTabs extends JPanel {
+
     DishDetailPanel dishDetailView;
     JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
     List<JComponent> panels = new ArrayList<>();
     NewBooking newBooking = new NewBooking();
     DishesPanel dishesPanel;
-    
+
     Controller remote = new Controller() {
 
         @Override
@@ -63,7 +66,16 @@ public class SharedTabs extends JPanel {
 
         @Override
         public void setViewDishDetail(Dish d) {
-            dishDetailView.setDish(d);
+            try {
+                dishDetailView.setDish(d);
+            } catch (DataSource.WrongKeyException ex) {
+                Container parent = SharedTabs.this.getParent();
+                parent.add(new LoginPage());
+                parent.remove(SharedTabs.this);
+                parent.revalidate();
+                parent.repaint();
+            }
+
             tabbedPane.addTab("Rätten i detaij", dishDetailView);
             tabbedPane.revalidate();
             tabbedPane.setSelectedComponent(dishDetailView);
@@ -73,9 +85,9 @@ public class SharedTabs extends JPanel {
         public void setViewInventory() {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
-        
+
         @Override
-        public void setViewUsers(){
+        public void setViewUsers() {
             tabbedPane.setSelectedIndex(4);
         }
 
@@ -86,64 +98,66 @@ public class SharedTabs extends JPanel {
             tabbedPane.revalidate();
             tabbedPane.setSelectedComponent(newBooking);
         }
-        
+
     };
+
     public SharedTabs() throws DataSource.WrongKeyException {
         dishDetailView = new DishDetailPanel(null, remote);
         dishesPanel = new DishesPanel(remote);
-        
+
         setLayout(new BorderLayout());
         dishesPanel.setViewSwitch(remote);
         panels.add(dishesPanel);
         JComponent panel2 = new WebsitePanel();
         panels.add(panel2);
-        InventoryPanel panel3 = new InventoryPanel(); 
+        InventoryPanel panel3 = new InventoryPanel();
         panels.add(panel3);
         UsersPanel panel4 = new UsersPanel();
         panels.add(panel4);
         MenuPanel panel5 = new MenuPanel(remote, new String[]{"A la Carte"});
         panels.add(panel5);
-        MenuPanel panel6 = new MenuPanel(remote, new String[]{"Måndag","Tisdag","Onsdag","Torsdag","Fredag"});
+        MenuPanel panel6 = new MenuPanel(remote, new String[]{"Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag"});
         panels.add(panel6);
         BookingsPanel panel7 = new BookingsPanel(remote);
         panels.add(panel7);
         SchedulesPanel panel8 = new SchedulesPanel();
         panels.add(panel8);
-        String[] titles = {"Rätter", "Hemsida","Inventarie", "Användare", "A La Carté","Veckans Meny", "Bokningar", "Schema"};
+        String[] titles = {"Rätter", "Hemsida", "Inventarie", "Användare", "A La Carté", "Veckans Meny", "Bokningar", "Schema"};
         int i = 0;
-        for(JComponent panel : panels) {
+        for (JComponent panel : panels) {
             ScrollPane sp = new ScrollPane(ScrollPane.SCROLLBARS_AS_NEEDED);
             sp.add(panel);
-            panel.setBorder(new EmptyBorder(10,10,10,10));
+            panel.setBorder(new EmptyBorder(10, 10, 10, 10));
             tabbedPane.addTab(titles[i], sp);
             i++;
         }
-        
+
         tabbedPane.addChangeListener(new ChangeListener() {
-            
+
             @Override
             public void stateChanged(ChangeEvent ce) {
-                for(JComponent j : panels) {
+                for (JComponent j : panels) {
                     j.revalidate();
                 }
-                if(tabbedPane.isAncestorOf(newBooking) && tabbedPane.getSelectedComponent() != newBooking)
+                if (tabbedPane.isAncestorOf(newBooking) && tabbedPane.getSelectedComponent() != newBooking) {
                     tabbedPane.remove(newBooking);
-                if(tabbedPane.isAncestorOf(dishDetailView) && tabbedPane.getSelectedComponent() != dishDetailView)
+                }
+                if (tabbedPane.isAncestorOf(dishDetailView) && tabbedPane.getSelectedComponent() != dishDetailView) {
                     tabbedPane.remove(dishDetailView);
+                }
             }
         });
-        
+
         //Add the tabbed pane to this panel.
         add(tabbedPane);
-        
+
         //The following line enables to use scrolling tabs.
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
     }
 
     /**
-     * Create the GUI and show it.  For thread safety,
-     * this method should be invoked from
-     * the event dispatch thread.
+     * Create the GUI and show it. For thread safety, this method should be
+     * invoked from the event dispatch thread.
      */
     private static void createAndShowGUI() {
         //Create and set up the window.
@@ -151,7 +165,7 @@ public class SharedTabs extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ImageIcon img = new ImageIcon("res/graphics/logo.png");
         frame.setIconImage(img.getImage());
-        
+
         try {
             SharedTabs st = new SharedTabs();
             //Add content to the window.
@@ -159,34 +173,34 @@ public class SharedTabs extends JPanel {
         } catch (DataSource.WrongKeyException ex) {
             frame.getContentPane().add(new LoginPage());
         }
-        
+
         //Display the window.
         frame.pack();
-        frame.setMinimumSize(new Dimension(700,700));
+        frame.setMinimumSize(new Dimension(700, 700));
         frame.setVisible(true);
     }
-    
+
     public static void main(String[] args) {
-        
+
         UIManager.put("Button.font", new Font("Calibri", Font.PLAIN, 22));
         UIManager.put("Button.background", Styles.btnBackground);
         UIManager.put("Button.foreground", Styles.btnForeground);
-        
+
         UIManager.put("Label.font", new Font("Calibri", Font.BOLD, 25));
-        
+
         UIManager.put("TextArea.font", new Font("Calibri", Font.PLAIN, 22));
         UIManager.put("TextArea.background", Styles.fieldColor);
         UIManager.put("TextArea.border", BorderFactory.createLoweredBevelBorder());
-        
+
         UIManager.put("TextField.font", new Font("Calibri", Font.PLAIN, 32));
         UIManager.put("TextField.background", Styles.fieldColor);
         UIManager.put("TextField.selectionBackground", Color.RED);
         UIManager.put("TextField.selectionForeground", Color.WHITE);
         UIManager.put("TextField.caretForeground", Color.pink);
-        
+
         UIManager.put("Table.font", new Font("Calibri", Font.PLAIN, 22));
         UIManager.put("Table.selectionBackground", Styles.fieldColor);
-        
+
         UIManager.put("ComboBox.background", Styles.fieldColor);
         UIManager.put("ComboBox.selectionBackground", Color.RED);
         //Schedule a job for the event dispatch thread:
@@ -194,9 +208,8 @@ public class SharedTabs extends JPanel {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-		createAndShowGUI();
+                createAndShowGUI();
             }
-        });        
-    } 
+        });
+    }
 }
-
