@@ -10,6 +10,9 @@ package code.servlets;
 import data.entity.Booking;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
@@ -77,7 +80,17 @@ public class BookingServlet extends HttpServlet {
             response.sendRedirect(response.encodeRedirectURL("/Server/faces/index.xhtml?page=bord&status=false") );
         Booking newBooking = new Booking();
         newBooking.setName(name);
-        newBooking.setStartDate(sdate);
+        SimpleDateFormat ft = new SimpleDateFormat ("dd/MM-yy 'kl:' HH:mm");
+        Date d = new Date(); 
+        d.setTime(0);
+        try {
+            d = ft.parse(sdate);
+        } catch (ParseException ex) {
+            Logger.getLogger(BookingServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        newBooking.setPhone(Integer.parseInt(tel));
+        newBooking.setDuration(2);
+        newBooking.setStartDate(d.getTime());
         newBooking.setPersons(count);
         EntityManager em = null;
         try {

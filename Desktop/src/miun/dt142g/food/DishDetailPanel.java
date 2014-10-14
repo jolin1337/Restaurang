@@ -10,6 +10,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -18,6 +19,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import miun.dt142g.Controller;
 import miun.dt142g.DataSource;
 import miun.dt142g.data.Dish;
 import miun.dt142g.data.Ingredient;
@@ -27,54 +29,71 @@ import miun.dt142g.data.Ingredient;
  * @author Johannes
  */
 public class DishDetailPanel extends JPanel {
-    Dish dish=null;
+
+    Dish dish = null;
     Inventory inv = new Inventory();
     JButton addIngBtn = new JButton("Lägg till ingrediens");
-    JPanel ingredientsPanel = new JPanel();
-    public DishDetailPanel(Dish dish) throws DataSource.WrongKeyException {
-        inv.dbConnect();
-        inv.loadData();
+    JButton saveDishBtn;
+    JPanel ingredientsContainer;
+    Controller remote = null;
+    List<JComboBox> ingredientsComboBoxes;
+    List<JPanel> ingredientPanelList;
+
+    public DishDetailPanel(Dish dish, final Controller c) throws DataSource.WrongKeyException {
+        remote = c;
+
         setBackground(Color.white);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        ingredientsPanel.setLayout(new BoxLayout(ingredientsPanel, BoxLayout.Y_AXIS));
-        if(dish == null)
+
+        if (dish == null) {
             return;
+        }
         setDish(dish);
+
     }
+
     private JLabel addLabel(String labelName) {
         JLabel label = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>" + labelName + "</div></html>");
-        Box  fixHeight = Box.createHorizontalBox();
-        fixHeight.add( label );
-        fixHeight.add( Box.createHorizontalGlue() );
-        add(fixHeight); 
+        Box fixHeight = Box.createHorizontalBox();
+        fixHeight.add(label);
+        fixHeight.add(Box.createHorizontalGlue());
+        add(fixHeight);
         return label;
     }
+
     private JTextField addTextField(String textName) {
         JTextField textField = new JTextField(textName);
         textField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
-        add(textField);  
+        add(textField);
         return textField;
     }
-    public final void setDish(Dish d) {
+
+    public final void setDish(Dish d) throws DataSource.WrongKeyException {
+        inv.dbConnect();
+        inv.loadData();
         removeAll();
         addIngBtn = new JButton("Lägg till ingrediens");
+
         dish = d;
         addLabel("Namn");
-        addTextField(dish.getName());
-        
+        final JTextField name = addTextField(dish.getName());
+        ingredientsContainer = new JPanel();
+        ingredientsContainer.setLayout(new BoxLayout(ingredientsContainer, BoxLayout.Y_AXIS));
         addLabel("Ingredienser");
         List<Integer> ingredients = dish.getIngredients();
-        if(ingredients != null)
-            for(Integer ingredient : ingredients) {
+        ingredientsComboBoxes = new ArrayList<>();
+        ingredientPanelList = new ArrayList<>();
+        if (ingredients != null) {
+            for (Integer ingredient : ingredients) {
                 JButton remove = new JButton("X");
                 remove.setMaximumSize(new Dimension(35, 35));
                 remove.addActionListener(removeIngredientListener);
                 JComboBox jListInventory = new JComboBox();
-                for(Ingredient ing : inv) {
+                for (Ingredient ing : inv) {
                     jListInventory.addItem(ing);
-                    if(ing.getId() == ingredient) {
+                    if (ing.getId() == ingredient) {
                         jListInventory.setSelectedItem(ing);
-                    }       
+                    }
                 }
                 //JTextField ingEdit = new JTextField(name);
                 JPanel horiView = new JPanel();
@@ -82,10 +101,13 @@ public class DishDetailPanel extends JPanel {
                 horiView.setLayout(new BoxLayout(horiView, BoxLayout.LINE_AXIS));
                 horiView.add(remove);
                 horiView.add(jListInventory);
-                ingredientsPanel.add(horiView);
+                ingredientPanelList.add(horiView);
+                ingredientsComboBoxes.add(jListInventory);
+                ingredientsContainer.add(horiView);
             }
-        ingredientsPanel.setMaximumSize(ingredientsPanel.getPreferredSize());
-        add(ingredientsPanel);
+        }
+        ingredientsContainer.setMaximumSize(ingredientsContainer.getPreferredSize());
+        add(ingredientsContainer);
         addIngBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         add(addIngBtn);
         addIngBtn.addActionListener(new ActionListener() {
@@ -94,10 +116,10 @@ public class DishDetailPanel extends JPanel {
                 JButton remove = new JButton("X");
                 remove.setMaximumSize(new Dimension(35, 35));
                 remove.addActionListener(removeIngredientListener);
-                
+
                 JComboBox jListInventory = new JComboBox();
                 String name = "";
-                for(Ingredient ing : inv) {
+                for (Ingredient ing : inv) {
                     jListInventory.addItem(ing);
                 }
                 JPanel horiView = new JPanel();
@@ -105,27 +127,55 @@ public class DishDetailPanel extends JPanel {
                 horiView.setLayout(new BoxLayout(horiView, BoxLayout.LINE_AXIS));
                 horiView.add(remove);
                 horiView.add(jListInventory);
-                ingredientsPanel.add(horiView);
-                ingredientsPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, ingredientsPanel.getPreferredSize().height));
-                ingredientsPanel.revalidate();
+                ingredientPanelList.add(horiView);
+                ingredientsComboBoxes.add(jListInventory);
+                ingredientsContainer.add(horiView);
+                ingredientsContainer.setMaximumSize(new Dimension(Integer.MAX_VALUE, ingredientsContainer.getPreferredSize().height));
+                ingredientsContainer.revalidate();
             }
         });
         addLabel("Pris");
-        addTextField(Float.toString(dish.getPrice()));
+        final JTextField price = addTextField(Float.toString(dish.getPrice()));
+        saveDishBtn = new JButton("Spara rätt");
+        saveDishBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        add(saveDishBtn);
+        saveDishBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                dish.setName(name.getText());
+                dish.setPrice(Float.parseFloat(price.getText()));
+
+                dish.getIngredients().clear();
+
+                for (JComboBox ingredientsComboBox : ingredientsComboBoxes) {
+                    Object ingredient = ingredientsComboBox.getSelectedItem();
+                    if (ingredient instanceof Ingredient) {
+                        dish.addIngredient(((Ingredient) ingredient).getId());
+                    }
+                }
+
+                remote.setViewDishes();
+            }
+        });
     }
     ActionListener removeIngredientListener = new ActionListener() {
 
         @Override
         public void actionPerformed(ActionEvent ae) {
-            if(ae.getSource().getClass() != JButton.class)
+            if (ae.getSource().getClass() != JButton.class) {
                 return;
-            JButton btn = (JButton)ae.getSource();
-            if(btn.getParent() == null)
+            }
+            JButton btn = (JButton) ae.getSource();
+            if (btn.getParent() == null) {
                 return;
+            }
+            int ingredientIndex = ingredientPanelList.indexOf(btn.getParent());
+            ingredientPanelList.remove(ingredientIndex);
+            ingredientsComboBoxes.remove(ingredientIndex);
             Container parent = btn.getParent().getParent();
             parent.remove(btn.getParent());
-            ingredientsPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, ingredientsPanel.getPreferredSize().height));
             parent.revalidate();
+            parent.repaint();
         }
     };
 }

@@ -42,7 +42,7 @@ public class InventoryPanel extends JPanel {
         
         this.inventory = new Inventory(); 
         this.addIngredient = new JButton("Lägg till ingrediens");
-        this.submit = new JButton("Synkronisera");
+        this.submit = new JButton("Synkronisera med server");
         
         this.inventory.dbConnect();
         this.inventory.loadData();

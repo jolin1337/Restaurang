@@ -20,16 +20,18 @@ public class Booking {
     
     // Variables for adding a table
     private int duration, persons = 1;
+    private int phoneNr = 0; 
     private String name;
     private Date date;
     
     // Construct a new booking
-    public Booking(int id, String name, Date date, int time, int duration, int persons){
+    public Booking(int id, String name, Date date, int duration, int persons, int phoneNr){
         this.id = id;
         this.name = name;
         this.date = date;
         this.duration = duration; 
         this.persons = persons;
+        this.phoneNr = phoneNr;
     }
 
     /**
@@ -104,6 +106,20 @@ public class Booking {
      */
     public void setId(int id) {
         this.id = id;
+    }
+
+    /**
+     * @return the phoneNr
+     */
+    public int getPhoneNr() {
+        return phoneNr;
+    }
+
+    /**
+     * @param phoneNr the phoneNr to set
+     */
+    public void setPhoneNr(int phoneNr) {
+        this.phoneNr = phoneNr;
     }
     
     

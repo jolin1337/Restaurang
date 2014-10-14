@@ -5,6 +5,7 @@
  */
 package miun.dt142g.data;
 
+import java.util.ArrayList;
 import java.util.List;
 import miun.dt142g.food.Inventory;
 
@@ -13,18 +14,19 @@ import miun.dt142g.food.Inventory;
  * @author Ulf
  */
 public class Dish {
-    private final int id; 
-    private String name; 
-    private float price; 
-    private final List<Integer> ingredients; 
-    
-    public Dish(int id, String name, float price, List<Integer> ingredients){
-        this.id = id; 
-        this.name = name; 
+
+    private final int id;
+    private String name;
+    private float price;
+    private List<Integer> ingredients;
+
+    public Dish(int id, String name, float price, List<Integer> ingredients) {
+        this.id = id;
+        this.name = name;
         this.price = price;
         this.ingredients = ingredients;
     }
-    
+
     public int getId() {
         return id;
     }
@@ -62,29 +64,43 @@ public class Dish {
      * @return the ingredients
      */
     public int getIngredient(int ingred) {
+        initIngredients();
         return ingredients.get(ingred);
-    }
-    public void addIngredient(int id) {
-        ingredients.add(id);
-    }
-    public void removeIngredient(int index) {
-        ingredients.remove(id);
-    }
-    public void editIngredient(int index, int id) {
-        ingredients.set(index, id);
-    }
-    
-    public boolean equals(Dish x){
-        return this.id==x.id; 
-    }
-    
-    @Override
-    public String toString(){
-        return this.getName() + "\n" +Float.toString(this.getPrice())+":-";
     }
 
     public List<Integer> getIngredients() {
+        initIngredients();
         return ingredients;
     }
-            
+
+    public void addIngredient(int id) {
+        initIngredients();
+        ingredients.add(id);
+    }
+
+    public void removeIngredient(int index) {
+        initIngredients();
+        ingredients.remove(id);
+    }
+
+    public void editIngredient(int index, int id) {
+        initIngredients();
+        ingredients.set(index, id);
+    }
+
+    private void initIngredients() {
+        if (ingredients == null) {
+            ingredients = new ArrayList<>();
+        }
+    }
+
+    public boolean equals(Dish x) {
+        return this.id == x.id;
+    }
+
+    @Override
+    public String toString() {
+        return this.getName() + "\n" + Float.toString(this.getPrice()) + ":-";
+    }
+
 }
