@@ -42,7 +42,7 @@
                             <div class="post event">
                                 <h3>Boka ditt bord här!</h3>
                                 <p>
-                                    <c:set var="page" value="#{request.getParameter('state')}" />
+                                    <c:set var="state" value="#{request.getParameter('state')}" />
                                     <c:choose> 
                                         <c:when test="${state == 'true'}">
                                             Vi lyckades att hitta ett bord till er, tack för att du väljer att äta på vår restaurang.
@@ -52,7 +52,7 @@
                                         </c:when>
                                     </c:choose>
                                 </p>
-                                <form action="/Server/newbooking" method="GET">
+                                <form action="/Server/newbooking" method="POST"> 
                                     <label>Namn: <br/><input name="name" class="long" type="text" /></label><br/>
                                     <label>Telefon: <br/><input name="tel" class="long" type="text" /></label><br/>
                                     <label>Datum/tid: <br/><input name="sdate" placeholder="dd/mm-åå kl hh:mm" type="text" /></label><br/>

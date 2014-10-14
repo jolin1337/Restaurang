@@ -27,6 +27,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -41,7 +43,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "TABLEORDER", catalog = "", schema = "APP")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "TableOrder.findByTableID", query = "SELECT o FROM Dishgroup o WHERE d.id = :tableID"),
+    @NamedQuery(name = "TableOrder.findByTableID", query = "SELECT o FROM TableOrder o WHERE o.id = :tableID"),
     @NamedQuery(name = "TableOrder.findAllOrders", query = "SELECT o FROM TableOrder o")})
 public class TableOrder extends JsonEntity implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -58,6 +60,7 @@ public class TableOrder extends JsonEntity implements Serializable {
         @JoinColumn(name = "TABLE_ID", referencedColumnName = "tableID")}, inverseJoinColumns = {
         @JoinColumn(name = "DISH_ID", referencedColumnName = "ID")})
     @Column(name = "TIMEOFORDER")
+    @Temporal(TemporalType.DATE) 
     private Date timeOfOrder;
     @ManyToMany
     private List<Dish> orderedDishes;
