@@ -32,8 +32,11 @@ public class NewBooking extends JPanel {
     JTextField personsField;
     JTextField timeField;
     JTextField durationField;
+    JTextField phoneNrField; 
     private JLabel missingBookingInput;
     private JLabel invalidBookingInput;
+    private JLabel invalidPhoneInput;
+    private JLabel phoneNrInput; 
     private JSpinner spinner;
     Date bookingTime;
 
@@ -59,6 +62,9 @@ public class NewBooking extends JPanel {
         addLabel("Namn: ");
         nameField = addTextField("Anders Svensson");
         
+        addLabel("Telefon: ");
+        phoneNrField = addTextField("");
+        
         addLabel("Antal personer: ");
         personsField = addTextField("");
         
@@ -71,17 +77,18 @@ public class NewBooking extends JPanel {
         spinner.setEditor(new JSpinner.DateEditor(spinner, "h:mm a"));
         add(spinner);
         /* Time spinner */
-
-        addLabel("Varaktighet: ");
-        durationField = addTextField("");
+        
+        
         
         addLabel("Datum: ");
         add(Box.createRigidArea(new Dimension(0, 10)));
         
-        
         final DatePicker datePicker = new DatePicker(new Date());
         datePicker.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         this.add(datePicker);
+        
+        addLabel("Varaktighet: ");
+        durationField = addTextField("");
                 
         add(Box.createRigidArea(new Dimension(0, 10)));
         addBookingBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
@@ -89,8 +96,11 @@ public class NewBooking extends JPanel {
         
         missingBookingInput = addLabel("Vänligen fyll i alla fält för att godkänna bokningen.");
         invalidBookingInput = addLabel("Vänligen ange endast heltal.");
+        invalidPhoneInput = addLabel("Vänligen ange ett telefonnummer som är mellan 7 och 9 siffror");
         add(missingBookingInput);
         add(invalidBookingInput);
+        add(invalidPhoneInput);
+        invalidPhoneInput.setVisible(false);
         missingBookingInput.setVisible(false);
         invalidBookingInput.setVisible(false);
         
@@ -104,18 +114,27 @@ public class NewBooking extends JPanel {
                 bookingTime = (Date)date;
     
                 
-                if (nameField.getText().isEmpty() || personsField.getText().isEmpty() || durationField.getText().isEmpty()){
+                if (nameField.getText().isEmpty() || personsField.getText().isEmpty() || durationField.getText().isEmpty() || phoneNrField.getText().isEmpty()){
                     missingBookingInput.setVisible(true);
                     return;
                 }
-                if (!( isInteger(personsField.getText()) && isInteger(durationField.getText()) )){
+                
+                if (!( phoneNrField.getText().length() > 6 && phoneNrField.getText().length() < 10 )){
+                    invalidPhoneInput.setVisible(true);
+                    return;
+                }
+                
+                if (!( isInteger(personsField.getText()) && isInteger(durationField.getText()) && isInteger(phoneNrField.getText()) )){
                     invalidBookingInput.setVisible(true);
                     return;
                 }
+
+                
                 
                 // Merge datePicker with timePicker
                 booking.setName(nameField.getText());
                 booking.setPersons(Integer.parseInt(personsField.getText()));
+                booking.setPhoneNr(Integer.parseInt(phoneNrField.getText()));
                 bookingTime.setYear(datePicker.getDate().getYear());
                 bookingTime.setMonth(datePicker.getDate().getMonth());
                 bookingTime.setDate(datePicker.getDate().getDate());

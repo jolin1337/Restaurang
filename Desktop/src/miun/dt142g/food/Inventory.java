@@ -90,11 +90,7 @@ public class Inventory extends DataSource implements Iterable<Ingredient> {
      */
     @Override
     public void loadData() {
-        try {
-            this.dbConnect();
-        } catch (WrongKeyException ex) {
-            return; 
-        }
+
         JSONObject response = null;
         JSONArray data = null; 
         try {
@@ -118,9 +114,9 @@ public class Inventory extends DataSource implements Iterable<Ingredient> {
      */
     @Override
     public void update() {
-        JSONArray data = new JSONArray(); 
-        for(Ingredient ing : this.ingredients) {
-            try {
+        try {
+            JSONArray data = new JSONArray(); 
+            for(Ingredient ing : this.ingredients) {
                 JSONObject jsonDataElement = new JSONObject();
                 JSONObject jsonIngredient = new JSONObject();
                 if (ing.isFlaggedForRemoval()) {
@@ -135,27 +131,25 @@ public class Inventory extends DataSource implements Iterable<Ingredient> {
                     }
                 }
                 else {
-                jsonIngredient.put("id", ing.getId());
-                jsonIngredient.put("name", ing.getName());
-                jsonIngredient.put("amount", ing.getAmount());
-                jsonDataElement.put("data", jsonIngredient);
-                data.put(jsonDataElement);
+                    if(ing.getId()<0)
+                        jsonIngredient.put("id", -1);
+                    else
+                        jsonIngredient.put("id", ing.getId());
+                    jsonIngredient.put("name", ing.getName());
+                    jsonIngredient.put("amount", ing.getAmount());
+                    jsonDataElement.put("data", jsonIngredient);
+                    data.put(jsonDataElement);
                 }
-
-            } catch (JSONException ex) {
-                Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-        
-        JSONObject send = new JSONObject(); 
-        try {
+            JSONObject send = new JSONObject(); 
             send.put("data", data);
-        } catch (JSONException ex) {
+            System.out.println("Json object to send: " + send.toString());
+            String urlParams = "key=" + key + "&table=inventory&data="+send.toString();
+            System.out.println("Update status: " +getRequest("updaterow", urlParams));
+        } 
+        catch (JSONException ex) {
             Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("Json object to send: " + send.toString());
-        String urlParams = "key=" + key + "&table=inventory&data="+send.toString();
-        System.out.println("Update status: " +getRequest("updaterow", urlParams));
     }
 
     /**
@@ -165,13 +159,12 @@ public class Inventory extends DataSource implements Iterable<Ingredient> {
      */
     @Override
     public int getUniqueId() {
-        return -1;
-//        int id  = 0;
-//        for(Ingredient ing : ingredients){
-//            if(ing.getId() >= id)
-//                id = ing.getId()+1;
-//        }
-//        return id; 
+        int id  = -1;
+        for(Ingredient ing : ingredients){
+            if(ing.getId() <= id)
+                id = ing.getId()-1;
+        }
+        return id; 
     }
 
     /**

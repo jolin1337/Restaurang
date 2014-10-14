@@ -11,6 +11,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
+import java.util.Vector;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -35,6 +36,7 @@ public class BookingsPanel extends JPanel {
     private final JPanel thisPanel = this;
     private JButton addBooking;
     private JButton remove; 
+    private JButton submit; 
     private final Controller fjarr;
     private boolean newBookingP = false;
     private boolean removeBooking = false;
@@ -63,6 +65,7 @@ public class BookingsPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Delete row
+                
                 removeBooking = true;
                 thisPanel.revalidate();
             }
@@ -70,14 +73,14 @@ public class BookingsPanel extends JPanel {
         this.add(Box.createRigidArea(new Dimension(0, 30)));
         
         // Create a couple of columns 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             model.addColumn("Col"+i);
         }
 
         // Append a row 
-        model.addRow(new Object[]{"Namn", "Antal", "Datum", "Varaktighet"});
+        model.addRow(new Object[]{"Namn","Telefon", "Antal", "Datum", "Varaktighet"});
         for (Booking bok : bookings) {
-            model.addRow(new Object[]{bok.getName(), bok.getPersons(),
+            model.addRow(new Object[]{bok.getName(), bok.getPhoneNr(), bok.getPersons(),
                 bok.getDateString(), bok.getDuration()});
         }
         resizeColumnWidth(table);
@@ -99,6 +102,16 @@ public class BookingsPanel extends JPanel {
         });
         addBooking.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         this.add(addBooking);
+        
+        submit = new JButton("Synkronisera med server");
+        this.submit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                bookings.update();
+            }
+        });
+        submit.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        this.add(submit);
     }
     
     // Haxxor thing to resize table according to contents
@@ -133,7 +146,7 @@ public class BookingsPanel extends JPanel {
                     return;
             }
             model.addRow(new Object[]{
-                bok.getName(), bok.getPersons(), bok.getDateString(), bok.getDate().getTime(), bok.getDuration()
+                bok.getName(), bok.getPhoneNr(), bok.getPersons(), bok.getDateString(), bok.getDuration()
             });
             resizeColumnWidth(table);
             newBookingP = false;
@@ -141,8 +154,12 @@ public class BookingsPanel extends JPanel {
         else if (removeBooking){
             removeBooking = false;
             try {
-                if (table.getSelectedRow() > 0 )
+                if (table.getSelectedRow() > 0 ){;
+                    bookings.removeBooking(
+                            bookings.getBookingByIndex(table.getSelectedRow())
+                                    .getId());
                     model.removeRow(table.getSelectedRow());
+                }
             } catch (IndexOutOfBoundsException e) {
                 System.err.println("BookingsPanel(removeBooking) IndexOutOfBoundsException: " + e.getMessage());
             }
