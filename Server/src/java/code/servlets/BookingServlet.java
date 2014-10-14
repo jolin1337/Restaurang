@@ -10,14 +10,25 @@ package code.servlets;
 import data.entity.Booking;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Resource;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 
 /**
  *
@@ -29,8 +40,16 @@ import javax.servlet.http.HttpServletResponse;
     @WebInitParam(name = "sdate", value = ""),
     @WebInitParam(name = "count", value = "1")})
 public class BookingServlet extends HttpServlet {
-    @PersistenceContext(unitName = "WebApplication1PU")
-    private EntityManager em;
+    /**
+     * This injects the default persistence unit.
+     */
+    @PersistenceUnit(name = "WebApplication1")
+    private EntityManagerFactory emf;
+    /**
+     * This injects a user transaction object.
+     */
+    @Resource
+    private UserTransaction utx;
 
     /**
      * Processes requests for both HTTP <code>POST</code>
@@ -60,7 +79,21 @@ public class BookingServlet extends HttpServlet {
         newBooking.setName(name);
         newBooking.setStartDate(sdate);
         newBooking.setPersons(count);
-        em.persist(newBooking);
+        EntityManager em = null;
+        try {
+            utx.begin();
+            // crea em to access database
+            em = emf.createEntityManager();
+            em.persist(newBooking);
+            utx.commit();
+        } catch(NotSupportedException | SystemException | RollbackException | 
+                HeuristicMixedException | HeuristicRollbackException | SecurityException |
+                IllegalStateException ex) {
+        }
+        if(em != null) {
+            em.clear();     // forget everything we did
+            em.close();     // close the em
+        }
         response.setHeader("location", "index.xhtml?page=bord&status=true");
     }
 
@@ -76,7 +109,7 @@ public class BookingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //processRequest(request, response);
+        processRequest(request, response);
     }
 
     /**
