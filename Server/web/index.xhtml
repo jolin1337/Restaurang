@@ -42,12 +42,12 @@
                             <div class="post event">
                                 <h3>Boka ditt bord här!</h3>
                                 <p>
-                                    <c:set var="state" value="#{request.getParameter('state')}" />
+                                    <c:set var="bookingState" value="#{request.getParameter('s')}" />
                                     <c:choose> 
-                                        <c:when test="${state == 'true'}">
+                                        <c:when test="${bookingState == 'true'}">
                                             Vi lyckades att hitta ett bord till er, tack för att du väljer att äta på vår restaurang.
                                         </c:when>
-                                        <c:when test="${state == 'false'}">
+                                        <c:when test="${bookingState == 'false'}">
                                             Tyvärr så gick det inte att boka ett bord just nu. Det kan bero på att det är fullbokat eller att du matat in fel värden i formuläret nedan.
                                         </c:when>
                                     </c:choose>

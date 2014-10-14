@@ -77,7 +77,7 @@ public class BookingServlet extends HttpServlet {
             count = -1;
         }
         if(name.isEmpty() || tel.isEmpty() || sdate.isEmpty() || count <= 0 || count > 6)
-            response.sendRedirect(response.encodeRedirectURL("/Server/faces/index.xhtml?page=bord&status=false") );
+            response.sendRedirect(response.encodeRedirectURL("/Server/faces/index.xhtml?page=bord&s=false") );
         Booking newBooking = new Booking();
         newBooking.setName(name);
         SimpleDateFormat ft = new SimpleDateFormat ("dd/MM-yy 'kl:' HH:mm");
@@ -86,12 +86,21 @@ public class BookingServlet extends HttpServlet {
         try {
             d = ft.parse(sdate);
         } catch (ParseException ex) {
-            Logger.getLogger(BookingServlet.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error: " + ex.getMessage());
+            System.out.println("In BookingServlet.java");
+            return;
         }
-        newBooking.setPhone(Integer.parseInt(tel));
-        newBooking.setDuration(2);
-        newBooking.setStartDate(d.getTime());
-        newBooking.setPersons(count);
+        try {
+            newBooking.setPhone(tel);
+            newBooking.setDuration(2);
+            newBooking.setStartDate(d.getTime());
+            newBooking.setPersons(count);
+        } catch(NumberFormatException ex) {
+            System.out.println("Number not well formated in input field");
+            
+            return;
+        }
+        
         EntityManager em = null;
         try {
             utx.begin();
@@ -107,7 +116,7 @@ public class BookingServlet extends HttpServlet {
             em.clear();     // forget everything we did
             em.close();     // close the em
         }
-        response.sendRedirect(response.encodeRedirectURL("/Server/faces/index.xhtml?page=bord&status=true") );
+        response.sendRedirect(response.encodeRedirectURL("/Server/faces/index.xhtml?page=bord&s=true") );
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
