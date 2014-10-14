@@ -42,7 +42,7 @@ public class Booking extends JsonEntity implements Serializable {
     public Booking() {
     }
     private static final long serialVersionUID = 1L;
-    @Id
+    @Id 
     @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
     @Column(name = "ID")
@@ -55,7 +55,7 @@ public class Booking extends JsonEntity implements Serializable {
     private String name;
     @Column(name = "STARTDATE")
     private long startDate;
-    @Column(name = "phone")
+    @Column(name = "PHONE")
     private String phone;
 
 

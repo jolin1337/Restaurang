@@ -8,16 +8,10 @@
 package code.servlets;
 
 import data.Settings;
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.URL;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.annotation.WebInitParam;
@@ -25,7 +19,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.pdfbox.io.IOUtils;
-import static sun.security.krb5.Confounder.bytes;
 
 /**
  *
@@ -46,7 +39,7 @@ public class GetImage extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("image/jpg;charset=UTF-8");
+        //response.setContentType("image/jpg;charset=UTF-8");
         try (OutputStream out = response.getOutputStream()) {
             String imgSrc = request.getParameter("img");
             if(imgSrc.contains("/") || imgSrc.contains("\\")) {

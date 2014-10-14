@@ -20,7 +20,7 @@ import javax.crypto.spec.SecretKeySpec;
  * @version 1.0
  */
 public class Settings {
-    static final public String imagePath = "/var/dt142g/uploads/";
+    static final public String imagePath = System.getProperty("user.home").replace("\\", "/").substring(2) + "/dt142g_uploads/";//"/var/dt142g/uploads/";//
     static final public String[] allowedKeys = new String[]{"dt142g-awesome"};
     static final public String cryptionValue = "dt142g!Key()##!3"; // 128 bit key
     static final public String tempPrefixKey = "enroligtemporarnyckel";

@@ -20,6 +20,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
+import javax.persistence.TypedQuery;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.annotation.WebInitParam;
@@ -76,45 +77,48 @@ public class BookingServlet extends HttpServlet {
         catch(NumberFormatException ex) {
             count = -1;
         }
-        if(name.isEmpty() || tel.isEmpty() || sdate.isEmpty() || count <= 0 || count > 6)
-            response.sendRedirect(response.encodeRedirectURL("/Server/faces/index.xhtml?page=bord&s=false") );
-        Booking newBooking = new Booking();
-        newBooking.setName(name);
-        SimpleDateFormat ft = new SimpleDateFormat ("dd/MM-yy 'kl:' HH:mm");
-        Date d = new Date(); 
-        d.setTime(0);
-        try {
-            d = ft.parse(sdate);
-        } catch (ParseException ex) {
-            System.out.println("Error: " + ex.getMessage());
-            System.out.println("In BookingServlet.java");
-            return;
-        }
-        try {
-            newBooking.setPhone(tel);
-            newBooking.setDuration(2);
-            newBooking.setStartDate(d.getTime());
-            newBooking.setPersons(count);
-        } catch(NumberFormatException ex) {
-            System.out.println("Number not well formated in input field");
-            
-            return;
-        }
         
-        EntityManager em = null;
         try {
             utx.begin();
-            // crea em to access database
-            em = emf.createEntityManager();
+            EntityManager em = emf.createEntityManager();
+            //This commented code is for checking the total amount of persons booked in this period...
+            //TypedQuery<int> query = em.createQuery("SELECT SUM() FROM Booking b WHERE ", null)
+            //int sum = query.getSingleResult();
+            if(name.isEmpty() || tel.isEmpty() || sdate.isEmpty() || count <= 0 || count > 6)
+                response.sendRedirect(response.encodeRedirectURL("/Server/faces/index.xhtml?page=bord&s=false") );
+            Booking newBooking = new Booking();
+            newBooking.setName(name);
+            SimpleDateFormat ft = new SimpleDateFormat ("dd/MM-yy 'kl' HH:mm");
+            Date d = new Date(); 
+            d.setTime(0);
+            try {
+                d = ft.parse(sdate);
+            } catch (ParseException ex) {
+                System.out.println("Error: " + ex.getMessage());
+                System.out.println("In BookingServlet.java");
+                return;
+            }
+            try {
+                newBooking.setPhone(tel);
+                newBooking.setDuration(2);
+                newBooking.setStartDate(d.getTime());
+                newBooking.setPersons(count);
+            } catch(NumberFormatException ex) {
+                System.out.println("Number not well formated in input field");
+
+                return;
+            }
+
             em.persist(newBooking);
             utx.commit();
+        
+            if(em != null) {
+                em.clear();     // forget everything we did
+                em.close();     // close the em
+            }
         } catch(NotSupportedException | SystemException | RollbackException | 
-                HeuristicMixedException | HeuristicRollbackException | SecurityException |
-                IllegalStateException ex) {
-        }
-        if(em != null) {
-            em.clear();     // forget everything we did
-            em.close();     // close the em
+            HeuristicMixedException | HeuristicRollbackException | SecurityException |
+            IllegalStateException ex) {
         }
         response.sendRedirect(response.encodeRedirectURL("/Server/faces/index.xhtml?page=bord&s=true") );
     }
