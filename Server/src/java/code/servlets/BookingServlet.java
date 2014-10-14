@@ -73,8 +73,8 @@ public class BookingServlet extends HttpServlet {
         catch(NumberFormatException ex) {
             count = -1;
         }
-        if(name.isEmpty() || tel.isEmpty() || sdate.isEmpty() || count <= 0 || count > 6);
-            response.setHeader("location", "index.xhtml?page=bord&status=false");
+        if(name.isEmpty() || tel.isEmpty() || sdate.isEmpty() || count <= 0 || count > 6)
+            response.sendRedirect(response.encodeRedirectURL("/Server/faces/index.xhtml?page=bord&status=false") );
         Booking newBooking = new Booking();
         newBooking.setName(name);
         newBooking.setStartDate(sdate);
@@ -94,7 +94,7 @@ public class BookingServlet extends HttpServlet {
             em.clear();     // forget everything we did
             em.close();     // close the em
         }
-        response.setHeader("location", "index.xhtml?page=bord&status=true");
+        response.sendRedirect(response.encodeRedirectURL("/Server/faces/index.xhtml?page=bord&status=true") );
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
