@@ -28,7 +28,7 @@ import miun.dt142g.data.EventPost;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import sun.net.www.http.HttpClient;
+import org.apache.pdfbox.io.IOUtils;
 
 /**
  *
@@ -131,6 +131,16 @@ public class EventPosts extends DataSource implements Iterable<EventPost> {
     private boolean upploadImg(int id, String url) {
         try {
             File uploadFile = new File(url);
+            FormMultiPartUtility multipart = new FormMultiPartUtility(serverUrl + "upload", "utf-8");
+            multipart.addFilePart("fileUpload", uploadFile);
+ 
+            multipart.finish();
+        } catch (IOException ex) {
+            Logger.getLogger(EventPosts.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        /*
+        try {
+            File uploadFile = new File(url);
             
             System.out.println("File to upload: " + url);
             
@@ -150,12 +160,14 @@ public class EventPosts extends DataSource implements Iterable<EventPost> {
                     OutputStream outputStream = httpConn.getOutputStream()) {
                 // Opens input stream of the file for reading data
                 inputStream = new FileInputStream(uploadFile);
+                
                 byte[] buffer = new byte[BUFFER_SIZE];
                 int bytesRead;
                 System.out.println("Start writing data...");
                 while ((bytesRead = inputStream.read(buffer)) != -1) {
                     outputStream.write(buffer, 0, bytesRead);
-                }   System.out.println("Data was written.");
+                }
+                System.out.println("Data was written.");
             }
             catch(FileNotFoundException ex) {}
             finally {
@@ -180,7 +192,7 @@ public class EventPosts extends DataSource implements Iterable<EventPost> {
             Logger.getLogger(EventPosts.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(EventPosts.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
         return false;
     }
     public EventPost getEvent(int i) {

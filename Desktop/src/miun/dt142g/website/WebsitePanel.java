@@ -11,8 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -20,11 +18,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import miun.dt142g.DataSource;
 import miun.dt142g.data.AboutUs;
 import miun.dt142g.data.EventPost;
@@ -59,6 +52,7 @@ public class WebsitePanel extends JPanel {
             public void actionPerformed(ActionEvent ae) {
                 about.setDataOpen(openEdit.getText());
                 about.setDataContacts(contactEdit.getText());
+                about.update();
                 for(EventPostPanel evPostPanel : eventPostPanels) 
                     evPostPanel.updateEvent();
                 try {
@@ -70,7 +64,9 @@ public class WebsitePanel extends JPanel {
                         "Server error",
                         JOptionPane.ERROR_MESSAGE);
                 }
-                about.update();
+                int index = 0;
+                for(EventPost p : eventPosts)
+                    eventPostPanels.get(++index-1).setUpdatedEvent(p);
             }
         });
         

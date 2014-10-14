@@ -44,20 +44,21 @@ public class AboutUs extends DataSource {
 
     @Override
     public void loadData() {
-        /**try {
+        try {
             JSONObject data = new JSONObject(getRequest("gettable", "key=" + key + "&table=info"));
             JSONArray dataArr = data.getJSONArray("data");
-            for(int i = dataArr.length();i > 0;i--) {
-                JSONObject obj = dataArr.getJSONObject(i);
-                //if(obj.getString("what"))
-            }
             dataOpen = "Öppetider är...";
             dataContacts = "Du når oss på...";
+            for(int i = dataArr.length();i > 0;i--) {
+                JSONObject obj = dataArr.getJSONObject(i-1);
+                if(obj.getString("what").equals("openings"))
+                    dataOpen = obj.getString("data");
+                else if(obj.getString("what").equals("contacts"))
+                    dataContacts = obj.getString("data");
+            }
         } catch (JSONException ex) {
             Logger.getLogger(AboutUs.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
-        dataContacts = "djhfjka";
-        dataOpen = "jkldaf";
+        }
     }
 
     @Override
