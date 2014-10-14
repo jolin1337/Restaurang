@@ -41,6 +41,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "TABLEORDER", catalog = "", schema = "APP")
 @XmlRootElement
 @NamedQueries({
+    @NamedQuery(name = "TableOrder.findByTableID", query = "SELECT o FROM Dishgroup o WHERE d.id = :tableID"),
     @NamedQuery(name = "TableOrder.findAllOrders", query = "SELECT o FROM TableOrder o")})
 public class TableOrder extends JsonEntity implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -56,8 +57,9 @@ public class TableOrder extends JsonEntity implements Serializable {
     @JoinTable(name = "TABLE_HAS_ORDER", joinColumns = {
         @JoinColumn(name = "TABLE_ID", referencedColumnName = "tableID")}, inverseJoinColumns = {
         @JoinColumn(name = "DISH_ID", referencedColumnName = "ID")})
-    @ManyToMany
+    @Column(name = "TIMEOFORDER")
     private Date timeOfOrder;
+    @ManyToMany
     private List<Dish> orderedDishes;
 
     /**
