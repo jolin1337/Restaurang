@@ -5,6 +5,7 @@
  */
 package miun.dt142g;
 
+import java.awt.event.ActionListener;
 import miun.dt142g.data.Booking;
 import miun.dt142g.data.Dish;
 
@@ -17,7 +18,7 @@ public interface Controller {
     
     public void setViewDishes();
     
-    public void setViewDishDetail(Dish d);
+    public void setViewDishDetail(Dish d, ActionListener removeEvent);
     public void setViewNewBooking(Booking b);
     
     public void setViewInventory();

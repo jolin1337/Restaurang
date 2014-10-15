@@ -38,6 +38,7 @@ public class DishDetailPanel extends JPanel {
     Controller remote = null;
     List<JComboBox> ingredientsComboBoxes;
     List<JPanel> ingredientPanelList;
+    ActionListener removeEvent = null;
 
     public DishDetailPanel(Dish dish, final Controller c) throws DataSource.WrongKeyException {
         remote = c;
@@ -67,7 +68,11 @@ public class DishDetailPanel extends JPanel {
         add(textField);
         return textField;
     }
-
+    
+    public void setRemoveEventListener(ActionListener removeE) {
+        removeEvent = removeE;
+    }
+    
     public final void setDish(Dish d) throws DataSource.WrongKeyException {
         inv.dbConnect();
         inv.loadData();
@@ -75,6 +80,12 @@ public class DishDetailPanel extends JPanel {
         addIngBtn = new JButton("Lägg till ingrediens");
 
         dish = d;
+        if(removeEvent != null) {
+            JButton removeBtn = new JButton("X");
+            removeBtn.addActionListener(removeEvent);
+            add(removeBtn);
+        }
+        
         addLabel("Namn");
         final JTextField name = addTextField(dish.getName());
         ingredientsContainer = new JPanel();

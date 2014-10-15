@@ -11,6 +11,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.ScrollPane;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -66,8 +67,9 @@ public class SharedTabs extends JPanel {
         }
 
         @Override
-        public void setViewDishDetail(Dish d) {
+        public void setViewDishDetail(Dish d, ActionListener removeEvent) {
             try {
+                dishDetailView.setRemoveEventListener(removeEvent);
                 dishDetailView.setDish(d);
             } catch (DataSource.WrongKeyException ex) {
                 this.setConnectionView();
@@ -120,9 +122,9 @@ public class SharedTabs extends JPanel {
         panels.add(panel3);
         UsersPanel panel4 = new UsersPanel();
         panels.add(panel4);
-        MenuPanel panel5 = new MenuPanel(remote, new String[]{"A la Carte"});
+        MenuPanel panel5 = new MenuPanel(remote, Settings.aLaCarte);
         panels.add(panel5);
-        MenuPanel panel6 = new MenuPanel(remote, new String[]{"Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag"});
+        MenuPanel panel6 = new MenuPanel(remote, Settings.weekDays);
         panels.add(panel6);
         BookingsPanel panel7 = new BookingsPanel(remote);
         panels.add(panel7);

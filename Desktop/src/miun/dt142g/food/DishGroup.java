@@ -5,15 +5,19 @@
  */
 package miun.dt142g.food;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import miun.dt142g.data.Dish;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 /**
  *
  * @author Tomas
  */
 public class DishGroup {
-    private int dishId;
+    private List<Integer> dishIds;
     private String group;
-    private final int groupId;
 
     /**
      * @return the group
@@ -29,22 +33,63 @@ public class DishGroup {
         this.group = group;
     }
 
-    public int getDishId() {
-        return dishId;
+    public List<Integer> getDishes() {
+        initDishIds();
+        return dishIds;
+    }
+    public void addDish(int dishIndex) {
+        initDishIds();
+        if(!dishIds.contains(dishIndex))
+            dishIds.add(dishIndex);
     }
 
-    public void setDishId(int dishId) {
-        this.dishId = dishId;
+    public void setDishIds(List<Integer> dishId) {
+        this.dishIds = dishId;
     }
 
-    public DishGroup(int groupId, int dishId, String group) {
-        this.groupId = groupId;
-        this.dishId = dishId;
+    public DishGroup(List<Integer> dishId, String group) {
+        this.dishIds = dishId;
+        this.group = group;
+    }
+    public DishGroup(String group) {
+        this.dishIds = null;
         this.group = group;
     }
 
-    public int getGroupId() {
-        return groupId;
+    private void initDishIds() {
+        if(dishIds == null)
+            setDishIds(new ArrayList<Integer>());
+    }
+    
+    @Override
+    public boolean equals(Object groupName) {
+        return (groupName instanceof String || groupName instanceof DishGroup) 
+                && toString().equals(groupName.toString());
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 11 * hash + Objects.hashCode(this.group);
+        return hash;
+    }
+    
+    @Override
+    public String toString() {
+        return group;
+    }
+
+    String toJsonString() {
+        
+        // Set all properties of this event here to export the event to a json object
+        JSONObject value = new JSONObject();
+        try {
+            JSONArray dishes = new JSONArray(dishIds);
+            value.put("name", getGroup())
+                    .put("dishes", dishes);
+        } catch (JSONException ex) {
+        }
+        return value.toString();
     }
 
 }

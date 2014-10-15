@@ -24,5 +24,12 @@ public class Settings {
     public static class Strings {
         public static String submit = "Synkronisera med server";
         public static Object serverConnectionError = "There is an error in the authentication to the server or the server is down. Please check this out before do any changes!";
+        public static Object noDishesCreatedError = "Inga rätter tillgängliga ännu. Du kommer att skickas till tabben rätter för att lägga till några sådanna";
     }
+    
+    /**
+     * Default DishGroups values/names
+     */
+    public static String[] aLaCarte = new String[]{"A la Carte"};
+    public static String[] weekDays = new String[]{"Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag"};
 }

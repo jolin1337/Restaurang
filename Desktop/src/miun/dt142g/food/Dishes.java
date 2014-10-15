@@ -35,6 +35,9 @@ public class Dishes extends DataSource implements Iterable<Dish> {
                 return d;
         return null; 
     }
+    public Dish getDishByIndex(int index){
+        return dishes.get(index);
+    }
     
     public void addDish(Dish dish){
         for(Dish d : dishes) {
@@ -88,7 +91,7 @@ public class Dishes extends DataSource implements Iterable<Dish> {
         }
         if(dishes.isEmpty())
             str += ",";
-        if(dishes.isEmpty())
+        if(ds.isEmpty())
             strRm += ",";
         System.out.println(str.substring(0, str.length()-1) + "]}");
         // System.out.println(strRm.substring(0, strRm.length()-1) + "]}");

@@ -12,6 +12,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -24,11 +25,14 @@ import miun.dt142g.data.Dish;
  * @author Johannes
  */
 public class DishPanel extends JPanel {
+
     boolean isRemovedPanel = false;
     Dish dish;
     JTextField name;
+    Controller remote = null;
 
     public DishPanel(Dish dish, final Controller c) {
+        remote = c;
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(10, 10, 10, 10));
         setBackground(Color.white);
@@ -49,37 +53,26 @@ public class DishPanel extends JPanel {
             public void actionPerformed(ActionEvent ae) {
                 if (c != null) {
                     updateDishName();
-                    c.setViewDishDetail(DishPanel.this.dish);
+                    c.setViewDishDetail(DishPanel.this.dish, removeEvent);
                 }
             }
         });
-        remove.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                int n = ConfirmationBox.confirm(DishPanel.this, name.getText());
-                if (n == 0) {
-                    isRemovedPanel = true;
-                    Container parent = DishPanel.this.getParent();
-                    parent.remove(DishPanel.this);
-                    parent.revalidate();
-                    parent.repaint();
-                }
-            }
-        });
+        remove.addActionListener(removeEvent);
         //detail.setMaximumSize(new Dimension(Integer.MAX_VALUE, detail.getPreferredSize().height));
         add(detail, BorderLayout.EAST);
-       // item.setBorder(new EmptyBorder(10,10,10,10));
+        // item.setBorder(new EmptyBorder(10,10,10,10));
         //add(item);
 
     }
-    public void updateTextFieldContent(){
+
+    public void updateTextFieldContent() {
         name.setText(dish.getName());
     }
-    public void updateDishName(){
+
+    public void updateDishName() {
         dish.setName(name.getText());
     }
-    
+
     public Dish getDish() {
         return dish;
     }
@@ -87,5 +80,20 @@ public class DishPanel extends JPanel {
     boolean isRemoved() {
         return isRemovedPanel;
     }
+    ActionListener removeEvent = new ActionListener() {
 
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            int n = ConfirmationBox.confirm(DishPanel.this, name.getText());
+            if (n == 0) {
+                isRemovedPanel = true;
+                Container parent = DishPanel.this.getParent();
+                parent.remove(DishPanel.this);
+                parent.revalidate();
+                parent.repaint();
+                if(remote != null)
+                    remote.setViewDishes();
+            }
+        }
+    };
 }
