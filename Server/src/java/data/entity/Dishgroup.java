@@ -203,7 +203,9 @@ public class Dishgroup extends JsonEntity implements Serializable {
     public boolean setEntityByJson(JsonObject obj, EntityManager em) {
         try {
             // Parse the json object for insertion in this entity
-            setName(obj.getString("name", ""));
+            String gname = obj.getString("name", "");
+            if(gname.isEmpty()) return false;
+            setName(gname);
             JsonArray dishes = obj.getJsonArray("dishes");
             for (JsonValue itDish : dishes) {
                 if (itDish.getValueType() == JsonValue.ValueType.NUMBER) {
