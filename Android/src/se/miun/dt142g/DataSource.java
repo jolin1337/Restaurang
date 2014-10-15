@@ -37,7 +37,7 @@ public abstract class DataSource {
     /**
      * An abstract method for loading data to its datasource
      */
-    public abstract void load() throws WrongKeyException;
+    public abstract void load() ;
     /**
      * A key for authorization
      */
@@ -52,8 +52,8 @@ public abstract class DataSource {
      *
      * @throws miun.dt142g.DataSource.WrongKeyException
      */
-    public void dbConnect() throws WrongKeyException {
-        if (!key.equals("")) {
+    protected void dbConnect() throws WrongKeyException{
+        if (!key.isEmpty()) {
             if (!getRequest("test", "key=" + key).equals("true")) {
                 throw new WrongKeyException("Still not connected");
             }
@@ -120,12 +120,14 @@ public abstract class DataSource {
      *
      * @author Johannes
      */
-    private class ServerConnect extends AsyncTask<String, Void, String> {
+    protected class ServerConnect extends AsyncTask<String, Void, String> {
 
+        public ServerConnect(){}
         @Override
         protected String doInBackground(String... urls) {
             try {
                 if (urls.length > 1) {
+                    dbConnect();
                     String res = processRequest(urls[0], urls[1]);
                     loadData(urls[0], res);
                 }

@@ -22,7 +22,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import se.miun.dt142g.BaseActivity;
+import se.miun.dt142g.DataSource;
 import se.miun.dt142g.R;
+import se.miun.dt142g.data.EntityHandler.TableOrders;
 
 
 public class Orders extends BaseActivity {
@@ -30,10 +32,13 @@ public class Orders extends BaseActivity {
     ExpandableListView expListView;
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
+    TableOrders tableOrders = new TableOrders();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        tableOrders.load();
         setContentView(R.layout.activity_orders);
         // get the listview
         expListView = (ExpandableListView) findViewById(R.id.ListOrders);

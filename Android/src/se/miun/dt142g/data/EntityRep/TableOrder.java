@@ -20,7 +20,7 @@ import org.json.JSONObject;
 public class TableOrder {
     private int id;
     private Date timeOfOrder;
-    private List<Dish> orderedDishes;
+    private List<Integer> orderedDishes;
 
     public int getId() {
         return id;
@@ -38,11 +38,11 @@ public class TableOrder {
         this.timeOfOrder = timeOfOrder;
     }
 
-    public List<Dish> getOrderedDishes() {
+    public List<Integer> getOrderedDishes() {
         return orderedDishes;
     }
 
-    public void setOrderedDishes(List<Dish> orderedDishes) {
+    public void setOrderedDishes(List<Integer> orderedDishes) {
         this.orderedDishes = orderedDishes;
     }
     
