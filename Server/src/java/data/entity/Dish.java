@@ -8,6 +8,7 @@
 package data.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -127,7 +128,9 @@ public class Dish extends JsonEntity implements Serializable {
         this.inventoryList = inventoryList;
     }
     public void addToInventory(Inventory inv) {
-        if(inv != null && inventoryList != null && inventoryList.indexOf(inv) < 0)
+        if(inventoryList == null)
+            inventoryList = new ArrayList<>();
+        if(inv != null && inventoryList.indexOf(inv) < 0)
             inventoryList.add(inv);
     }
     public void removeIngredient(Inventory inv) {
