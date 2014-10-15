@@ -41,7 +41,7 @@ public class Dishes extends DataSource implements Iterable<Dish> {
     
     public void addDish(Dish dish){
         for(Dish d : dishes) {
-            if(d.getId() == dish.getId()) {
+            if(d.getId() == dish.getId() && d.getId() > -1) {
                 editDish(dish);
                 return;
             }

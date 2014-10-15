@@ -5,6 +5,7 @@
  */
 package miun.dt142g.food;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import miun.dt142g.DataSource;
 import miun.dt142g.Settings;
@@ -22,15 +23,19 @@ public class DishGroups extends DataSource{
     private final List<DishGroup> dishGroups = new ArrayList<>();
     private Dishes dishes = new Dishes();
 
+
+    Dishes getDishes() {
+        return dishes;
+    }
     /**
      * @param groupNames
      * @return the dishesInGroup
      */
     public List<DishGroup> getDishGroups(String[] groupNames) {
         List<DishGroup> dishesInGroup = new ArrayList<>();
-        for(DishGroup d : dishGroups){
+        for (DishGroup d : dishGroups) {
             for (String groupName : groupNames) {
-                if (d.getGroup() == groupName) {
+                if (d.getGroup().equals(groupName)) {
                     dishesInGroup.add(d);
                 }
             }
@@ -38,16 +43,41 @@ public class DishGroups extends DataSource{
         
         return dishesInGroup;
     }
+    public DishGroup findGroup(String group) {
+        for(DishGroup dishGroup : dishGroups) {
+            if(dishGroup.getGroup().equals(group)) {
+                return dishGroup;
+            }
+        }
+        return null;
+    }
+    public void removeAllFromGroup(String group) {
+        DishGroup dishGroup = findGroup(group);
+        if(dishGroup != null)
+            dishGroup.getDishes().clear();
+    }
+    public void addDishToGroup(String group, Dish dish) {
+        DishGroup dishGroup = findGroup(group);
+        if(dishGroup != null)
+            dishGroup.addDish(dish.getId());
+    }
 
+    static private boolean groupExists(List<DishGroup> dishGroup, String group) {
+        for(DishGroup gdish : dishGroup)
+            if(gdish.getGroup().equals(group))
+                return true;
+        return false;
+    }
+    
     @Override
     public void loadData() throws WrongKeyException {  
         dishes.loadData();
         dishGroups.clear();
         List<DishGroup> dGroups = getDataList();
         for(String day : Settings.weekDays)
-            if(!dGroups.contains(day))
+            if(!groupExists(dGroups, day))
                 dishGroups.add(new DishGroup(day));
-        if(!dGroups.contains(Settings.aLaCarte[0]))
+        if(!groupExists(dGroups, Settings.aLaCarte[0]))
             dishGroups.add(new DishGroup(Settings.aLaCarte[0]));
         for(DishGroup dishGroup : dGroups)
             dishGroups.add(dishGroup);
@@ -66,22 +96,19 @@ public class DishGroups extends DataSource{
     public void update() throws WrongKeyException {
         dishes.loadData();
         List<DishGroup> dg = getDataList();
-        String str = "&table=dish&data={\"data\":[";
-        String strRm = "&table=dish&data={\"data\":[";
+        String str = "&table=" + table + "&data={\"data\":[";
+        String strRm = "&table=" + table + "&data={\"data\":[";
         for(DishGroup dishGroup : dg)
-            strRm += "{\"data\":{\"remove\":true,\"id\":" + dishGroup.getGroup()+ "}},";
+            strRm += "{\"data\":{\"remove\":true,\"name\":\"" + dishGroup.getGroup()+ "\"}},";
         for (DishGroup dishGroup : dishGroups) {
-            String gName = dishGroup.getGroup();
-            dishGroup.setGroup("");
             str += "{\"data\":" + dishGroup.toJsonString() + "},";
-            dishGroup.setGroup(gName);
         }
         if(dishGroups.isEmpty())
             str += ",";
         if(dg.isEmpty())
             strRm += ",";
         System.out.println(str.substring(0, str.length()-1) + "]}");
-        // System.out.println(strRm.substring(0, strRm.length()-1) + "]}");
+        System.out.println(strRm.substring(0, strRm.length()-1) + "]}");
         System.out.println("Updatestatus: " + getRequest("updaterow", "key=" + key + strRm.substring(0, strRm.length()-1) + "]}"));
         System.out.println("Updatestatus: " + getRequest("updaterow", "key=" + key + str.substring(0, str.length()-1) + "]}"));
         
@@ -139,10 +166,6 @@ public class DishGroups extends DataSource{
     @Override
     public int getUniqueId() {
         return -1;
-    }
-
-    Dishes getDishes() {
-        return dishes;
     }
     
 }
