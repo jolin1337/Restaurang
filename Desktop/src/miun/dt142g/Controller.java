@@ -13,16 +13,18 @@ import miun.dt142g.data.Dish;
  * @author Johannes
  */
 public interface Controller {
-    void setViewWebsite ();
+    public void setViewWebsite ();
     
-    void setViewDishes();
+    public void setViewDishes();
     
-    void setViewDishDetail(Dish d);
-    void setViewNewBooking(Booking b);
+    public void setViewDishDetail(Dish d);
+    public void setViewNewBooking(Booking b);
     
-    void setViewInventory();
+    public void setViewInventory();
     
-    void setViewUsers();
+    public void setViewUsers();
+
+    public void setConnectionView();
     
     /**
      * ... more comming ...

@@ -15,6 +15,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import miun.dt142g.DataSource;
+import miun.dt142g.Settings;
 import miun.dt142g.data.Ingredient;
 import miun.dt142g.food.Inventory;
 
@@ -42,7 +43,7 @@ public class InventoryPanel extends JPanel {
         
         this.inventory = new Inventory(); 
         this.addIngredient = new JButton("Lägg till ingrediens");
-        this.submit = new JButton("Synkronisera med server");
+        this.submit = new JButton(Settings.Strings.submit);
         
         this.inventory.dbConnect();
         this.inventory.loadData();

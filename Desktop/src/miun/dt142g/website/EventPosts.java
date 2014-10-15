@@ -7,16 +7,8 @@
  */
 package miun.dt142g.website;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -28,7 +20,6 @@ import miun.dt142g.data.EventPost;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.apache.pdfbox.io.IOUtils;
 
 /**
  *
@@ -138,61 +129,6 @@ public class EventPosts extends DataSource implements Iterable<EventPost> {
         } catch (IOException ex) {
             Logger.getLogger(EventPosts.class.getName()).log(Level.SEVERE, null, ex);
         }
-        /*
-        try {
-            File uploadFile = new File(url);
-            
-            System.out.println("File to upload: " + url);
-            
-            // creates a HTTP connection
-            URL httpUrl = new URL(serverUrl + "upload");
-            HttpURLConnection httpConn = (HttpURLConnection) httpUrl.openConnection();
-            httpConn.setUseCaches(false);
-            httpConn.setDoOutput(true);
-            httpConn.setRequestMethod("POST");
-            // sets file name as a HTTP header
-            httpConn.setRequestProperty("fileName", uploadFile.getName());
-            httpConn.setRequestProperty("eventId", Integer.toString(id));
-            
-            FileInputStream inputStream = null;
-            // Opens input stream of the file for reading data
-            try ( // opens output stream of the HTTP connection for writing data
-                    OutputStream outputStream = httpConn.getOutputStream()) {
-                // Opens input stream of the file for reading data
-                inputStream = new FileInputStream(uploadFile);
-                
-                byte[] buffer = new byte[BUFFER_SIZE];
-                int bytesRead;
-                System.out.println("Start writing data...");
-                while ((bytesRead = inputStream.read(buffer)) != -1) {
-                    outputStream.write(buffer, 0, bytesRead);
-                }
-                System.out.println("Data was written.");
-            }
-            catch(FileNotFoundException ex) {}
-            finally {
-                if(inputStream != null)
-                    inputStream.close();
-                else return false;
-            }
-            
-            // always check HTTP response code from server
-            int responseCode = httpConn.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                // reads server's response
-                BufferedReader reader = new BufferedReader(new InputStreamReader(
-                        httpConn.getInputStream()));
-                String response = reader.readLine();
-                System.out.println("Server's response: " + response);
-                return true;
-            } else {
-                System.out.println("Server returned non-OK code: " + responseCode);
-            }
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(EventPosts.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(EventPosts.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
         return false;
     }
     public EventPost getEvent(int i) {

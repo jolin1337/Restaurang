@@ -24,7 +24,7 @@ import miun.dt142g.data.Dish;
  * @author Johannes
  */
 public class DishPanel extends JPanel {
-
+    boolean isRemovedPanel = false;
     Dish dish;
     JTextField name;
 
@@ -48,6 +48,7 @@ public class DishPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 if (c != null) {
+                    updateDishName();
                     c.setViewDishDetail(DishPanel.this.dish);
                 }
             }
@@ -58,6 +59,7 @@ public class DishPanel extends JPanel {
             public void actionPerformed(ActionEvent ae) {
                 int n = ConfirmationBox.confirm(DishPanel.this, name.getText());
                 if (n == 0) {
+                    isRemovedPanel = true;
                     Container parent = DishPanel.this.getParent();
                     parent.remove(DishPanel.this);
                     parent.revalidate();
@@ -73,6 +75,17 @@ public class DishPanel extends JPanel {
     }
     public void updateTextFieldContent(){
         name.setText(dish.getName());
+    }
+    public void updateDishName(){
+        dish.setName(name.getText());
+    }
+    
+    public Dish getDish() {
+        return dish;
+    }
+
+    boolean isRemoved() {
+        return isRemovedPanel;
     }
 
 }

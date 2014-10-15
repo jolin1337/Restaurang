@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import miun.dt142g.DataSource;
+import miun.dt142g.Settings;
 import miun.dt142g.data.AboutUs;
 import miun.dt142g.data.EventPost;
 
@@ -32,7 +33,7 @@ public class WebsitePanel extends JPanel {
     AboutUs about = new AboutUs();
     
     JButton newEventPostBtn = new JButton("Lägg till nytt evenemang");
-    JButton submitBtn = new JButton("Syncronizera med server");
+    JButton submitBtn = new JButton(Settings.Strings.submit);
     
     JTextArea openEdit = new JTextArea();
     JTextArea contactEdit = new JTextArea();
@@ -60,7 +61,7 @@ public class WebsitePanel extends JPanel {
                 } catch (DataSource.WrongKeyException ex) {
                     
                     JOptionPane.showMessageDialog(WebsitePanel.this,
-                        "There is an error in the authentication to the server or the server is down. Please check this out before do any changes!",
+                        Settings.Strings.serverConnectionError,
                         "Server error",
                         JOptionPane.ERROR_MESSAGE);
                 }

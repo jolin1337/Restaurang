@@ -52,9 +52,9 @@ public class DishGroups extends DataSource{
     }
 
     @Override
-    public void loadData() {  
+    public void loadData() throws WrongKeyException {  
         dishes.loadData();
-        dishGroups.add(new DishGroup(getUniqueId(), 1, "Måndag")); 
+        /*dishGroups.add(new DishGroup(getUniqueId(), 1, "Måndag")); 
         dishGroups.add(new DishGroup(getUniqueId(), 2, "Måndag")); 
         dishGroups.add(new DishGroup(getUniqueId(), 0, "Tisdag")); 
         dishGroups.add(new DishGroup(getUniqueId(), 0, "Onsdag")); 
@@ -62,7 +62,7 @@ public class DishGroups extends DataSource{
         dishGroups.add(new DishGroup(getUniqueId(), 0, "Fredag")); 
         dishGroups.add(new DishGroup(getUniqueId(), 0, "A la Carte")); 
         dishGroups.add(new DishGroup(getUniqueId(), 2, "A la Carte"));
-        dishGroups.add(new DishGroup(getUniqueId(), 1, "A la Carte"));
+        dishGroups.add(new DishGroup(getUniqueId(), 1, "A la Carte"));*/
     }
 
     @Override

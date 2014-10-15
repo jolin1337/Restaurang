@@ -8,14 +8,17 @@ package miun.dt142g.data;
 import java.util.ArrayList;
 import java.util.List;
 import miun.dt142g.food.Inventory;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
  * @author Ulf
  */
-public class Dish {
+public class Dish implements Comparable<Dish> {
 
-    private final int id;
+    private int id;
     private String name;
     private float price;
     private List<Integer> ingredients;
@@ -29,6 +32,9 @@ public class Dish {
 
     public int getId() {
         return id;
+    }
+    public void setId(int id) {
+        this.id = id;
     }
 
     /**
@@ -103,4 +109,22 @@ public class Dish {
         return this.getName() + "\n" + Float.toString(this.getPrice()) + ":-";
     }
 
+    public String toJsonString() {
+        // Set all properties of this event here to export the event to a json object
+        JSONObject value = new JSONObject();
+        try {
+            JSONArray ings = new JSONArray(ingredients);
+            value.put("id", getId())
+                    .put("name", getName())
+                    .put("price", getPrice())
+                    .put("ingredients", ings);
+        } catch (JSONException ex) {
+        }
+        return value.toString();
+    }
+
+    @Override
+    public int compareTo(Dish t) {
+        return name.toLowerCase().compareTo(t.getName().toLowerCase());
+    }
 }

@@ -13,11 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import miun.dt142g.Controller;
 import miun.dt142g.DataSource;
+import miun.dt142g.Settings;
 import miun.dt142g.data.Dish;
+import miun.dt142g.website.WebsitePanel;
 
 /**
  *
@@ -46,7 +49,8 @@ public class DishesPanel extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                DishPanel dp = new DishPanel(new Dish(dishes.getUniqueId(), "", 0.0f, null), remote);
+                Dish dish = new Dish(dishes.getUniqueId(), "", 0.0f, null);
+                DishPanel dp = new DishPanel(dish, remote);
                 remove(addDishBtn);
                 add(dp);
                 add(addDishBtn);
@@ -56,6 +60,39 @@ public class DishesPanel extends JPanel {
         });
         add(addDishBtn);
         addDishBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        
+        JButton submitBtn = new JButton(Settings.Strings.submit);
+        submitBtn.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                dishes.clear();
+                List<DishPanel> dishesToRemove = new ArrayList<>();
+                for(DishPanel dp : dishPanels) {
+                    if(dp.isRemoved()) {
+                        dishesToRemove.add(dp);
+                        continue;
+                    }
+                    dp.updateDishName();
+                    dishes.addDish(dp.getDish());
+                }
+                for(DishPanel dp : dishesToRemove){
+                        dishPanels.remove(dp);
+                }
+                try {
+                    dishes.update();
+                } catch (DataSource.WrongKeyException ex) {
+                    JOptionPane.showMessageDialog(DishesPanel.this,
+                        Settings.Strings.serverConnectionError,
+                        "Server error",
+                        JOptionPane.ERROR_MESSAGE);
+                    if(remote != null)
+                        remote.setConnectionView();
+                }
+            }
+        });
+        add(submitBtn);
+        submitBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
     }
 
     public void setViewSwitch(Controller c) {

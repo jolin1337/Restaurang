@@ -69,11 +69,7 @@ public class SharedTabs extends JPanel {
             try {
                 dishDetailView.setDish(d);
             } catch (DataSource.WrongKeyException ex) {
-                Container parent = SharedTabs.this.getParent();
-                parent.add(new LoginPage());
-                parent.remove(SharedTabs.this);
-                parent.revalidate();
-                parent.repaint();
+                this.setConnectionView();
             }
 
             tabbedPane.addTab("Rätten i detaij", dishDetailView);
@@ -97,6 +93,15 @@ public class SharedTabs extends JPanel {
             tabbedPane.addTab("Bokning i detaij", newBooking);
             tabbedPane.revalidate();
             tabbedPane.setSelectedComponent(newBooking);
+        }
+
+        @Override
+        public void setConnectionView() {
+            Container parent = SharedTabs.this.getParent();
+            parent.add(new LoginPage());
+            parent.remove(SharedTabs.this);
+            parent.revalidate();
+            parent.repaint();
         }
 
     };
