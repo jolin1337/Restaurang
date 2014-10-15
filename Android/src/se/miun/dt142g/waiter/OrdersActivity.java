@@ -18,7 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import se.miun.dt142g.BaseActivity;
+import se.miun.dt142g.DataSource;
 import se.miun.dt142g.R;
 import se.miun.dt142g.data.EntityRep.Dish;
 import se.miun.dt142g.data.EntityHandler.Dishes;
@@ -49,8 +52,12 @@ public class OrdersActivity extends BaseActivity {
         Intent thisActivity = getIntent();
         setTitle(thisActivity.getExtras().getString("bord_str"));
         
-        if(!availableMenus.readMenus())
+        try {
+            availableMenus.dbConnect();
+        } catch (DataSource.WrongKeyException ex) {
             Toast.makeText(this, "Databasen var inte åtkommlig, du kan inte ta emot din beställning just nu", Toast.LENGTH_LONG).show();
+            return;
+        }
         // Get ListView ob ject from xml
         listView = (ListView) findViewById(R.id.orderView);
 
@@ -103,7 +110,7 @@ public class OrdersActivity extends BaseActivity {
         makeChoiseOfMenu(new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Dish m = availableMenus.getMenu(which);
+                Dish m = availableMenus.getDishByIndex(which);
                 values.set(position, m);
                 orders.notifyDataSetChanged();
                 tv.setTextColor(Color.BLACK);
@@ -115,7 +122,7 @@ public class OrdersActivity extends BaseActivity {
         makeChoiseOfMenu(new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Menu m = availableMenus.getMenu(which);
+                Dish m = availableMenus.getDishByIndex(which);
                 values.add(m);
                 orders.notifyDataSetChanged();
             }
@@ -131,8 +138,13 @@ public class OrdersActivity extends BaseActivity {
     }
 
     private void makeChoiseOfMenu(DialogInterface.OnClickListener blob) {
-        if(!availableMenus.readMenus())
+        
+        try {
+            availableMenus.dbConnect();
+        } catch (DataSource.WrongKeyException ex) {
             Toast.makeText(this, "Databasen var inte åtkommlig, du kan inte ta emot din beställning just nu", Toast.LENGTH_LONG).show();
+            return;
+        }
         //CharSequence colors[] = new CharSequence[] {"red", "green", "blue", "black"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

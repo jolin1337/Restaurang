@@ -86,7 +86,7 @@ public class Reservations extends DataSource implements Iterable<Reservation>{
     }
 
     @Override
-    public void loadData(String responseText) throws WrongKeyException {
+    public void loadData(String url, String responseText) throws WrongKeyException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -97,6 +97,11 @@ public class Reservations extends DataSource implements Iterable<Reservation>{
 
     @Override
     public int getUniqueId() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void load() throws WrongKeyException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

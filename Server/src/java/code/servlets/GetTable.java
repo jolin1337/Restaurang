@@ -14,6 +14,7 @@ import data.entity.Dishgroup;
 import data.entity.Event;
 import data.entity.Info;
 import data.entity.Inventory;
+import data.entity.TableOrder;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.persistence.EntityManager;
@@ -99,6 +100,12 @@ public class GetTable extends HttpServlet {
                         break; 
                     case "scheme": 
                         
+                        break; 
+                    case "tableorder": 
+                        TypedQuery<TableOrder> tableOrderQuery = em.createNamedQuery("TableOrder.findAll", TableOrder.class);
+                        for(TableOrder d : tableOrderQuery.getResultList()){
+                            jsonString += d.toJsonString() + ",";
+                        }
                         break; 
                     default: 
                         

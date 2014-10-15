@@ -15,6 +15,7 @@ import data.entity.Event;
 import data.entity.Info;
 import data.entity.Inventory;
 import data.entity.JsonEntity;
+import data.entity.TableOrder;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -137,6 +138,11 @@ public class UpdateRow extends HttpServlet {
                         case "inventory":
                             // try to alter the table
                             edited |= updateTable(obj, obj.getInt(Inventory.getPK(), -1), Inventory.class);
+                            break;
+                        case "tableorder":
+                            // try to alter the table
+                            edited |= updateTable(obj, obj.getInt(TableOrder.getPK(), -1), TableOrder.class);
+
                             break;
                         case "scheme":
 

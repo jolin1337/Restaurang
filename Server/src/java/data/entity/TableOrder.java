@@ -8,6 +8,7 @@
 package data.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.json.Json;
@@ -43,6 +44,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "TABLEORDER", catalog = "", schema = "APP")
 @XmlRootElement
 @NamedQueries({
+    @NamedQuery(name = "TableOrder.findAll", query = "SELECT o FROM TableOrder o"),
     @NamedQuery(name = "TableOrder.findByTableID", query = "SELECT o FROM TableOrder o WHERE o.id = :tableID"),
     @NamedQuery(name = "TableOrder.findAllOrders", query = "SELECT o FROM TableOrder o")})
 public class TableOrder extends JsonEntity implements Serializable {
@@ -55,7 +57,7 @@ public class TableOrder extends JsonEntity implements Serializable {
     /**
      * The primary key of this entity
      */
-    private String id;
+    private Integer id;
     @JoinTable(name = "TABLE_HAS_ORDER", joinColumns = {
         @JoinColumn(name = "TABLE_ID", referencedColumnName = "tableID")}, inverseJoinColumns = {
         @JoinColumn(name = "DISH_ID", referencedColumnName = "ID")})
@@ -69,7 +71,7 @@ public class TableOrder extends JsonEntity implements Serializable {
      * Getter of the table ID
      * @return the table ID
      */
-    public String getId() {
+    public int getId() {
         return id;
     }
         
@@ -77,7 +79,7 @@ public class TableOrder extends JsonEntity implements Serializable {
      * Set the table ID
      * @param id the table ID
      */
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
         
@@ -142,7 +144,9 @@ public class TableOrder extends JsonEntity implements Serializable {
      * @param dish - The dish you want to add
      */
     public void addToOrders(Dish dish) {
-        if (dish != null && orderedDishes != null && orderedDishes.indexOf(dish) < 0) {
+        if(orderedDishes == null)
+            orderedDishes = new ArrayList<>();
+        if (dish != null && orderedDishes.indexOf(dish) < 0) {
             orderedDishes.add(dish);
         }
     }
@@ -152,7 +156,9 @@ public class TableOrder extends JsonEntity implements Serializable {
      * @param dish - The dish to remove
      */
     public void removeOrder(Dish dish) {
-        if (dish != null && orderedDishes != null && orderedDishes.indexOf(dish) > -1) {
+        if(orderedDishes == null)
+            orderedDishes = new ArrayList<>();
+        if (dish != null && orderedDishes.indexOf(dish) > -1) {
             orderedDishes.remove(dish);
         }
     }
@@ -174,9 +180,9 @@ public class TableOrder extends JsonEntity implements Serializable {
         
         // Create the main json object for the string
         JsonObject value = Json.createObjectBuilder()
-                .add("tableID", getId())
+                .add("id", getId())
                 .add("orders", orders.build())
-                .add("timeOfOrder", getTimeOfOrder().toString())
+                .add("timeOfOrder", getTimeOfOrder().getTime())
                 .build();
         return value.toString();
     }
@@ -185,7 +191,6 @@ public class TableOrder extends JsonEntity implements Serializable {
     public boolean setEntityByJson(JsonObject obj, EntityManager em) {
         try {
             // Parse the json object for insertion in this entity
-            setId(obj.getString("tableID", ""));
             JsonArray orders = obj.getJsonArray("orders");
             for (JsonValue itDish : orders) {
                 if (itDish.getValueType() == JsonValue.ValueType.NUMBER) {

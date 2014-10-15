@@ -20,7 +20,8 @@ import org.json.JSONObject;
  * @author Ulf
  */
 public class Dishes extends DataSource implements Iterable<Dish> {
-    private final List<Dish> dishes = new ArrayList<>();
+    private final String table="dish";
+    private final List<Dish> dishes = new ArrayList<Dish>();
     
     public Dishes(){
     }
@@ -57,22 +58,27 @@ public class Dishes extends DataSource implements Iterable<Dish> {
             if(d.getId() == dish.getId()) {
                 d.setName(dish.getName());
                 d.setPrice(dish.getPrice());
-                d.getIngredients().clear();
-                for(int ing : dish.getIngredients())
-                    d.getIngredients().add(ing);
                 return;
             }
         }
     }
 
     @Override
-    public void loadData() throws WrongKeyException {
+    public void load() throws WrongKeyException {
         List<Dish> ds = getDataList();
         dishes.clear();
         for(Dish dish : ds)
             dishes.add(dish);
         
         Collections.sort(dishes);
+    }
+    @Override
+    public void loadData(String url, String responseText) throws WrongKeyException {
+   
+    }
+    
+    public CharSequence[] toCharSequence() {
+        return (CharSequence[])dishes.toArray();
     }
 
     @Override
@@ -98,10 +104,10 @@ public class Dishes extends DataSource implements Iterable<Dish> {
         System.out.println("Updatestatus: " + getRequest("updaterow", "key=" + key + str.substring(0, str.length()-1) + "]}"));
         
         // To make sure that we have the correct id:s/pk:s
-        loadData();
+        getRequest("gettable", "key=" + key + "&table=" + table);
     }
     private List<Dish> getDataList() throws WrongKeyException {
-        List<Dish> currentEvents = new ArrayList<>();
+        List<Dish> currentEvents = new ArrayList<Dish>();
         JSONObject json;
         String jsonStr = getRequest("gettable", "key=" + key + "&table=dish");
         if(jsonStr.equals("expired_key")) {
@@ -130,13 +136,7 @@ public class Dishes extends DataSource implements Iterable<Dish> {
                 int id = obj.getInt("id");
                 String name = obj.getString("name");
                 int price = obj.getInt("price");
-                JSONArray ings = obj.getJSONArray("ingredients");
-                List<Integer> ingredients = new ArrayList<>();
-                for (int j = ings.length(); j > 0; j--) {
-                    ingredients.add(ings.getInt(j-1));
-                }
-                Collections.sort(ingredients);
-                d = new Dish(id, name, price, ingredients);
+                d = new Dish(id, name, price);
                 
                 currentEvents.add(d);
             } catch (JSONException ex) {

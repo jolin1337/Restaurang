@@ -17,17 +17,32 @@ import se.miun.dt142g.data.EntityRep.TableOrder;
  *
  * @author Johannes
  */
-public class TableOrders extends DataSource implements Iterable<TableOrder>{
+public class TableOrders extends DataSource implements Iterable<TableOrder> {
+
     List<TableOrder> tableOrders;
     String table = "tableorder";
-    
-    public TableOrders(){
+
+    public TableOrders() {
         tableOrders = new ArrayList<TableOrder>();
     }
-    
+
+    private void parseTable(String jsonStr) {
+    }
+
     @Override
-    public void loadData(String responseText) throws WrongKeyException {
-        String params = "key=" + key +"&table=" + table;
+    public void loadData(String url, String responseText) throws WrongKeyException {
+        if (url.equals("login")) {
+            key = responseText;
+        } else if (url.equals("gettable")) {
+            parseTable(responseText);
+        } else if(url.equals("updaterow")) {
+            load();
+        }
+    }
+
+    @Override
+    public void load() throws WrongKeyException {
+        String params = "key=" + key + "&table=" + table;
         String response = getRequest("gettable", params);
         System.out.println(response);
     }
@@ -43,9 +58,6 @@ public class TableOrders extends DataSource implements Iterable<TableOrder>{
     }
 
     public Iterator<TableOrder> iterator() {
-        return this.tableOrders.iterator(); 
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
 }
-

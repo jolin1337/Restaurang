@@ -33,7 +33,11 @@ public abstract class DataSource {
     /**
      * An abstract method for loading data to its datasource
      */
-    public abstract void loadData(String responseText) throws WrongKeyException;
+    public abstract void loadData(String url, String responseText) throws WrongKeyException;
+    /**
+     * An abstract method for loading data to its datasource
+     */
+    public abstract void load() throws WrongKeyException;
     /**
      * A key for authorization
      */
@@ -123,7 +127,7 @@ public abstract class DataSource {
             try {
                 if (urls.length > 1) {
                     String res = processRequest(urls[0], urls[1]);
-                    loadData(res);
+                    loadData(urls[0], res);
                 }
 
             } catch (Exception e) {
