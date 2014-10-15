@@ -21,6 +21,7 @@ import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
+import miun.dt142g.Controller;
 /**
  *
  * @author Simple
@@ -37,8 +38,10 @@ public class NewBooking extends JPanel {
     private JLabel invalidBookingInput;
     private JLabel invalidPhoneInput;
     private JLabel phoneNrInput; 
+    private JLabel invalidDateInput;
     private JSpinner spinner;
     Date bookingTime;
+    Controller remote = null;
 
     private JLabel addLabel(String labelName) {
         JLabel label = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>" + labelName + "</div></html>");
@@ -54,13 +57,14 @@ public class NewBooking extends JPanel {
         add(textField);  
         return textField;
     }
-    public final void newBooking(Booking b){
+    public final void newBooking(Booking b, Controller c){
+        this.remote = c;
         this.booking = b;
         removeAll();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         
         addLabel("Namn: ");
-        nameField = addTextField("Anders Svensson");
+        nameField = addTextField("");
         
         addLabel("Telefon: ");
         phoneNrField = addTextField("");
@@ -97,12 +101,14 @@ public class NewBooking extends JPanel {
         missingBookingInput = addLabel("Vänligen fyll i alla fält för att godkänna bokningen.");
         invalidBookingInput = addLabel("Vänligen ange endast heltal.");
         invalidPhoneInput = addLabel("Vänligen ange ett telefonnummer som är mellan 7 och 9 siffror");
+        invalidDateInput = addLabel("Vänligen ange ett datum som inte är i det förflutna.");
         add(missingBookingInput);
         add(invalidBookingInput);
         add(invalidPhoneInput);
         invalidPhoneInput.setVisible(false);
         missingBookingInput.setVisible(false);
         invalidBookingInput.setVisible(false);
+        invalidDateInput.setVisible(false);
         
         addBookingBtn.addActionListener(new ActionListener() {
             @Override
@@ -112,23 +118,32 @@ public class NewBooking extends JPanel {
                 Object date = spinner.getValue();
                 bookingTime = new Date();
                 bookingTime = (Date)date;
-    
+                boolean invalidInput = false;
                 
                 if (nameField.getText().isEmpty() || personsField.getText().isEmpty() || durationField.getText().isEmpty() || phoneNrField.getText().isEmpty()){
                     missingBookingInput.setVisible(true);
-                    return;
+                    invalidInput = true;
                 }
                 
                 if (!( phoneNrField.getText().length() > 6 && phoneNrField.getText().length() < 10 )){
                     invalidPhoneInput.setVisible(true);
-                    return;
+                    invalidInput = true;
                 }
                 
                 if (!( isInteger(personsField.getText()) && isInteger(durationField.getText()) && isInteger(phoneNrField.getText()) )){
                     invalidBookingInput.setVisible(true);
+                    invalidInput = true;
+                }
+                
+                // Invalid input if date before "now" + 1 hour
+                if (datePicker.getDate().getTime() < new Date().getTime()){
+                    invalidDateInput.setVisible(true);
+                    invalidInput = true;
+                }
+                
+                if (invalidInput){
                     return;
                 }
-
                 
                 
                 // Merge datePicker with timePicker
@@ -138,7 +153,6 @@ public class NewBooking extends JPanel {
                 bookingTime.setYear(datePicker.getDate().getYear());
                 bookingTime.setMonth(datePicker.getDate().getMonth());
                 bookingTime.setDate(datePicker.getDate().getDate());
-                System.out.println(bookingTime);
 
                 booking.setDate(bookingTime);
                 booking.setDuration(Integer.parseInt(durationField.getText()));
@@ -151,6 +165,7 @@ public class NewBooking extends JPanel {
                 Container parent = btn.getParent().getParent();
                 parent.remove(btn.getParent());
                 parent.revalidate();
+                remote.setViewBookings();
             }
         });
     }

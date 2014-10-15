@@ -101,10 +101,11 @@ public class Bookings extends DataSource implements Iterable<Booking> {
                 if (bok.getId()<0)
                     jsonBooking.put("id", -1);
                 else
-                    jsonBooking.put("id", bok.getId());
+                jsonBooking.put("id", bok.getId());
                 jsonBooking.put("name", bok.getName());
-                jsonBooking.put("phone", bok.getPhoneNr());
-                jsonBooking.put("date", bok.getDate().getTime());
+                jsonBooking.put("phone", Integer.toString(bok.getPhoneNr()));
+                jsonBooking.put("date", Long.toString(bok.getDate().getTime()));
+                
                 jsonBooking.put("duration", bok.getDuration());
                 jsonBooking.put("persons", bok.getPersons());
                 jsonDataElement.put("data", jsonBooking);

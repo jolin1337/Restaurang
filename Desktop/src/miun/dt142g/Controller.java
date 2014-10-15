@@ -19,7 +19,10 @@ public interface Controller {
     public void setViewDishes();
     
     public void setViewDishDetail(Dish d, ActionListener removeEvent);
+    
     public void setViewNewBooking(Booking b);
+    
+    public void setViewBookings();
     
     public void setViewInventory();
     
