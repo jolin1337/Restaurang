@@ -54,7 +54,7 @@ public class Booking extends JsonEntity implements Serializable {
     @Column(name = "NAME")
     private String name;
     @Column(name = "STARTDATE")
-    private long startDate;
+    private String startDate;
     @Column(name = "PHONE")
     private String phone;
 
@@ -99,8 +99,8 @@ public class Booking extends JsonEntity implements Serializable {
             this.duration = obj.getInt("duration", 2);
             this.persons = obj.getInt("persons", 1);
             this.name = obj.getString("name", "Anders Svensson");
-            this.phone = obj.getString("phone", "070000000");
-            this.startDate = new Date(obj.getInt("date")).getTime();
+            this.phone = obj.getString("phone");
+            this.startDate = obj.getString("date");
         }catch(NullPointerException | ClassCastException ex){
             return false;
         }
@@ -165,14 +165,14 @@ public class Booking extends JsonEntity implements Serializable {
     /**
      * @return the startDate
      */
-    public long getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
     /**
      * @param startDate the startDate to set
      */
-    public void setStartDate(long startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
