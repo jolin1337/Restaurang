@@ -27,11 +27,13 @@ public class UsersPanel extends JPanel {
     public UsersPanel() throws DataSource.WrongKeyException{
         usrs.dbConnect();
         usrs.loadData();
+        usrs.listToJsonArray();
         //.addUser();
         
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setBackground(Color.WHITE);
         addUserBtn = new JButton("Lägg till användare");
+        final JButton serverSyncBtn = new JButton("Synkronisera med servern");
         
         addUserBtn.setMinimumSize(new Dimension(50, 25));
         addUserBtn.setPreferredSize(new Dimension(50, 25));
@@ -45,20 +47,47 @@ public class UsersPanel extends JPanel {
 
         addUserBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
         add(addUserBtn);  
+        add(serverSyncBtn);
         addUserBtn.addActionListener(new ActionListener(){
             
             @Override
             public void actionPerformed(ActionEvent event)
             {
                 remove(addUserBtn);
-                UserPanel p = new UserPanel(new User(2,"","","",""));
+                remove(serverSyncBtn);
+                User a =new User(-1,"","","","");
+                usrs.addUser(a);
+                UserPanel p = new UserPanel(a);
                 add(p);
                 add(addUserBtn);
+                add(serverSyncBtn);
+                revalidate();
                 
             }
             
         });
+        
+        serverSyncBtn.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                remove(addUserBtn);
+                remove(serverSyncBtn);
+                usrs.update();
+                removeAll();
+                for (User user : usrs) {
+                    UserPanel pn = new UserPanel(user);
+                    add(pn);
+                }
+                add(addUserBtn);
+                add(serverSyncBtn);
+                revalidate();
+                    
+            }
+        });
            
     }
+
+
     
 }

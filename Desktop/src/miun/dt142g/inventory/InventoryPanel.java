@@ -94,6 +94,10 @@ public class InventoryPanel extends JPanel {
                 remove(addIngredient);
                 remove(submit);
                 inventory.update();
+                removeAll();
+                for(Ingredient ingredient: inventory) {
+                    add(new IngredientPanel(ingredient));
+                }
                 add(addIngredient);
                 add(submit);
                 revalidate();   
