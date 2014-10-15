@@ -106,10 +106,6 @@ public class Bookings extends DataSource implements Iterable<Booking> {
                 jsonBooking.put("phone", Integer.toString(bok.getPhoneNr()));
                 jsonBooking.put("date", Long.toString(bok.getDate().getTime()));
                 
-                Date d = new Date();
-                d.setTime(bok.getDate().getTime());
-                System.out.println("Time at input: "+d);
-                
                 jsonBooking.put("duration", bok.getDuration());
                 jsonBooking.put("persons", bok.getPersons());
                 jsonDataElement.put("data", jsonBooking);
@@ -117,7 +113,6 @@ public class Bookings extends DataSource implements Iterable<Booking> {
             }
             JSONObject send = new JSONObject(); 
             send.put("data", data);
-            System.out.println("Same value in json format: "+send.toString());
             String urlParams = "key=" + key + "&table=booking&data="+send.toString();
             System.out.println("Update status: " +getRequest("updaterow", urlParams));
         } 

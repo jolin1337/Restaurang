@@ -38,6 +38,7 @@ public class NewBooking extends JPanel {
     private JLabel invalidBookingInput;
     private JLabel invalidPhoneInput;
     private JLabel phoneNrInput; 
+    private JLabel invalidDateInput;
     private JSpinner spinner;
     Date bookingTime;
     Controller remote = null;
@@ -100,12 +101,14 @@ public class NewBooking extends JPanel {
         missingBookingInput = addLabel("Vänligen fyll i alla fält för att godkänna bokningen.");
         invalidBookingInput = addLabel("Vänligen ange endast heltal.");
         invalidPhoneInput = addLabel("Vänligen ange ett telefonnummer som är mellan 7 och 9 siffror");
+        invalidDateInput = addLabel("Vänligen ange ett datum som inte är i det förflutna.");
         add(missingBookingInput);
         add(invalidBookingInput);
         add(invalidPhoneInput);
         invalidPhoneInput.setVisible(false);
         missingBookingInput.setVisible(false);
         invalidBookingInput.setVisible(false);
+        invalidDateInput.setVisible(false);
         
         addBookingBtn.addActionListener(new ActionListener() {
             @Override
@@ -115,23 +118,32 @@ public class NewBooking extends JPanel {
                 Object date = spinner.getValue();
                 bookingTime = new Date();
                 bookingTime = (Date)date;
-    
+                boolean invalidInput = false;
                 
                 if (nameField.getText().isEmpty() || personsField.getText().isEmpty() || durationField.getText().isEmpty() || phoneNrField.getText().isEmpty()){
                     missingBookingInput.setVisible(true);
-                    return;
+                    invalidInput = true;
                 }
                 
                 if (!( phoneNrField.getText().length() > 6 && phoneNrField.getText().length() < 10 )){
                     invalidPhoneInput.setVisible(true);
-                    return;
+                    invalidInput = true;
                 }
                 
                 if (!( isInteger(personsField.getText()) && isInteger(durationField.getText()) && isInteger(phoneNrField.getText()) )){
                     invalidBookingInput.setVisible(true);
+                    invalidInput = true;
+                }
+                
+                // Invalid input if date before "now" + 1 hour
+                if (datePicker.getDate().getTime() < new Date().getTime()){
+                    invalidDateInput.setVisible(true);
+                    invalidInput = true;
+                }
+                
+                if (invalidInput){
                     return;
                 }
-
                 
                 
                 // Merge datePicker with timePicker
