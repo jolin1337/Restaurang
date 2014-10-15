@@ -1,19 +1,19 @@
 # view res/layout/reservations.xml #generated:2
 -keep class android.support.v4.view.ViewPager { <init>(...); }
 
-# view AndroidManifest.xml #generated:9
+# view AndroidManifest.xml #generated:11
 -keep class se.miun.dt142g.LoginActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:30
+# view AndroidManifest.xml #generated:32
 -keep class se.miun.dt142g.kitchen.Orders { <init>(...); }
 
-# view AndroidManifest.xml #generated:33
+# view AndroidManifest.xml #generated:35
 -keep class se.miun.dt142g.reservations.ReservationsActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:23
+# view AndroidManifest.xml #generated:25
 -keep class se.miun.dt142g.waiter.OrdersActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:16
+# view AndroidManifest.xml #generated:18
 -keep class se.miun.dt142g.waiter.WaiterActivity { <init>(...); }
 
 # onClick res/layout/login_activity.xml #generated:50

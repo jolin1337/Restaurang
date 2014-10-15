@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import se.miun.dt142g.BaseActivity;
 import se.miun.dt142g.R;
-import se.miun.dt142g.data.Menu;
-import se.miun.dt142g.data.Menus;
+import se.miun.dt142g.data.EntityRep.Dish;
+import se.miun.dt142g.data.EntityHandler.Dishes;
 
 /**
  *
@@ -29,9 +29,10 @@ import se.miun.dt142g.data.Menus;
  */
 public class OrdersActivity extends BaseActivity {
     private ListView listView;
-    private ArrayAdapter<Menu> orders = null;
-    private final List<Menu> values = new ArrayList<Menu>();
-    private final Menus availableMenus = new Menus();
+    private ArrayAdapter<Dish> orders = null;
+    private final List<Dish> values = new ArrayList<Dish>();
+    private final Dishes availableMenus = new Dishes();
+    
     /**
      * Called when the activity is first created.
      * @param icicle The bundle for current activity
@@ -54,10 +55,6 @@ public class OrdersActivity extends BaseActivity {
         listView = (ListView) findViewById(R.id.orderView);
 
         // Defined Array values to show in ListView
-        values.add(availableMenus.getMenu("Fisk"));
-        values.add(availableMenus.getMenu("Gröt"));
-        values.add(availableMenus.getMenu("Spagetti"));
-        values.add(availableMenus.getMenu("Potatisbullar"));
         
         
         
@@ -71,14 +68,14 @@ public class OrdersActivity extends BaseActivity {
     public void removeBtnClicked(View btn) {
         int position = listView.getPositionForView(btn);
         
-        Menu value = values.get(position);
+        Dish value = values.get(position);
         
-        if(value.deleted())  {
+        if(value.isDeleted())  {
             values.remove(position);
             orders.remove(value);
         }
         else
-            value.delete();
+            value.setDeleted(true);
         orders.notifyDataSetChanged();
     }
     public void orderDetails(final View orderItem) {
@@ -86,12 +83,12 @@ public class OrdersActivity extends BaseActivity {
         
         final int position = listView.getPositionForView(orderItem);
         // ListView Clicked item value
-        Menu itemValue = orders.getItem(position);
+        Dish itemValue = orders.getItem(position);
         
-        if(itemValue.deleted()) {
+        if(itemValue.isDeleted()) {
             tv.setTextColor(Color.BLACK);
             orderItem.setBackgroundColor(Color.WHITE);
-            itemValue.restore();
+            itemValue.setDeleted(false);
             orders.notifyDataSetChanged();
             return;
         }
@@ -106,7 +103,7 @@ public class OrdersActivity extends BaseActivity {
         makeChoiseOfMenu(new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Menu m = availableMenus.getMenu(which);
+                Dish m = availableMenus.getMenu(which);
                 values.set(position, m);
                 orders.notifyDataSetChanged();
                 tv.setTextColor(Color.BLACK);

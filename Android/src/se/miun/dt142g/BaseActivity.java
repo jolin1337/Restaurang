@@ -6,7 +6,9 @@ package se.miun.dt142g;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import se.miun.dt142g.reservations.ReservationsActivity;
@@ -15,14 +17,14 @@ import se.miun.dt142g.reservations.ReservationsActivity;
  * @author Johannes
  */
 public class BaseActivity extends Activity {
-
     /**
      * Called when the activity is first created.
      */
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        // ToDo add your GUI initialization code here        
+        // ToDo add your GUI initialization code here   
+        //StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectNetwork().build());
     }
     
     @Override

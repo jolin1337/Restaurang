@@ -11,15 +11,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import java.util.List;
-import se.miun.dt142g.data.Menu;
+import se.miun.dt142g.data.EntityRep.Dish;
 
 /**
  *
  * @author Simple
  */
-public class OrdersListView extends ArrayAdapter<Menu>{
+public class OrdersListView extends ArrayAdapter<Dish>{
     
-    public OrdersListView(Context context, int resource, int textViewResourceId, int textViewResourceId2, List<Menu> objects) {
+    public OrdersListView(Context context, int resource, int textViewResourceId, int textViewResourceId2, List<Dish> objects) {
         super(context, resource, textViewResourceId, objects);
         layoutViewResourceId = resource;
         this.textViewResourceId = textViewResourceId;
@@ -35,7 +35,7 @@ public class OrdersListView extends ArrayAdapter<Menu>{
         if (convertView == null)
             return null;
         TextView priceView = (TextView)(convertView.findViewById(textViewResourceId2));
-        priceView.setText(Float.toString(getItem(position).price) + " :-");
+        priceView.setText(Float.toString(getItem(position).getPrice()) + " :-");
         return convertView;
     }
 }
