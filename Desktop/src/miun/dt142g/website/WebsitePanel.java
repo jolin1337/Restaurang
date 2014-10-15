@@ -38,7 +38,6 @@ public class WebsitePanel extends JPanel {
     List<EventPostPanel> eventPostPanels = new ArrayList<>();
     EventPosts eventPosts = new EventPosts();
     AboutUs about = new AboutUs();
-    
     JButton newEventPostBtn = new JButton("Lägg till nytt evenemang");
     JButton submitBtn = new JButton(Settings.Strings.submit);
     
@@ -50,7 +49,7 @@ public class WebsitePanel extends JPanel {
         eventPosts.loadData();
         about.dbConnect();
         about.loadData();
-        
+
         setBackground(Color.WHITE);
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         

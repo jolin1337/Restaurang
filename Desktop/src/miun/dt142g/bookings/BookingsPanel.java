@@ -36,7 +36,7 @@ public class BookingsPanel extends JPanel {
     private JButton addBooking;
     private JButton remove; 
     private JButton submit; 
-    private final Controller fjarr;
+    private final Controller remote;
     private boolean newBookingP = false;
     private boolean removeBooking = false;
     private final DefaultTableModel model = new DefaultTableModel();
@@ -44,12 +44,12 @@ public class BookingsPanel extends JPanel {
     // End of variables declaration  
     
     
-    public BookingsPanel(Controller fjarr) throws DataSource.WrongKeyException {
+    public BookingsPanel(Controller c) throws DataSource.WrongKeyException {
         this.bookings = new Bookings();
         this.bookings.dbConnect();
         this.bookings.loadData();
         initComponents();
-        this.fjarr = fjarr;
+        this.remote = c;
     }
 
     /*@SuppressWarnings("empty-statement")*/
@@ -95,7 +95,7 @@ public class BookingsPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 Booking b = new Booking(bookings.getUniqueId(), "", new Date(), 0, 0, 0);
                 bookings.addBooking(b);
-                fjarr.setViewNewBooking(b);
+                remote.setViewNewBooking(b);
                 newBookingP = true;
             }
         });

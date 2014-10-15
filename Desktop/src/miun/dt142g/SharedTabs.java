@@ -90,9 +90,14 @@ public class SharedTabs extends JPanel {
         @Override
         public void setViewNewBooking(Booking b) {
             newBooking.newBooking(b, remote);
-            tabbedPane.addTab("Bokning i detaij", newBooking);
-            tabbedPane.revalidate();
-            tabbedPane.setSelectedComponent(newBooking);
+            //tabbedPane.addTab("Bokning i detaij", newBooking);
+                    JScrollPane sp = new JScrollPane(newBooking, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                    sp.setMinimumSize(new Dimension(500,700));
+                    tabbedPane.addTab("Bokning i detalj", sp);
+                    newBooking.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+            sp.revalidate();
+            tabbedPane.setSelectedComponent(sp);
         }
         
         @Override
@@ -204,7 +209,10 @@ public class SharedTabs extends JPanel {
         UIManager.put("TextArea.font", new Font("Calibri", Font.PLAIN, 22));
         UIManager.put("TextArea.background", Styles.fieldColor);
         UIManager.put("TextArea.border", BorderFactory.createLoweredBevelBorder());
-
+        
+        UIManager.put("FormattedTextField.background", Styles.fieldColor);
+        UIManager.put("FormattedTextField.font", new Font("Calibri", Font.PLAIN, 22));
+        
         UIManager.put("TextField.font", new Font("Calibri", Font.PLAIN, 32));
         UIManager.put("TextField.background", Styles.fieldColor);
         UIManager.put("TextField.selectionBackground", Color.RED);
