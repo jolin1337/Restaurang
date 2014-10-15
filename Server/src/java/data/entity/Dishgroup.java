@@ -8,6 +8,7 @@
 package data.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -139,7 +140,9 @@ public class Dishgroup extends JsonEntity implements Serializable {
      * @param dish - The dish you want to add
      */
     public void addToDishes(Dish dish) {
-        if (dish != null && dishList != null && dishList.indexOf(dish) < 0) {
+        if(dishList == null)
+            dishList = new ArrayList<>();
+        if (dish != null && dishList.indexOf(dish) < 0) {
             dishList.add(dish);
         }
     }
