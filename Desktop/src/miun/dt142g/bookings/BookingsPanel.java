@@ -52,7 +52,9 @@ public class BookingsPanel extends JPanel {
         this.remote = c;
     }
 
-    /*@SuppressWarnings("empty-statement")*/
+    /**
+    * Initiates all components and adding them to the container
+    */
     private void initComponents() {
         
         table.setRowHeight(33);
@@ -113,7 +115,10 @@ public class BookingsPanel extends JPanel {
         this.add(submit);
     }
     
-    // Haxxor thing to resize table according to contents
+    /**
+    * Resizes a JTable according to the cellcontents 
+    * @param table table to be resized
+    */
     private void resizeColumnWidth(JTable table) {
         final TableColumnModel columnModel = table.getColumnModel();
         for (int column = 0; column < table.getColumnCount(); column++) {
@@ -126,6 +131,12 @@ public class BookingsPanel extends JPanel {
             columnModel.getColumn(column).setPreferredWidth(width);
         }
     }
+    
+    /**
+    * Creates a formatted JLabel instance with the specified text. 
+    * @param labelName
+    * @return returns the JLabel
+    */
     private JLabel addLabel(String labelName) {
         JLabel label = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>" + labelName + "</div></html>");
         Box  fixHeight = Box.createHorizontalBox();

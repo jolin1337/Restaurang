@@ -51,6 +51,11 @@ public class NewBooking extends JPanel  {
     private Date bookingTime = new Date();
     private Controller remote = null;
 
+    /**
+    * Creates a formatted JLabel instance with the specified text. 
+    * @param labelName
+    * @return returns the JLabel
+    */
     private JLabel addLabel(String labelName) {
         JLabel label = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>" + labelName + "</div></html>");
         Box fixHeight = Box.createHorizontalBox();
@@ -59,6 +64,12 @@ public class NewBooking extends JPanel  {
         add(fixHeight); 
         return label;
     }
+    
+    /**
+    * Creates a formatted JTextField instance with the specified text. 
+    * @param textName 
+    * @return returns the JTextField
+    */
     private JTextField addTextField(String textName) {
         JTextField textField = new JTextField(textName);
         textField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
@@ -87,10 +98,6 @@ public class NewBooking extends JPanel  {
         spinner = new JSpinner();
         spinner.setModel(model);
         spinner.setEditor(new JSpinner.DateEditor(spinner, "h:mm a"));
-        JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor)spinner.getEditor();
-        editor.getTextField().setBackground(Settings.Styles.fieldColor);
-        editor.getTextField().setFont(new Font("Calibri", Font.PLAIN, 22));
-        editor.getTextField().setPreferredSize(new Dimension(Integer.MAX_VALUE, 40));
         add(spinner);
         /* Time spinner */
         
