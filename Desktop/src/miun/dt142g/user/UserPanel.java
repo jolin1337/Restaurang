@@ -9,9 +9,10 @@ import miun.dt142g.data.User;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -19,22 +20,22 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
-import miun.dt142g.Settings;
 import miun.dt142g.ConfirmationBox;
 
 /**
  *
  * @author Ali Omran
  */
-public class UserPanel extends JPanel{
+public class UserPanel extends JPanel  implements FocusListener{
     
-    private final JButton remove;
+    private JButton remove;
     private final JLabel name,tele, epost, password;
     private final JTextField user, pwd, mail, telenr;
+    private User usr;
     
-    public UserPanel(User user){
+    public UserPanel(final User user){
         
+        this.usr = user;
         setBackground(Color.WHITE);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         JPanel a = new JPanel();
@@ -58,12 +59,16 @@ public class UserPanel extends JPanel{
         
         this.user = new JTextField(user.getUsername());
         this.user.setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
-        pwd = new JTextField(user.getPassword());
+        this.user.addFocusListener(this);
+        pwd = new JTextField(user.getPassword());        
         pwd.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-        mail = new JTextField(user.getUsername());
+        pwd.addFocusListener(this);
+        mail = new JTextField(user.getMail());
         mail.setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
+        mail.addFocusListener(this);
         telenr = new JTextField(user.getPhoneNumber());
         telenr.setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
+        telenr.addFocusListener(this);
 
         leftAlignLabel(name, inputs);
         inputs.add(this.user);
@@ -88,9 +93,12 @@ public class UserPanel extends JPanel{
             {
                 int n = ConfirmationBox.confirm(UserPanel.this, UserPanel.this.user.getText());
                 if(n == 0){
+                    user.setRemove();
                     Container parent = UserPanel.this.getParent();
                     parent.remove(UserPanel.this);
+                    remove= new JButton("X");
                     parent.revalidate();
+                    
                 }
             }
             
@@ -103,6 +111,24 @@ public class UserPanel extends JPanel{
         b.add(Box.createHorizontalGlue());
         c.add(b);
         
+    }
+
+    @Override
+    public void focusGained(FocusEvent e) {
+        
+    }
+
+    @Override
+    public void focusLost(FocusEvent e) {
+        usr.setUsername(user.getText());
+        usr.setPassword(pwd.getText());
+        usr.setMail(mail.getText());
+        usr.setPhoneNumber(telenr.getText());
+
+    }
+    
+    public User getUser(){
+        return this.usr;
     }
     
 }

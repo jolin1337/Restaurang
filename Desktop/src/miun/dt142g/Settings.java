@@ -19,6 +19,7 @@ public class Settings {
         public static Color btnForeground = Color.white;
         public static Color fieldColor = new Color(255,200,200);
         public static Color darkBg = new Color(240, 240, 240);
+        
     }
 
     public static class Strings {

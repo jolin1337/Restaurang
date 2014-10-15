@@ -101,7 +101,7 @@ public class BookingServlet extends HttpServlet {
             try {
                 newBooking.setPhone(tel);
                 newBooking.setDuration(2);
-                newBooking.setStartDate(d.getTime());
+                newBooking.setStartDate(Long.toString(d.getTime()));
                 newBooking.setPersons(count);
             } catch(NumberFormatException ex) {
                 System.out.println("Number not well formated in input field");

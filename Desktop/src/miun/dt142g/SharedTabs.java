@@ -10,12 +10,9 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.ScrollPane;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -52,6 +49,7 @@ public class SharedTabs extends JPanel {
     List<JComponent> panels = new ArrayList<>();
     NewBooking newBooking = new NewBooking();
     DishesPanel dishesPanel;
+    JScrollPane newBookingsScrollPane;
 
     Controller remote = new Controller() {
 
@@ -92,12 +90,22 @@ public class SharedTabs extends JPanel {
 
         @Override
         public void setViewNewBooking(Booking b) {
-            newBooking.newBooking(b);
-            tabbedPane.addTab("Bokning i detaij", newBooking);
-            tabbedPane.revalidate();
-            tabbedPane.setSelectedComponent(newBooking);
-        }
+            newBooking.newBooking(b, remote);
+            //tabbedPane.addTab("Bokning i detaij", newBooking);
+                    newBookingsScrollPane = new JScrollPane(newBooking, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                    newBookingsScrollPane.setMinimumSize(new Dimension(500,700));
+                    tabbedPane.addTab("Bokning i detalj", newBookingsScrollPane);
+                    newBooking.setBorder(new EmptyBorder(10, 10, 10, 10));
 
+            newBookingsScrollPane.revalidate();
+            tabbedPane.setSelectedComponent(newBookingsScrollPane);
+        }
+        
+        @Override
+        public void setViewBookings() {
+            tabbedPane.setSelectedIndex(6);
+        }
+        
         @Override
         public void setConnectionView() {
             Container parent = SharedTabs.this.getParent();
@@ -149,8 +157,8 @@ public class SharedTabs extends JPanel {
                 for (JComponent j : panels) {
                     j.revalidate();
                 }
-                if (tabbedPane.isAncestorOf(newBooking) && tabbedPane.getSelectedComponent() != newBooking) {
-                    tabbedPane.remove(newBooking);
+                if (tabbedPane.isAncestorOf(newBookingsScrollPane) && tabbedPane.getSelectedComponent() != newBookingsScrollPane) {
+                    tabbedPane.remove(newBookingsScrollPane);
                 }
                 if (tabbedPane.isAncestorOf(dishDetailView) && tabbedPane.getSelectedComponent() != dishDetailView) {
                     tabbedPane.remove(dishDetailView);
@@ -192,6 +200,7 @@ public class SharedTabs extends JPanel {
 
     public static void main(String[] args) {
 
+                
         UIManager.put("Button.font", new Font("Calibri", Font.PLAIN, 22));
         UIManager.put("Button.background", Styles.btnBackground);
         UIManager.put("Button.foreground", Styles.btnForeground);
@@ -201,12 +210,15 @@ public class SharedTabs extends JPanel {
         UIManager.put("TextArea.font", new Font("Calibri", Font.PLAIN, 22));
         UIManager.put("TextArea.background", Styles.fieldColor);
         UIManager.put("TextArea.border", BorderFactory.createLoweredBevelBorder());
-
+        
+        UIManager.put("FormattedTextField.background", Styles.fieldColor);
+        UIManager.put("FormattedTextField.font", new Font("Calibri", Font.PLAIN, 22));
+        
         UIManager.put("TextField.font", new Font("Calibri", Font.PLAIN, 32));
         UIManager.put("TextField.background", Styles.fieldColor);
         UIManager.put("TextField.selectionBackground", Color.RED);
         UIManager.put("TextField.selectionForeground", Color.WHITE);
-        UIManager.put("TextField.caretForeground", Color.pink);
+        UIManager.put("TextField.caretForeground", Color.black);
 
         UIManager.put("Table.font", new Font("Calibri", Font.PLAIN, 22));
         UIManager.put("Table.selectionBackground", Styles.fieldColor);

@@ -29,7 +29,7 @@ import org.json.JSONObject;
  * 
  */
 public class Inventory extends DataSource implements Iterable<Ingredient> {
-    private final List<Ingredient> ingredients = new ArrayList<>();
+    private List<Ingredient> ingredients = new ArrayList<>();
     
     /**
      * Constructor does nothing. Class relies on it's other methods for explicit
@@ -132,10 +132,10 @@ public class Inventory extends DataSource implements Iterable<Ingredient> {
                     }
                 }
                 else {
-                    if(ing.getId()<0)
-                        jsonIngredient.put("id", -1);
-                    else
-                        jsonIngredient.put("id", ing.getId());
+                    /*if(ing.getId()<0)
+                        jsonIngredient.put("id", -1);*/
+                    //else
+                    jsonIngredient.put("id", ing.getId());
                     jsonIngredient.put("name", ing.getName());
                     jsonIngredient.put("amount", ing.getAmount());
                     jsonDataElement.put("data", jsonIngredient);
@@ -147,6 +147,9 @@ public class Inventory extends DataSource implements Iterable<Ingredient> {
             System.out.println("Json object to send: " + send.toString());
             String urlParams = "key=" + key + "&table=inventory&data="+send.toString();
             System.out.println("Update status: " +getRequest("updaterow", urlParams));
+            
+            ingredients = new ArrayList<>();
+            loadData();
         } 
         catch (JSONException ex) {
             Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);

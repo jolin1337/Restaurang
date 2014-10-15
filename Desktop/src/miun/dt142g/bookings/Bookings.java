@@ -32,6 +32,11 @@ public class Bookings extends DataSource implements Iterable<Booking> {
         return bookings.size();
     }
 
+    /**
+    * Returns the requested booking if it exists. 
+    * @param id of the requested booking
+    * @return the booking instance or null if it doesn't exist.
+    */
     public Booking getBooking(int id){
         for(Booking b : bookings)
             if(b.getId() == id)
@@ -72,15 +77,12 @@ public class Bookings extends DataSource implements Iterable<Booking> {
                 Logger.getLogger(Bookings.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-//        Date date = new Date();
-//        // Get time by user input in hours, minutes and date
-//        // date.getTime() + 1000*3600*hours + 1000*60*minutes;
-//        bookings.add(new Booking(0, "chocklad", date, 1, 0, 0));
-//        bookings.add(new Booking(1, "majs", date, 2, 3, 0));
-//        bookings.add(new Booking(2, "pannkaka", date, 2, 0, 0));
-        
     }
 
+    /**
+    * Attempts to create a new booking instance and add it to the bookings iterator 
+    * @param bok the booking to be added.
+    */
     private void addJsonBooking(JSONObject bok){
         try { 
             Booking b = new Booking(bok.getInt("id"), bok.getString("name"), new Date(bok.getLong("date")), bok.getInt("duration"), bok.getInt("persons"), bok.getInt("phone"));
@@ -101,10 +103,11 @@ public class Bookings extends DataSource implements Iterable<Booking> {
                 if (bok.getId()<0)
                     jsonBooking.put("id", -1);
                 else
-                    jsonBooking.put("id", bok.getId());
+                jsonBooking.put("id", bok.getId());
                 jsonBooking.put("name", bok.getName());
-                jsonBooking.put("phone", bok.getPhoneNr());
-                jsonBooking.put("date", bok.getDate().getTime());
+                jsonBooking.put("phone", Integer.toString(bok.getPhoneNr()));
+                jsonBooking.put("date", Long.toString(bok.getDate().getTime()));
+                
                 jsonBooking.put("duration", bok.getDuration());
                 jsonBooking.put("persons", bok.getPersons());
                 jsonDataElement.put("data", jsonBooking);
@@ -135,6 +138,11 @@ public class Bookings extends DataSource implements Iterable<Booking> {
         return bookings.iterator();
     }
     
+    /**
+    * Removes an instance of bookings in the databse based on specified ID 
+    * @param id is the ID of the booking instance to be removed
+    * @return returns whether the instance has successfully been remoeved or not
+    */
     public boolean removeBookingDb(int id) {
         JSONObject objectToRemove = new JSONObject();
         JSONObject jsonData = new JSONObject();
