@@ -104,7 +104,6 @@ public class ReservationFragment extends Fragment {
         protected Integer doInBackground(String... urls) {
             try {
                 Reservations re = new Reservations();
-                re.dbConnect();
                 /*
                 URL url= new URL("http://10.0.2.2:8080/Server/");
                 SAXParserFactory factory =SAXParserFactory.newInstance();

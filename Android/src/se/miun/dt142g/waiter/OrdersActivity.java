@@ -52,12 +52,7 @@ public class OrdersActivity extends BaseActivity {
         Intent thisActivity = getIntent();
         setTitle(thisActivity.getExtras().getString("bord_str"));
         
-        try {
-            availableMenus.dbConnect();
-        } catch (DataSource.WrongKeyException ex) {
-            Toast.makeText(this, "Databasen var inte åtkommlig, du kan inte ta emot din beställning just nu", Toast.LENGTH_LONG).show();
-            return;
-        }
+
         // Get ListView ob ject from xml
         listView = (ListView) findViewById(R.id.orderView);
 
@@ -139,12 +134,7 @@ public class OrdersActivity extends BaseActivity {
 
     private void makeChoiseOfMenu(DialogInterface.OnClickListener blob) {
         
-        try {
-            availableMenus.dbConnect();
-        } catch (DataSource.WrongKeyException ex) {
-            Toast.makeText(this, "Databasen var inte åtkommlig, du kan inte ta emot din beställning just nu", Toast.LENGTH_LONG).show();
-            return;
-        }
+            
         //CharSequence colors[] = new CharSequence[] {"red", "green", "blue", "black"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

@@ -8,8 +8,14 @@
 package se.miun.dt142g.data.EntityHandler;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import se.miun.dt142g.DataSource;
 import se.miun.dt142g.data.EntityRep.TableOrder;
 
@@ -27,6 +33,26 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
     }
 
     private void parseTable(String jsonStr) {
+        try {
+            JSONObject json = new JSONObject(jsonStr);
+            JSONArray data = json.getJSONArray("data");
+            for(int i=data.length(); i > 0; i--) {
+                JSONObject row = data.getJSONObject(i-1).getJSONObject("data");
+                TableOrder order = new TableOrder();
+                order.setId(row.getInt("id"));
+                order.setTimeOfOrder(new Date(row.getInt("timeOfOrder")));
+                JSONArray dishes = row.getJSONArray("orders");
+                List<Integer> dishesIndicies = new ArrayList<Integer>();
+                for(int j=dishes.length(); j > 0; j--) {
+                    int dishIndex = dishes.getInt(j-1);
+                    dishesIndicies.add(dishIndex);
+                }
+                order.setOrderedDishes(dishesIndicies);
+                tableOrders.add(order);
+            }
+        } catch (JSONException ex) {
+        }
+        
     }
 
     @Override
@@ -41,10 +67,9 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
     }
 
     @Override
-    public void load() throws WrongKeyException {
+    public void load() {
         String params = "key=" + key + "&table=" + table;
-        String response = getRequest("gettable", params);
-        System.out.println(response);
+        new ServerConnect().execute("gettable", params);
     }
 
     @Override

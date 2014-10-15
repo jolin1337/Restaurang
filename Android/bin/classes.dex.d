@@ -1,18 +1,12 @@
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes.dex : \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\BaseActivity.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\BuildConfig.class \
-C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\EntityHandler\Menus.class \
+C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\EntityHandler\Dishes.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\EntityHandler\Reservations.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\EntityHandler\TableOrders.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\EntityRep\Dish.class \
-C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\EntityRep\Menu.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\EntityRep\Reservation.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\EntityRep\TableOrder.class \
-C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\Menu.class \
-C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\Menus.class \
-C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\Reservation.class \
-C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\Reservations.class \
-C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\DataSource$1.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\DataSource$ServerConnect.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\DataSource$WrongKeyException.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\DataSource.class \

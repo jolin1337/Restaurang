@@ -64,13 +64,13 @@ public class Dishes extends DataSource implements Iterable<Dish> {
     }
 
     @Override
-    public void load() throws WrongKeyException {
-        List<Dish> ds = getDataList();
+    public void load() {
+        /*List<Dish> ds = getDataList();
         dishes.clear();
         for(Dish dish : ds)
             dishes.add(dish);
         
-        Collections.sort(dishes);
+        Collections.sort(dishes);*/
     }
     @Override
     public void loadData(String url, String responseText) throws WrongKeyException {
