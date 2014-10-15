@@ -191,7 +191,6 @@ public class NewBooking extends JPanel  {
                     return;
                 Container parent = btn.getParent().getParent();
                 remote.setViewBookings();
-                parent.remove(btn.getParent());
                 parent.revalidate();
             }
         });
