@@ -63,8 +63,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return this._listDataChild.get(this._listDataHeader.get(groupPosition))
+        try {
+            return this._listDataChild.get(this._listDataHeader.get(groupPosition))
                 .size();
+        }
+        catch(IndexOutOfBoundsException ex) {
+            return 0;
+        }
     }
 
     @Override
@@ -120,4 +125,5 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
+    
 }

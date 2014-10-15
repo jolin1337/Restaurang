@@ -27,7 +27,11 @@ import org.json.JSONObject;
  * @version 1.2
  */
 public abstract class DataSource {
-
+    /**
+     * Update event listener
+     */
+    DataEntityListener tableListener = null;
+    
     private static String safeKey = "dt142g-awesome";
 
     /**
@@ -48,27 +52,6 @@ public abstract class DataSource {
     protected static final String serverUrl = "http://10.0.2.2:8080/Server/";
 
     /**
-     * This method connects us with key to the server
-     *
-     * @throws miun.dt142g.DataSource.WrongKeyException
-     */
-    protected void dbConnect() throws WrongKeyException{
-        if (!key.isEmpty()) {
-            if (!getRequest("test", "key=" + key).equals("true")) {
-                throw new WrongKeyException("Still not connected");
-            }
-            return;
-        }
-        key = getRequest("login", "key=" + safeKey);
-        String req = getRequest("test", "key=" + key);
-        //System.out.println(req);
-        if (!req.equals("true")) {
-            key = "";
-            throw new WrongKeyException("Not correct key");
-        }
-    }
-
-    /**
      * Send a post request to server with a suburl of url and some optional
      * specifik params
      *
@@ -77,7 +60,7 @@ public abstract class DataSource {
      * @param params - The specifik params to send with the url to the server
      * @return A string of the requested information (the result of the request)
      */
-    protected String getRequest(String url, String params) {
+    protected String sendRequestFromThread(String url, String params) {
         String response = "";
 
         try {
@@ -94,7 +77,7 @@ public abstract class DataSource {
     }
 
     protected JSONObject getJsonRequest(String table) throws JSONException {
-        return new JSONObject(getRequest("gettable", "table=" + table + "&key=" + key));
+        return new JSONObject(sendRequestFromThread("gettable", "table=" + table + "&key=" + key));
     }
 
     public abstract void update() throws WrongKeyException;
@@ -115,6 +98,14 @@ public abstract class DataSource {
     static String getSafeKey() {
         return safeKey;
     }
+
+    public DataEntityListener getTableListener() {
+        return tableListener;
+    }
+
+    public void setTableListener(DataEntityListener tableListener) {
+        this.tableListener = tableListener;
+    }
     
     /**
      *
@@ -128,15 +119,38 @@ public abstract class DataSource {
             try {
                 if (urls.length > 1) {
                     dbConnect();
-                    String res = processRequest(urls[0], urls[1]);
-                    loadData(urls[0], res);
+                    String res = processRequest(urls[0], "key=" + key + urls[1]);
+                    if(!res.equals("false") && !res.equals("expired_key"))
+                        loadData(urls[0], res);
                 }
 
             } catch (Exception e) {
             }
+            if(tableListener != null && urls.length > 1)
+                tableListener.onFaildRequest(urls[0]);
             return "Error: Getrequest failed!";
         }
 
+        /**
+         * This method connects us with key to the server
+         *
+         * @throws miun.dt142g.DataSource.WrongKeyException
+         */
+        protected void dbConnect() throws WrongKeyException{
+            if (!key.isEmpty()) {
+                if (!processRequest("test", "key=" + key).equals("true")) {
+                    throw new WrongKeyException("Still not connected");
+                }
+                return;
+            }
+            key = processRequest("login", "key=" + safeKey);
+            String req = processRequest("test", "key=" + key);
+            //System.out.println(req);
+            if (!req.equals("true")) {
+                key = "";
+                throw new WrongKeyException("Not correct key");
+            }
+        }
         protected void onProgressUpdate(Integer... progress) {
             //setProgressPercent(progress[0]);
         }

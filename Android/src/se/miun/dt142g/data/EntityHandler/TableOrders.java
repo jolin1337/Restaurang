@@ -37,7 +37,7 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
             JSONObject json = new JSONObject(jsonStr);
             JSONArray data = json.getJSONArray("data");
             for(int i=data.length(); i > 0; i--) {
-                JSONObject row = data.getJSONObject(i-1).getJSONObject("data");
+                JSONObject row = data.getJSONObject(i-1);
                 TableOrder order = new TableOrder();
                 order.setId(row.getInt("id"));
                 order.setTimeOfOrder(new Date(row.getInt("timeOfOrder")));
@@ -61,14 +61,18 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
             key = responseText;
         } else if (url.equals("gettable")) {
             parseTable(responseText);
+            if(getTableListener() != null)
+                getTableListener().onReadTable();
         } else if(url.equals("updaterow")) {
             load();
+            if(getTableListener() != null)
+                getTableListener().onUpdateTable();
         }
     }
 
     @Override
     public void load() {
-        String params = "key=" + key + "&table=" + table;
+        String params = "&table=" + table;
         new ServerConnect().execute("gettable", params);
     }
 
@@ -83,6 +87,6 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
     }
 
     public Iterator<TableOrder> iterator() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return tableOrders.iterator();
     }
 }

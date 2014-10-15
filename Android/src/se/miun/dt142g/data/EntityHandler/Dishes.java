@@ -100,19 +100,18 @@ public class Dishes extends DataSource implements Iterable<Dish> {
             strRm += ",";
         System.out.println(str.substring(0, str.length()-1) + "]}");
         // System.out.println(strRm.substring(0, strRm.length()-1) + "]}");
-        System.out.println("Updatestatus: " + getRequest("updaterow", "key=" + key + strRm.substring(0, strRm.length()-1) + "]}"));
-        System.out.println("Updatestatus: " + getRequest("updaterow", "key=" + key + str.substring(0, str.length()-1) + "]}"));
+        System.out.println("Updatestatus: " + sendRequestFromThread("updaterow", "key=" + key + strRm.substring(0, strRm.length()-1) + "]}"));
+        System.out.println("Updatestatus: " + sendRequestFromThread("updaterow", "key=" + key + str.substring(0, str.length()-1) + "]}"));
         
         // To make sure that we have the correct id:s/pk:s
-        getRequest("gettable", "key=" + key + "&table=" + table);
+        sendRequestFromThread("gettable", "key=" + key + "&table=" + table);
     }
     private List<Dish> getDataList() throws WrongKeyException {
         List<Dish> currentEvents = new ArrayList<Dish>();
         JSONObject json;
-        String jsonStr = getRequest("gettable", "key=" + key + "&table=dish");
+        String jsonStr = sendRequestFromThread("gettable", "key=" + key + "&table=dish");
         if(jsonStr.equals("expired_key")) {
-            dbConnect();
-            jsonStr = getRequest("gettable", "key=" + key + "&table=dish");
+            jsonStr = sendRequestFromThread("gettable", "key=" + key + "&table=dish");
         }
         try {
             json = new JSONObject(jsonStr);
