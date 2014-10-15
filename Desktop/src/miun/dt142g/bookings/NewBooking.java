@@ -141,10 +141,6 @@ public class NewBooking extends JPanel {
                 bookingTime.setYear(datePicker.getDate().getYear());
                 bookingTime.setMonth(datePicker.getDate().getMonth());
                 bookingTime.setDate(datePicker.getDate().getDate());
-                System.out.println("Time saved when adding new booking: "+bookingTime+" Time in ms: "+bookingTime.getTime());
-                Date d = new Date();
-                d.setTime(bookingTime.getTime());
-                System.out.println("Same time in ms: "+d);
 
                 booking.setDate(bookingTime);
                 booking.setDuration(Integer.parseInt(durationField.getText()));
