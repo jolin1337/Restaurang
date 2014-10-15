@@ -31,6 +31,7 @@ public class DishesPanel extends JPanel {
     List<DishPanel> dishPanels = new ArrayList<>();
     Dishes dishes = new Dishes();
     JButton addDishBtn = new JButton("Lägg till rätt");
+    JButton submitBtn = new JButton(Settings.Strings.submit);
     private Controller remote = null;
 
     public DishesPanel(Controller c) throws DataSource.WrongKeyException {
@@ -40,29 +41,41 @@ public class DishesPanel extends JPanel {
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.white);
+        JButton addDishBtnTop = new JButton("Lägg till rätt");
+        addDishBtnTop.addActionListener(addNewDishEvent);
+        add(addDishBtnTop);
+        addDishBtnTop.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        
+        JButton submitBtnTop = new JButton(Settings.Strings.submit);
+        submitBtnTop.addActionListener(submitEvent);
+        add(submitBtnTop);
+        submitBtnTop.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        
         for (Dish dish : dishes) {
             DishPanel dp = new DishPanel(dish, remote);
             add(dp);
             dishPanels.add(dp);
         }
-        addDishBtn.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                Dish dish = new Dish(dishes.getUniqueId(), "", 0.0f, null);
-                DishPanel dp = new DishPanel(dish, remote);
-                remove(addDishBtn);
-                add(dp);
-                add(addDishBtn);
-                dishPanels.add(dp);
-                DishesPanel.this.revalidate();
-            }
-        });
+        addDishBtn.addActionListener(addNewDishEvent);
         add(addDishBtn);
         addDishBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         
-        JButton submitBtn = new JButton(Settings.Strings.submit);
-        submitBtn.addActionListener(new ActionListener() {
+        submitBtn.addActionListener(submitEvent);
+        add(submitBtn);
+        submitBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+    }
+
+    public void setViewSwitch(Controller c) {
+        this.remote = c;
+    }
+
+    public void updateTextFieldContents(){
+        for(DishPanel d: dishPanels){
+            d.updateTextFieldContent();
+        }
+    }
+    
+    ActionListener submitEvent = new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -90,18 +103,21 @@ public class DishesPanel extends JPanel {
                         remote.setConnectionView();
                 }
             }
-        });
-        add(submitBtn);
-        submitBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-    }
+        };
+    ActionListener addNewDishEvent = new ActionListener() {
 
-    public void setViewSwitch(Controller c) {
-        this.remote = c;
-    }
-
-    public void updateTextFieldContents(){
-        for(DishPanel d: dishPanels){
-            d.updateTextFieldContent();
-        }
-    }
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                Dish dish = new Dish(dishes.getUniqueId(), "", 0.0f, null);
+                DishPanel dp = new DishPanel(dish, remote);
+                remove(addDishBtn);
+                remove(submitBtn);
+                add(dp);
+                
+                add(addDishBtn);
+                add(submitBtn);
+                dishPanels.add(dp);
+                DishesPanel.this.revalidate();
+            }
+        };
 }

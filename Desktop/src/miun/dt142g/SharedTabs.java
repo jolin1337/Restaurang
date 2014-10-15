@@ -20,6 +20,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -130,8 +131,10 @@ public class SharedTabs extends JPanel {
         String[] titles = {"Rätter", "Hemsida", "Inventarie", "Användare", "A La Carté", "Veckans Meny", "Bokningar", "Schema"};
         int i = 0;
         for (JComponent panel : panels) {
-            ScrollPane sp = new ScrollPane(ScrollPane.SCROLLBARS_AS_NEEDED);
-            sp.add(panel);
+            JScrollPane sp = new JScrollPane(panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            sp.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+            sp.setMinimumSize(new Dimension(700,700));
+            //sp.add(panel);
             panel.setBorder(new EmptyBorder(10, 10, 10, 10));
             tabbedPane.addTab(titles[i], sp);
             i++;

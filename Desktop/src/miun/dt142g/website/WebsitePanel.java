@@ -6,17 +6,24 @@
 package miun.dt142g.website;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import miun.dt142g.DataSource;
 import miun.dt142g.Settings;
@@ -46,8 +53,48 @@ public class WebsitePanel extends JPanel {
         
         setBackground(Color.WHITE);
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        
+        JLabel open = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>Öppetider</div></html>");
+        Box  leftJustify = Box.createHorizontalBox();
+        leftJustify.add( open );
+        leftJustify.add( Box.createHorizontalGlue() );
+        add(leftJustify);     
+        openEdit.setText(about.getDataOpen());
+        add(openEdit);
+   
+        JLabel contact = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>Kontaktinformation</div></html>");
+        leftJustify = Box.createHorizontalBox();
+        leftJustify.add( contact );
+        leftJustify.add( Box.createHorizontalGlue() );
+        add(leftJustify);
+        contactEdit.setText(about.getDataContacts());
+        add(contactEdit);
+        
+        JButton newEventPostBtnTop = new JButton("Lägg till nytt evenemang");
+        newEventPostBtnTop.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        newEventPostBtnTop.addActionListener(newEventListener);
+        add(newEventPostBtnTop);
+        
+        JButton submitBtnTop = new JButton(Settings.Strings.submit);
+        submitBtnTop.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        submitBtnTop.addActionListener(submitEventListener);
+        add(submitBtnTop);
+        
+        for(EventPost ep : eventPosts) {
+            add(Box.createRigidArea(new Dimension(1, 10)));
+            EventPostPanel ep1 = new EventPostPanel(ep);
+            add(ep1);
+            eventPostPanels.add(ep1);
+        }
+        newEventPostBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        newEventPostBtn.addActionListener(newEventListener);
+        add(newEventPostBtn);
+        
         submitBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-        submitBtn.addActionListener(new ActionListener() {
+        submitBtn.addActionListener(submitEventListener);
+        add(submitBtn);
+    }
+    ActionListener submitEventListener = new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -69,32 +116,8 @@ public class WebsitePanel extends JPanel {
                 for(EventPost p : eventPosts)
                     eventPostPanels.get(++index-1).setUpdatedEvent(p);
             }
-        });
-        
-        JLabel open = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>Öppetider</div></html>");
-        Box  leftJustify = Box.createHorizontalBox();
-        leftJustify.add( open );
-        leftJustify.add( Box.createHorizontalGlue() );
-        add(leftJustify);     
-        openEdit.setText(about.getDataOpen());
-        add(openEdit);
-   
-        JLabel contact = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>Kontaktinformation</div></html>");
-        leftJustify = Box.createHorizontalBox();
-        leftJustify.add( contact );
-        leftJustify.add( Box.createHorizontalGlue() );
-        add(leftJustify);
-        contactEdit.setText(about.getDataContacts());
-        add(contactEdit);
-        
-        for(EventPost ep : eventPosts) {
-            add(Box.createRigidArea(new Dimension(1, 10)));
-            EventPostPanel ep1 = new EventPostPanel(ep);
-            add(ep1);
-            eventPostPanels.add(ep1);
-        }
-        newEventPostBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-        newEventPostBtn.addActionListener(new ActionListener() {
+        };
+    ActionListener newEventListener = new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -109,9 +132,27 @@ public class WebsitePanel extends JPanel {
                 add(newEventPostBtn);
                 add(submitBtn);
                 WebsitePanel.this.revalidate();
+                WebsitePanel.this.repaint();
+                Container parent = WebsitePanel.this.getParent().getParent();
+                if(parent instanceof JScrollPane) {
+                    final JScrollBar vertical = ((JScrollPane)parent).getVerticalScrollBar();
+                    Runnable myTask = new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(WebsitePanel.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            vertical.setValue( vertical.getMaximum() );
+                            WebsitePanel.this.revalidate();
+                            WebsitePanel.this.repaint();
+                        }
+                    };
+                    Thread thread = new Thread(myTask);
+                    thread.start();
+
+                }
             }
-        });
-        add(newEventPostBtn);
-        add(submitBtn);
-    }
+        };
 }
