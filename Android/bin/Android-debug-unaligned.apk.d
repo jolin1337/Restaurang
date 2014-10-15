@@ -1,5 +1,4 @@
-C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\Android-debug-unaligned.apk : \
-C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\Android.ap_ \
-C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes.dex \
-C:\Users\Johannes\Downloads\adt-bundle-windows-x86_64-20140702\adt-bundle-windows-x86_64-20140702\sdk\tools\support\annotations.jar \
-C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\libs\android-support-v13.jar \
+/home/ulf/NetBeansProjects/Restaurang/Android/bin/Android-debug-unaligned.apk : \
+/home/ulf/NetBeansProjects/Restaurang/Android/bin/Android.ap_ \
+/home/ulf/NetBeansProjects/Restaurang/Android/bin/classes.dex \
+/home/ulf/NetBeansProjects/Restaurang/Android/libs/android-support-v13.jar \

@@ -10,8 +10,11 @@ package se.miun.dt142g;
 import android.os.AsyncTask;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
@@ -46,7 +49,7 @@ public abstract class DataSource {
      * The url to the java ee server
      */
     protected static final String serverUrl = "http://10.0.2.2:8080/Server/";
-
+    
     /**
      * This method connects us with key to the server
      *
@@ -61,7 +64,6 @@ public abstract class DataSource {
         }
         key = getRequest("login", "key=" + safeKey);
         String req = getRequest("test", "key=" + key);
-        //System.out.println(req);
         if (!req.equals("true")) {
             key = "";
             throw new WrongKeyException("Not correct key");
@@ -79,11 +81,11 @@ public abstract class DataSource {
      */
     protected String getRequest(String url, String params) {
         String response = "";
-
+//String response = connection.execute("gettable", "key=" + getSafeKey()+"&table=bookings").get();
         try {
             ServerConnect connection = new ServerConnect();
-            response = connection.get();
-            connection.execute(serverUrl + url, params);
+            response = connection.execute(url, params).get();
+            System.out.println("Response from getRequest: " + response);
             return response;
         } catch (InterruptedException ex) {
             Logger.getLogger(DataSource.class.getName()).log(Level.SEVERE, null, ex);
@@ -108,41 +110,31 @@ public abstract class DataSource {
         }
     }
 
-    static void setSafeKey(String k) {
+    public static void setSafeKey(String k) {
         safeKey = k;
     }
 
     static String getSafeKey() {
         return safeKey;
     }
-    
-    /**
-     *
-     * @author Johannes
-     */
-    protected class ServerConnect extends AsyncTask<String, Void, String> {
+
+        protected class ServerConnect extends AsyncTask<String, Void, String> {
 
         public ServerConnect(){}
         @Override
         protected String doInBackground(String... urls) {
-            try {
-                if (urls.length > 1) {
-                    dbConnect();
-                    String res = processRequest(urls[0], urls[1]);
+            String res = "";
+            if (urls.length > 1) {
+
+                res = processRequest(urls[0], urls[1]);
+                try {
                     loadData(urls[0], res);
+                } 
+                catch (WrongKeyException ex) {
+                    Logger.getLogger(DataSource.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
-            } catch (Exception e) {
             }
-            return "Error: Getrequest failed!";
-        }
-
-        protected void onProgressUpdate(Integer... progress) {
-            //setProgressPercent(progress[0]);
-        }
-
-        protected void onPostExecute(Long result) {
-            //showDialog("Downloaded " + result + " bytes");
+            return res;
         }
         
         /**
@@ -173,7 +165,7 @@ public abstract class DataSource {
                 int responseCode = con.getResponseCode();
                 if (!url.equals("test")) {
                     System.out.println("\nSending 'POST' request to URL : " + url);
-                    //System.out.println("Post parameters : " + params);
+                    System.out.println("Post parameters : " + params);
                     System.out.println("Response Code : " + responseCode);
                 }
                 if (responseCode != 200) {

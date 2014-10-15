@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import java.util.Date;
 import se.miun.dt142g.BaseActivity;
 import se.miun.dt142g.R;
+import se.miun.dt142g.data.EntityHandler.Reservations;
 
 
 /**
@@ -29,6 +30,7 @@ public class ReservationsActivity extends FragmentActivity{
     private static final int NUM_PAGES = 7;
     private ViewPager mPager;
     private PagerAdapter mPagerAdapter;
+   
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,4 +83,6 @@ public class ReservationsActivity extends FragmentActivity{
         }
     }
 }
+
+
 

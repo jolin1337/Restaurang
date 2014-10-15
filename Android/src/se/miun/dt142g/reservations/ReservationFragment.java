@@ -35,7 +35,7 @@ import se.miun.dt142g.data.EntityHandler.Reservations;
  */
 public class ReservationFragment extends Fragment {
 
-    private Reservations reservations = new Reservations();
+    private static Reservations reservations;
     
     /**
      * The argument key for the page number this fragment represents.
@@ -60,13 +60,11 @@ public class ReservationFragment extends Fragment {
     }
 
     public ReservationFragment() {
-        reservations = new Reservations();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new DownloadFilesTask().execute("Hej");
         mPageNumber = getArguments().getInt(ARG_PAGE);
     }
 
@@ -85,7 +83,8 @@ public class ReservationFragment extends Fragment {
         DateFormat theDate = new SimpleDateFormat("dd/MM-yy");
         
         String reserved=theDate.format(theDay)+"\n\n"; 
-        
+        Reservations reservations = new Reservations(); 
+        reservations.load();
         for(Reservation r :  reservations.getReservations(theDay.getDate())){
             reserved+=r.toString();
         }
@@ -98,36 +97,5 @@ public class ReservationFragment extends Fragment {
      */
     public int getPageNumber() {
         return mPageNumber;
-    }
-     private class DownloadFilesTask extends AsyncTask<String, Integer, Integer> {
-        @Override
-        protected Integer doInBackground(String... urls) {
-            try {
-                Reservations re = new Reservations();
-                /*
-                URL url= new URL("http://10.0.2.2:8080/Server/");
-                SAXParserFactory factory =SAXParserFactory.newInstance();
-                SAXParser parser=factory.newSAXParser();
-                //XMLReader xmlreader=parser.getXMLReader();
-                //RssHandler theRSSHandler=new RssHandler();
-                //xmlreader.setContentHandler(theRSSHandler);
-                InputStream is=new InputSource(url.openStream()).getByteStream();
-                int r;
-                while((r = is.read()) != -1)
-                    ;*/
-                //xmlreader.parse(is);
-                return 0;
-            } catch (Exception e) {
-                return 0;
-            }
-        }
-
-        protected void onProgressUpdate(Integer... progress) {
-            //setProgressPercent(progress[0]);
-        }
-
-        protected void onPostExecute(Long result) {
-            //showDialog("Downloaded " + result + " bytes");
-        }
     }
 }
