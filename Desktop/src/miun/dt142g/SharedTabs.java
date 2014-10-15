@@ -10,12 +10,9 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.ScrollPane;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -92,12 +89,17 @@ public class SharedTabs extends JPanel {
 
         @Override
         public void setViewNewBooking(Booking b) {
-            newBooking.newBooking(b);
+            newBooking.newBooking(b, remote);
             tabbedPane.addTab("Bokning i detaij", newBooking);
             tabbedPane.revalidate();
             tabbedPane.setSelectedComponent(newBooking);
         }
-
+        
+        @Override
+        public void setViewBookings() {
+            tabbedPane.setSelectedIndex(6);
+        }
+        
         @Override
         public void setConnectionView() {
             Container parent = SharedTabs.this.getParent();
@@ -192,6 +194,7 @@ public class SharedTabs extends JPanel {
 
     public static void main(String[] args) {
 
+                
         UIManager.put("Button.font", new Font("Calibri", Font.PLAIN, 22));
         UIManager.put("Button.background", Styles.btnBackground);
         UIManager.put("Button.foreground", Styles.btnForeground);
@@ -206,7 +209,7 @@ public class SharedTabs extends JPanel {
         UIManager.put("TextField.background", Styles.fieldColor);
         UIManager.put("TextField.selectionBackground", Color.RED);
         UIManager.put("TextField.selectionForeground", Color.WHITE);
-        UIManager.put("TextField.caretForeground", Color.pink);
+        UIManager.put("TextField.caretForeground", Color.black);
 
         UIManager.put("Table.font", new Font("Calibri", Font.PLAIN, 22));
         UIManager.put("Table.selectionBackground", Styles.fieldColor);

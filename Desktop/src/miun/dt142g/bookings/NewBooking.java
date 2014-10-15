@@ -21,6 +21,7 @@ import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
+import miun.dt142g.Controller;
 /**
  *
  * @author Simple
@@ -39,6 +40,7 @@ public class NewBooking extends JPanel {
     private JLabel phoneNrInput; 
     private JSpinner spinner;
     Date bookingTime;
+    Controller remote = null;
 
     private JLabel addLabel(String labelName) {
         JLabel label = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>" + labelName + "</div></html>");
@@ -54,13 +56,14 @@ public class NewBooking extends JPanel {
         add(textField);  
         return textField;
     }
-    public final void newBooking(Booking b){
+    public final void newBooking(Booking b, Controller c){
+        this.remote = c;
         this.booking = b;
         removeAll();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         
         addLabel("Namn: ");
-        nameField = addTextField("Anders Svensson");
+        nameField = addTextField("");
         
         addLabel("Telefon: ");
         phoneNrField = addTextField("");
@@ -138,7 +141,10 @@ public class NewBooking extends JPanel {
                 bookingTime.setYear(datePicker.getDate().getYear());
                 bookingTime.setMonth(datePicker.getDate().getMonth());
                 bookingTime.setDate(datePicker.getDate().getDate());
-                System.out.println(bookingTime);
+                System.out.println("Time saved when adding new booking: "+bookingTime+" Time in ms: "+bookingTime.getTime());
+                Date d = new Date();
+                d.setTime(bookingTime.getTime());
+                System.out.println("Same time in ms: "+d);
 
                 booking.setDate(bookingTime);
                 booking.setDuration(Integer.parseInt(durationField.getText()));
@@ -151,6 +157,7 @@ public class NewBooking extends JPanel {
                 Container parent = btn.getParent().getParent();
                 parent.remove(btn.getParent());
                 parent.revalidate();
+                remote.setViewBookings();
             }
         });
     }

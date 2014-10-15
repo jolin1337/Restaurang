@@ -11,7 +11,6 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
-import java.util.Vector;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -55,7 +54,16 @@ public class BookingsPanel extends JPanel {
 
     /*@SuppressWarnings("empty-statement")*/
     private void initComponents() {
-
+        Date d = new Date();
+        Date dd = new Date();
+        int timeInDB = 1638773698;
+        
+        dd.setTime(timeInDB);
+        System.out.println("Date in DB is: "+dd);
+        
+        d.setTime(new Date().getTime()+timeInDB);
+        System.out.println("Date in DB+new date() is: "+d);
+        
         table.setRowHeight(33);
         remove = new JButton("Ta bort selekterad rad");
         remove.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
