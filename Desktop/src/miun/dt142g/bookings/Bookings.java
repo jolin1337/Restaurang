@@ -85,7 +85,7 @@ public class Bookings extends DataSource implements Iterable<Booking> {
     */
     private void addJsonBooking(JSONObject bok){
         try { 
-            Booking b = new Booking(bok.getInt("id"), bok.getString("name"), new Date(bok.getLong("date")), bok.getInt("duration"), bok.getInt("persons"), bok.getInt("phone"));
+            Booking b = new Booking(bok.getInt("id"), bok.getString("name"), new Date(bok.getLong("date")), bok.getInt("duration"), bok.getInt("persons"), bok.getString("phone"));
             bookings.add(b);
         } catch (JSONException ex) {
             Logger.getLogger(Bookings.class.getName()).log(Level.SEVERE, null, ex);
@@ -103,9 +103,12 @@ public class Bookings extends DataSource implements Iterable<Booking> {
                 if (bok.getId()<0)
                     jsonBooking.put("id", -1);
                 else
+                if (bok.getName().isEmpty() || bok.getPhoneNr().isEmpty() || !(bok.getDuration() == 0) || (bok.getPersons() == 0) ){
+                    return;
+                }
                 jsonBooking.put("id", bok.getId());
                 jsonBooking.put("name", bok.getName());
-                jsonBooking.put("phone", Integer.toString(bok.getPhoneNr()));
+                jsonBooking.put("phone", bok.getPhoneNr());
                 jsonBooking.put("date", Long.toString(bok.getDate().getTime()));
                 
                 jsonBooking.put("duration", bok.getDuration());
