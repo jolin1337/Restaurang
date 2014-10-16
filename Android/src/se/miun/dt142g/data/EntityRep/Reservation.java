@@ -85,17 +85,19 @@ public class Reservation implements Comparable<Reservation>{
     }
 
     public int compareTo(Reservation another) {
-        if (this.getDate().getTime()<another.getDate().getTime())
-            return -1; 
-        if (this.getDate().getTime()>another.getDate().getTime())
-            return 1; 
-        return 0;
+        return this.getDate().compareTo(another.date);
+//        if (this.getDate().getTime()<another.getDate().getTime())
+//            return -1; 
+//        if (this.getDate().getTime()>another.getDate().getTime())
+//            return 1; 
+//        return 0;
     }
     
     @Override
     public String toString(){
+        DateFormat theDate = new SimpleDateFormat("dd/MM-yy");
         DateFormat theTime = new SimpleDateFormat("HH.mm");
-        return theTime.format(this.getDate()) + "\n"+this.getName()+"\nTel.Nr: " + this.getPhoneNr() + "\nAntal: "+Integer.toString(this.getPersons())+"\n\n";
+        return theDate.format(this.getDate()) + "\n" + theTime.format(this.getDate()) + "\n"+this.getName()+"\nTel.Nr: " + this.getPhoneNr() + "\nAntal: "+Integer.toString(this.getPersons())+"\n\n";
     }
 
     /**

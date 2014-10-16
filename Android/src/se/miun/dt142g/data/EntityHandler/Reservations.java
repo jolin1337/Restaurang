@@ -11,9 +11,6 @@ import static java.util.Collections.sort;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.JSONArray;
@@ -27,15 +24,21 @@ import se.miun.dt142g.DataSource;
  * @author Ulf
  */
 public class Reservations extends DataSource implements Iterable<Reservation>{
-    private List<Reservation> reservations = new ArrayList<Reservation>(); 
+    private static List<Reservation> reservations = new ArrayList<Reservation>(); 
     
     public Reservations() {
     }
+    
+    @Deprecated
     public boolean readReservations() {
         return true;
     }
      
-    
+    /**
+     * Gets a list of reservations that are for the same day as parameter day
+     * @param day day of the month to get reservations for
+     * @return List of reservations
+     */
     public List<Reservation> getReservations(int day){
         List<Reservation> temp = new ArrayList<Reservation>(); 
         for(Reservation r : reservations){
@@ -50,6 +53,16 @@ public class Reservations extends DataSource implements Iterable<Reservation>{
         return reservations.iterator();
     }
 
+    /**
+     * <Warning> Don't call this function manually. Should only be called by 
+     * ServerConnect Class in DataSource. 
+     * 
+     * Interprets response from server and deals with the response as needed. 
+     * 
+     * @param url Parameter sent with getRequest. 
+     * @param responseText  Response from server
+     * @throws se.miun.dt142g.DataSource.WrongKeyException 
+     */
     @Override
     public void loadData(String url, String responseText) throws WrongKeyException {
         if (url.equals("login")) {
@@ -59,7 +72,13 @@ public class Reservations extends DataSource implements Iterable<Reservation>{
         }
     }
 
+    /**
+     * Parses a string to json objects and calls addJsonBooking for each object to
+     * add them in reservations.
+     * @param jsonStr Json string representation to parse into json objects.
+     */
     private void parseReservation(String responseText){
+        reservations.clear();
         JSONObject response;
         JSONArray data = null; 
         
@@ -78,6 +97,11 @@ public class Reservations extends DataSource implements Iterable<Reservation>{
         }
 
     }
+    
+    /**
+     * Adds a reservation from a JSONObject
+     * @param res JSONObject of reservation to add
+     */
     private void addJsonBooking(JSONObject res){
         try { 
             Reservation b = new Reservation(res.getString("name"), new Date(res.getLong("date")), res.getInt("duration"), res.getInt("persons"), res.getString("phone"));
@@ -90,7 +114,7 @@ public class Reservations extends DataSource implements Iterable<Reservation>{
 
     @Override
     public void update() throws WrongKeyException {
-        //don't think it's needed in this class
+        //not needed in this class
     }
 
     @Override
@@ -99,19 +123,20 @@ public class Reservations extends DataSource implements Iterable<Reservation>{
         return 0; 
     }
 
+    /**
+     * Loads dishes from database. Use in activity where appropriate or use for 
+     * polling the server for data. 
+     */
     @Override
     public void load() {
-        ServerConnect connection = new ServerConnect(); 
         try {
-        dbConnect();
-        System.out.print("The key is: " + key);
-        //String response = connection.execute("gettable", "key=" + getSafeKey()+"&table=bookings").get();
-        //System.out.println(response);
-//        String params = "key=" + key + "&table=bookings";
-//        String response = getRequest("gettable", params);
-//        System.out.println(response);
-//        } catch (InterruptedException ex) {
-//        } catch (ExecutionException ex) {
+            if (key.length()==0)
+            dbConnect();
+            
+            String params = "key=" + key +"&table=booking"; 
+            System.out.println("Getrequest results: " + getRequest("gettable", params));
+            
+        
         } catch (WrongKeyException ex) {
             Logger.getLogger(Reservations.class.getName()).log(Level.SEVERE, null, ex);
         }

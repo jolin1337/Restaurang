@@ -68,8 +68,17 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
 
     @Override
     public void load() {
-        String params = "key=" + key + "&table=" + table;
-        new ServerConnect().execute("gettable", params);
+        try {
+            if (key.length()==0)
+                dbConnect();
+            
+            String params = "key=" + key +"&table=" + table; 
+            System.out.println("Getrequest results: " + getRequest("gettable", params));
+            
+        
+        } catch (WrongKeyException ex) {
+            Logger.getLogger(Reservations.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
@@ -79,10 +88,16 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
 
     @Override
     public int getUniqueId() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int id = -1; 
+        for(TableOrder to : tableOrders){
+            if (to.getId()<=id){
+                id-=1;
+            }
+        }
+        return id; 
     }
 
     public Iterator<TableOrder> iterator() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return tableOrders.iterator();
     }
 }

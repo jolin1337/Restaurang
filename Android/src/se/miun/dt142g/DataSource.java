@@ -10,11 +10,8 @@ package se.miun.dt142g;
 import android.os.AsyncTask;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
@@ -81,7 +78,6 @@ public abstract class DataSource {
      */
     protected String getRequest(String url, String params) {
         String response = "";
-//String response = connection.execute("gettable", "key=" + getSafeKey()+"&table=bookings").get();
         try {
             ServerConnect connection = new ServerConnect();
             response = connection.execute(url, params).get();
@@ -94,7 +90,8 @@ public abstract class DataSource {
         }
         return response;
     }
-
+    
+    //Possibly deprecated?
     protected JSONObject getJsonRequest(String table) throws JSONException {
         return new JSONObject(getRequest("gettable", "table=" + table + "&key=" + key));
     }
@@ -118,7 +115,11 @@ public abstract class DataSource {
         return safeKey;
     }
 
-        protected class ServerConnect extends AsyncTask<String, Void, String> {
+    
+    /**
+     * Class to handle requests to the server. 
+     */
+    protected class ServerConnect extends AsyncTask<String, Void, String> {
 
         public ServerConnect(){}
         @Override

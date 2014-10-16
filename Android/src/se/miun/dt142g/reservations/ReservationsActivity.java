@@ -8,7 +8,6 @@ package se.miun.dt142g.reservations;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentActivity;
@@ -16,10 +15,8 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
-import java.util.Date;
 import se.miun.dt142g.BaseActivity;
 import se.miun.dt142g.R;
-import se.miun.dt142g.data.EntityHandler.Reservations;
 
 
 /**
@@ -28,8 +25,8 @@ import se.miun.dt142g.data.EntityHandler.Reservations;
  */
 public class ReservationsActivity extends FragmentActivity{ 
     private static final int NUM_PAGES = 7;
-    private ViewPager mPager;
-    private PagerAdapter mPagerAdapter;
+    private ViewPager viewPager;
+    private PagerAdapter pagerAdapter;
    
 
     @Override
@@ -37,10 +34,10 @@ public class ReservationsActivity extends FragmentActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reservations);
 
-        mPager = (ViewPager) findViewById(R.id.pager);
-        mPagerAdapter = new ScreenSlidePagerAdapter(getFragmentManager());
-        mPager.setAdapter(mPagerAdapter);
-        mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        pagerAdapter = new ScreenSlidePagerAdapter(getFragmentManager());
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 invalidateOptionsMenu();
