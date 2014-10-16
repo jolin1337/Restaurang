@@ -11,6 +11,11 @@ import static java.util.Collections.sort;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import se.miun.dt142g.DataSource;
 
 
@@ -19,89 +24,117 @@ import se.miun.dt142g.DataSource;
  * @author Ulf
  */
 public class Reservations extends DataSource implements Iterable<Reservation>{
-    private List<Reservation> reservations; 
+    private static List<Reservation> reservations = new ArrayList<Reservation>(); 
     
     public Reservations() {
     }
+    
+    @Deprecated
     public boolean readReservations() {
-        Date date1 = new Date(); 
-        Date date2 = new Date();
-        Date date3 = new Date();
-        Date date4 = new Date();
-        Date date5 = new Date();
-
-        date2.setTime(date2.getTime()+1*(24*3600*1000));
-        date3.setTime(date3.getTime()+2*(24*3600*1000));
-        date4.setTime(date4.getTime()+3*(24*3600*1000));
-        date5.setTime(date5.getTime()+4*(24*3600*1000));
-        reservations = new ArrayList<Reservation>();
-
-        reservations.add(new Reservation(1, "Ulf", date1,  2, 1 ));
-        reservations.add(new Reservation(2, "Johannes", date1, 2, 1 ));
-        reservations.add(new Reservation(3, "Björn", date1 ,2 , 2 ));
-        reservations.add(new Reservation(4, "Markus med k", date1, 2, 1 ));
-        reservations.add(new Reservation(5, "Findus", date1, 2, 1 ));
-        reservations.add(new Reservation(6, "Sara", date1, 2, 1 ));
-        reservations.add(new Reservation(7, "Bengta", date1, 2, 1 ));
-        reservations.add(new Reservation(8, "Oden", date1, 2, 1 ));
-        
-        reservations.add(new Reservation(9, "Ulf", date2, 2, 2 ));
-        reservations.add(new Reservation(10, "Johannes", date2, 2, 2 ));
-        reservations.add(new Reservation(11, "Björn", date2, 2, 2 ));
-        reservations.add(new Reservation(12, "Markus med k", date2, 2, 2 ));
-                
-        reservations.add(new Reservation(13, "Ulf", date3, 2, 3 ));
-        reservations.add(new Reservation(14, "Johannes", date3, 2, 3 ));
-        reservations.add(new Reservation(15, "Björn", date3, 2, 3 ));
-        reservations.add(new Reservation(16, "Markus med k", date3, 2, 3 ));
-        
-        reservations.add(new Reservation(9, "Ulf", date4, 2, 4 ));
-        reservations.add(new Reservation(10, "Johannes", date4, 2, 4 ));
-        reservations.add(new Reservation(11, "Björn", date4, 2, 4 ));
-        reservations.add(new Reservation(12, "Markus med k", date4, 2, 4 ));
-
-        reservations.add(new Reservation(13, "Ulf", date5, 2, 5 ));
-        reservations.add(new Reservation(14, "Johannes",date5, 2, 5 ));
-        reservations.add(new Reservation(15, "Björn", date5, 2, 5 ));
-        reservations.add(new Reservation(16, "Markus med k", date5, 2, 5 ));
-        
-        System.out.println("Not yet implemented!");
         return true;
     }
      
-    
+    /**
+     * Gets a list of reservations that are for the same day as parameter day
+     * @param day day of the month to get reservations for
+     * @return List of reservations
+     */
     public List<Reservation> getReservations(int day){
         List<Reservation> temp = new ArrayList<Reservation>(); 
-        return temp;/*
         for(Reservation r : reservations){
             if(r.getDate().getDate()==day)
                 temp.add(r);
         }
         sort(temp);
-        return temp; */
+        return temp; 
     }
 
     public Iterator<Reservation> iterator() {
         return reservations.iterator();
     }
 
+    /**
+     * <Warning> Don't call this function manually. Should only be called by 
+     * ServerConnect Class in DataSource. 
+     * 
+     * Interprets response from server and deals with the response as needed. 
+     * 
+     * @param url Parameter sent with getRequest. 
+     * @param responseText  Response from server
+     * @throws se.miun.dt142g.DataSource.WrongKeyException 
+     */
     @Override
     public void loadData(String url, String responseText) throws WrongKeyException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (url.equals("login")) {
+            key = responseText;
+        } else if (url.equals("gettable")) {
+            parseReservation(responseText);
+        }
+    }
+
+    /**
+     * Parses a string to json objects and calls addJsonBooking for each object to
+     * add them in reservations.
+     * @param jsonStr Json string representation to parse into json objects.
+     */
+    private void parseReservation(String responseText){
+        reservations.clear();
+        JSONObject response;
+        JSONArray data = null; 
+        
+        try {
+            response = new JSONObject(responseText);
+            data = response.getJSONArray("data");
+        } catch (JSONException ex) {
+            Logger.getLogger(Reservations.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        for(int i = 0;i<data.length();i++){
+            try {
+                addJsonBooking(data.getJSONObject(i));
+            } catch (JSONException ex) {
+                Logger.getLogger(Reservations.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+    }
+    
+    /**
+     * Adds a reservation from a JSONObject
+     * @param res JSONObject of reservation to add
+     */
+    private void addJsonBooking(JSONObject res){
+        try { 
+            Reservation b = new Reservation(res.getString("name"), new Date(res.getLong("date")), res.getInt("duration"), res.getInt("persons"), res.getString("phone"));
+            reservations.add(b);
+        } catch (JSONException ex) {
+            Logger.getLogger(Reservations.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
     @Override
     public void update() throws WrongKeyException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //not needed in this class
     }
 
     @Override
     public int getUniqueId() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //not needed in this class
+        return 0; 
     }
 
+    /**
+     * Loads dishes from database. Use in activity where appropriate or use for 
+     * polling the server for data. 
+     */
     @Override
     public void load() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            //if (key.length()==0)
+            //dbConnect();
+            
+            String params = "key=" + key +"&table=booking"; 
+            System.out.println("Getrequest results: " + sendRequestFromThread("gettable", params));
+            
+        
     }
 }

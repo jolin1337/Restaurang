@@ -133,10 +133,8 @@ public class OrdersActivity extends BaseActivity {
     }
 
     private void makeChoiseOfMenu(DialogInterface.OnClickListener blob) {
-        
+        availableMenus.load();
             
-        //CharSequence colors[] = new CharSequence[] {"red", "green", "blue", "black"};
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Väj en meny till vår gäst");
         builder.setItems(availableMenus.toCharSequence(), blob);

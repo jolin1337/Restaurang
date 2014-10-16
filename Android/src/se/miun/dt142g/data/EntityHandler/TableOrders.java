@@ -128,7 +128,13 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
 
     @Override
     public int getUniqueId() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int id = -1; 
+        for(TableOrder to : tableOrders){
+            if (to.getId()<=id){
+                id-=1;
+            }
+        }
+        return id; 
     }
 
     public Iterator<TableOrder> iterator() {

@@ -16,6 +16,7 @@ public class User {
     private String password;
     private String phonenr;
     private String mail;
+    private boolean removeFlag = false;
     
     public User(int id, String username, String password, String mail, String telenr){
         this.id = id;
@@ -61,6 +62,12 @@ public class User {
     public String getPhoneNumber(){
         return phonenr; 
     }
+    public void setRemove(){
+        removeFlag = true;
+    }
     
+    public boolean isRemovable(){
+        return removeFlag;
+    }
             
 }

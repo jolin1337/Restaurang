@@ -50,7 +50,7 @@ public abstract class DataSource {
      * The url to the java ee server
      */
     protected static final String serverUrl = "http://10.0.2.2:8080/Server/";
-
+    
     /**
      * Send a post request to server with a suburl of url and some optional
      * specifik params
@@ -87,7 +87,7 @@ public abstract class DataSource {
         }
     }
 
-    static void setSafeKey(String k) {
+    public static void setSafeKey(String k) {
         safeKey = k;
     }
 
@@ -104,8 +104,7 @@ public abstract class DataSource {
     }
     
     /**
-     *
-     * @author Johannes
+     * Class to handle requests to the server. 
      */
     protected class ServerConnect extends AsyncTask<String, Void, Integer> {
         boolean run = true;
@@ -192,7 +191,7 @@ public abstract class DataSource {
                 int responseCode = con.getResponseCode();
                 if (!url.equals("test")) {
                     System.out.println("\nSending 'POST' request to URL : " + url);
-                    //System.out.println("Post parameters : " + params);
+                    System.out.println("Post parameters : " + params);
                     System.out.println("Response Code : " + responseCode);
                 }
                 if (responseCode != 200) {
