@@ -9,17 +9,14 @@ package code.servlets;
 
 import data.entity.Booking;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -69,7 +66,13 @@ public class BookingServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String name = request.getParameter("name");
         String tel = request.getParameter("tel");
-        String sdate = request.getParameter("sdate");
+        String syear = request.getParameter("syear");
+        String smonth = request.getParameter("smonth");
+        String sday = request.getParameter("sday");
+        String shour = request.getParameter("shour");
+        String smin = request.getParameter("smin");
+        String sdate = getDateString(syear, smonth, sday, shour, smin);
+        
         int count;
         try {
             count = Integer.parseInt(request.getParameter("count"));
@@ -82,13 +85,15 @@ public class BookingServlet extends HttpServlet {
             utx.begin();
             EntityManager em = emf.createEntityManager();
             //This commented code is for checking the total amount of persons booked in this period...
-            //TypedQuery<int> query = em.createQuery("SELECT SUM() FROM Booking b WHERE ", null)
-            //int sum = query.getSingleResult();
-            if(name.isEmpty() || tel.isEmpty() || sdate.isEmpty() || count <= 0 || count > 6)
-                response.sendRedirect(response.encodeRedirectURL("/Server/faces/index.xhtml?page=bord&s=false") );
+            // Getting error: java.lang.IllegalArgumentException, Syntax error parsing [SELECT SUM(b) FROM Booking b]. 
+            // Query query = em.createQuery("SELECT SUM(b) FROM Booking b");
+            Integer sum = 0;//(Integer)query.getSingleResult();
+            if(name.isEmpty() || tel.isEmpty() || sdate.isEmpty() || sdate.length() != "20141017:0130".length()
+                    || count <= 0 || count+sum > 6)
+                response.sendRedirect(response.encodeRedirectURL("/Server/?page=bord&s=false") );
             Booking newBooking = new Booking();
             newBooking.setName(name);
-            SimpleDateFormat ft = new SimpleDateFormat ("dd/MM-yy 'kl' HH:mm");
+            SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMdd:HHmm");
             Date d = new Date(); 
             d.setTime(0);
             try {
@@ -120,9 +125,16 @@ public class BookingServlet extends HttpServlet {
             HeuristicMixedException | HeuristicRollbackException | SecurityException |
             IllegalStateException ex) {
         }
-        response.sendRedirect(response.encodeRedirectURL("/Server/faces/index.xhtml?page=bord&s=true") );
+        response.sendRedirect(response.encodeRedirectURL("/Server/?page=bord&s=true") );
     }
 
+    private String getDateString(String... dates) {
+        for(int i = 1; i < 5; i++) 
+            if(dates[i].length() != 2)
+                dates[i] = "0" + dates[i];
+        return "20" + dates[0] + dates[1] + dates[2] + ":" + dates[3] + dates[4];
+    }
+    
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

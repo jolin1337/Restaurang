@@ -20,6 +20,7 @@
                                     <h2>#{event.title}</h2>
                                     <!--<div class="hidden-event"><h:graphicImage  url="/getimage?img=#{event.imgsrc}" alt="#{event.title}" style="width: 100%"/></div>-->
                                     <div class="hidden-event"><h:graphicImage  url="/getimage?img=#{event.imgsrc}" alt="#{event.title}" style="width: 100%"/></div>
+                                    #{event.description}
                                 </div>
                             </c:forEach>
                         </c:when>
@@ -54,9 +55,45 @@
                                 </p>
                                 <form action="/Server/newbooking" method="POST"> 
                                     <label>Namn: <br/><input name="name" class="long" type="text" /></label><br/>
-                                    <label>Telefon: <br/><input name="tel" class="long" type="text" /></label><br/>
-                                    <label>Datum/tid: <br/><input name="sdate" placeholder="dd/mm-åå kl hh:mm" type="text" /></label><br/>
-                                    <label>Antal: 
+                                    <label>Telefon: <br/><input name="tel" class="long" type="text" /></label><br/><br/><br/>
+                                    <label>
+                                        <span class="select-wrapper syear">
+                                            <select name="syear">
+                                                <option value="14">2014</option>
+                                                <option value="15">2015</option>
+                                            </select>
+                                        </span>
+                                        <span class="select-wrapper smonth">
+                                            <select name="smonth">
+                                                <c:set var="ms" value="#{dateFormat.months}" />
+                                                <c:forEach begin="1" end="12" var="index" >
+                                                    <option value="#{index}">#{ms[index-1]}</option>
+                                                </c:forEach>
+                                            </select>
+                                        </span>
+                                        <span class="select-wrapper sday">
+                                            <select name="sday">
+                                            <c:forEach items="#{dateFormat.getIntegerItems(31)}" var="itemStr">
+                                                <option value="#{itemStr}"> #{itemStr}</option>
+                                            </c:forEach>
+                                            </select>
+                                        </span>
+                                        <span class="select-wrapper shours">
+                                            <select name="shour">
+                                                <c:forEach items="#{dateFormat.getIntegerItems(24)}" var="itemStr">
+                                                    <option value="#{itemStr}"> #{itemStr}</option>
+                                                </c:forEach>
+                                            </select>
+                                        </span>
+                                        <span class="select-wrapper smin">
+                                            <select name="smin">
+                                                <c:forEach items="#{dateFormat.getIntegerItems(60)}" var="itemStr">
+                                                    <option value="#{itemStr}"> #{itemStr}</option>
+                                                </c:forEach>
+                                            </select>
+                                        </span>
+                                    </label><br/>
+                                    <label>Antal: <br/>
                                         <select name="count">
                                             <option value="1">1</option> 
                                             <option value="2">2</option> 
@@ -81,6 +118,7 @@
                                     <h2>#{event.title}</h2>
                                     <!--<div class="hidden-event"><h:graphicImage  url="/getimage?img=#{event.imgsrc}" alt="#{event.title}" style="width: 100%"/></div>-->
                                     <div class="hidden-event"><h:graphicImage  url="/getimage?img=#{event.imgsrc}" alt="#{event.title}" style="width: 100%"/></div>
+                                    #{event.description}
                                 </div>
                             </c:forEach>
                         </c:when>

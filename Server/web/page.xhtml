@@ -37,12 +37,12 @@
                 <h2>Kontakt</h2>
                 <script>
                     var str = "#{infoSessionBean.contactInfo}";
-                    document.write(str.replace("\n", "<br/>"));
+                    document.write(str.replace(/\n/g, "<br/>"));
                 </script>
                 <h2>Öppetider</h2>
                 <script>
                     var str = "#{infoSessionBean.openings}";
-                    document.write(str.replace("\n", "<br/>"));
+                    document.write(str.replace(/\n/g, "<br/>"));
                 </script>
             </div>
             <div id="page-home" class="page">

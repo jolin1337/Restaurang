@@ -24,6 +24,12 @@ input[type="text"]:focus {
     border: 1px solid #555;
     
 }
+
+select {
+    padding: 10px;
+    margin: 5px;
+}
+
 #content .menu {
   margin: 0;
   font-size: 0;
@@ -72,6 +78,32 @@ input[type="text"]:focus {
 #content .hidden-event:hover, #content .hidden-event:focus {
   height: auto;
   overflow: auto; }
+
+.select-wrapper {
+    position: relative;
+}
+.select-wrapper:before {
+    display: inline-block;
+    width: 100px;
+    position:absolute;
+    top:-30px;
+    left: 10px;
+}
+.syear:before {
+    content: "Year";
+}
+.smonth:before {
+    content: "Month";
+}
+.sday:before {
+    content: "Date";
+}
+.shours:before {
+    content: "Hour";
+}
+.smin:before {
+    content: "Minute";
+}
 
 @media (max-width: 500px) {
   #content .right-col {
