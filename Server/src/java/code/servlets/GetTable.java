@@ -14,6 +14,7 @@ import data.entity.Dishgroup;
 import data.entity.Event;
 import data.entity.Info;
 import data.entity.Inventory;
+import data.entity.RestaurantUser;
 import data.entity.TableOrder;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -107,6 +108,14 @@ public class GetTable extends HttpServlet {
                             jsonString += d.toJsonString() + ",";
                         }
                         break; 
+                    case "user":
+                        
+                       TypedQuery<RestaurantUser> userQuery = em.createNamedQuery("RestaurantUser.findAll", RestaurantUser.class);
+                       for(RestaurantUser d : userQuery.getResultList()){
+                           jsonString += d.toJsonString() + ",";
+                       }
+                       
+                       break;
                     default: 
                         
                 }

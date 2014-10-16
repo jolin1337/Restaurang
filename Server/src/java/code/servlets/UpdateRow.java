@@ -15,6 +15,7 @@ import data.entity.Event;
 import data.entity.Info;
 import data.entity.Inventory;
 import data.entity.JsonEntity;
+import data.entity.RestaurantUser;
 import data.entity.TableOrder;
 import java.io.File;
 import java.io.IOException;
@@ -146,6 +147,9 @@ public class UpdateRow extends HttpServlet {
                             break;
                         case "scheme":
 
+                            break;
+                        case "user":
+                            edited |= updateTable(obj, obj.getInt(RestaurantUser.getPK(), -1), RestaurantUser.class);
                             break;
                     }
                 }
