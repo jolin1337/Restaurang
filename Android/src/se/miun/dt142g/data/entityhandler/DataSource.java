@@ -5,7 +5,7 @@
  * This code is a piece of a project in the course DT142G on Mid. Sweden university
  * Created by students for this projekt only
  */
-package se.miun.dt142g.datahandler;
+package se.miun.dt142g.data.entityhandler;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -14,8 +14,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 
 /**
@@ -28,10 +26,6 @@ import org.json.JSONObject;
 public abstract class DataSource {
     
     private static String safeKey = "dt142g-awesome";
-    /**
-     * An abstract method for loading data to its datasource
-     */
-    public abstract void loadData() throws WrongKeyException;
     /**
      * A key for authorization
      */
@@ -128,6 +122,10 @@ public abstract class DataSource {
         // TODO: Update data
     }
 
+    /**
+     * An abstract method for loading data to datasource
+     */
+    public abstract void loadData() throws WrongKeyException;
     public abstract void update() throws WrongKeyException;
 
     public abstract int getUniqueId();

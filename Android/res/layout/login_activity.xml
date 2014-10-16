@@ -11,13 +11,12 @@
       <LinearLayout android:id="@+id/header"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="@layout/login_header"
                     android:paddingTop="5dip"
                     android:paddingBottom="5dip">
           <ImageView android:src="@drawable/ic_launcher"
                      android:layout_width="wrap_content"
                      android:layout_height="wrap_content"
-                     android:layout_marginLeft="10dip"/>
+                     android:contentDescription="@string/logodesc"/>
       </LinearLayout>
  
       <LinearLayout
@@ -36,7 +35,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dip"
                     android:layout_marginBottom="20dip"
-                    android:singleLine="true"/>
+                    android:singleLine="true"
+                    android:hint="@string/textfieldhint"/>
           <TextView android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textColor="#372c24"
@@ -46,7 +46,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dip"
                     android:singleLine="true"
-                    android:password="true"/>
+                    android:inputType="textPassword"
+                    android:hint="@string/textfieldhint"/>
           <Button android:id="@+id/btnLogin"
                   android:onClick="loginButtonClicked"
                   android:layout_width="fill_parent"

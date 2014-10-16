@@ -5,7 +5,7 @@
  * This code is a piece of a project in the course DT142G on Mid. Sweden university
  * Created by students for this projekt only
  */
-package se.miun.dt142g.data.EntityHandler;
+package se.miun.dt142g.data.handler;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,7 +14,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import se.miun.dt142g.datahandler.DataSource;
+import se.miun.dt142g.data.entityhandler.DataSource;
 import se.miun.dt142g.data.EntityRep.TableOrder;
 
 /**

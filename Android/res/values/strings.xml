@@ -17,6 +17,8 @@
     <string name="login">Login</string>
     <string name="username">Användarnamn</string>
     <string name="password">Lösenord</string>
+    <string name="logodesc">The important and beautifull logo of anders</string>
+    <string name="textfieldhint">Skriv något i textfältet ;)</string>
     
     <color name="green">#ff99CC00</color>
     <color name="dark_green">#ff669900</color>

@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import se.miun.dt142g.BaseActivity;
-import se.miun.dt142g.datahandler.DataSource;
+import se.miun.dt142g.data.entityhandler.DataSource;
 import se.miun.dt142g.R;
 import se.miun.dt142g.data.EntityRep.Dish;
-import se.miun.dt142g.data.EntityHandler.Dishes;
+import se.miun.dt142g.data.handler.Dishes;
 
 /**
  *

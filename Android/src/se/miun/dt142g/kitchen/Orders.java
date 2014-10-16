@@ -13,15 +13,11 @@ import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.ExpandableListView.OnGroupCollapseListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.Toast;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import se.miun.dt142g.BaseActivity;
-import se.miun.dt142g.datahandler.DataEntityListener;
-import se.miun.dt142g.datahandler.DataSource;
 import se.miun.dt142g.R;
-import se.miun.dt142g.data.EntityHandler.TableOrders;
+import se.miun.dt142g.data.handler.TableOrders;
 import se.miun.dt142g.data.EntityRep.TableOrder;
-import se.miun.dt142g.datahandler.DataSourceListener;
+import se.miun.dt142g.data.entityhandler.DataSourceListener;
 
 public class Orders extends BaseActivity {
 

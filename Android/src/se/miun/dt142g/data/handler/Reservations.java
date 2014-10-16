@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package se.miun.dt142g.data.EntityHandler;
+package se.miun.dt142g.data.handler;
 
 import se.miun.dt142g.data.EntityRep.Reservation;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import se.miun.dt142g.datahandler.DataSource;
+import se.miun.dt142g.data.entityhandler.DataSource;
 
 
 /**

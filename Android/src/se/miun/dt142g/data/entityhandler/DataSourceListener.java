@@ -5,7 +5,7 @@
  * This code is a piece of a project in the course DT142G on Mid. Sweden university
  * Created by students for this projekt only
  */
-package se.miun.dt142g.datahandler;
+package se.miun.dt142g.data.entityhandler;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -53,6 +53,10 @@ public class DataSourceListener extends Thread {
      * Indicates if we shoudl write the active state of dataContainer to database
      */
     private boolean shouldWrite = false;
+    /**
+     * Indicates if we should ignore the handle or not
+     */
+    private boolean shouldIgnoreDataResponse = false;
     
     /**
      * @param ds - The datasource to use
@@ -125,8 +129,10 @@ public class DataSourceListener extends Thread {
         }
     }
     private void sendMessage(String msg) {
-        if(handler == null) throw new NullPointerException("No handler set to "
+        if(handler == null && !shouldIgnoreDataResponse) 
+            throw new NullPointerException("No handler set to "
                 + "send information to, please use setHandler for this purpous.");
+        else if(shouldIgnoreDataResponse) return;
         Message msgObj = handler.obtainMessage();
         Bundle b = new Bundle();
         b.putString("message", msg);
@@ -134,8 +140,10 @@ public class DataSourceListener extends Thread {
         handler.sendMessage(msgObj);
     }
     private void sendCode(String key, int code) {
-        if(handler == null) throw new NullPointerException("No handler set to "
+        if(handler == null && !shouldIgnoreDataResponse) 
+            throw new NullPointerException("No handler set to "
                 + "send information to, please use setHandler for this purpous.");
+        else if(shouldIgnoreDataResponse) return;
         Message msgObj = handler.obtainMessage();
         Bundle b = new Bundle();
         b.putInt(key, code);
@@ -190,5 +198,13 @@ public class DataSourceListener extends Thread {
      */
     public boolean hasWriten() {
         return !shouldWrite;
+    }
+
+    public boolean shouldIgnoreDataResponse() {
+        return shouldIgnoreDataResponse;
+    }
+
+    public void setShouldIgnoreDataResponse(boolean shouldIgnoreDataResponse) {
+        this.shouldIgnoreDataResponse = shouldIgnoreDataResponse;
     }
 }
