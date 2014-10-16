@@ -44,7 +44,6 @@ public class NewBooking extends JPanel  {
     private final String newLine = "\n";
     private String missingBookingInput;
     private String invalidNumberInput;
-    private String invalidPhoneInput;
     private String phoneNrInput; 
     private String invalidDateInput;
     private JSpinner spinner;
@@ -97,7 +96,7 @@ public class NewBooking extends JPanel  {
         model.setCalendarField(Calendar.MINUTE);
         spinner = new JSpinner();
         spinner.setModel(model);
-        spinner.setEditor(new JSpinner.DateEditor(spinner, "h:mm a"));
+        spinner.setEditor(new JSpinner.DateEditor(spinner, "HH:mm"));
         add(spinner);
         /* Time spinner */
         
@@ -123,8 +122,7 @@ public class NewBooking extends JPanel  {
 //        invalidPhoneInput = addLabel("Vänligen ange ett telefonnummer som är mellan 7 och 9 siffror");
 //        invalidDateInput = addLabel("Vänligen ange ett datum som inte är i det förflutna.");
         missingBookingInput = "Vänligen fyll i alla fält för att godkänna bokningen.";
-        invalidNumberInput = "Vänligen ange endast heltal.";
-        invalidPhoneInput = "Vänligen ange ett telefonnummer som är mellan 7 och 9 siffror";
+        invalidNumberInput = "Vänligen ange endast heltal i personer fältet och varaktighet fältet.";
         invalidDateInput = "Vänligen ange ett datum som inte är i det förflutna.";
         errorMessagesTextArea = new JTextArea();
         errorMessagesTextArea.setEditable(false);
@@ -148,12 +146,7 @@ public class NewBooking extends JPanel  {
                     invalidInput = true;
                 }
                 
-                if (!( phoneNrField.getText().length() > 6 && phoneNrField.getText().length() < 10 )){
-                    errorMessagesTextArea.append(invalidPhoneInput + newLine);
-                    invalidInput = true;
-                }
-                
-                if (!( isInteger(personsField.getText()) && isInteger(durationField.getText()) && isInteger(phoneNrField.getText()) )){
+                if (!( isInteger(personsField.getText()) && isInteger(durationField.getText()) )){
                     errorMessagesTextArea.append(invalidNumberInput + newLine);
                     invalidInput = true;
                 }
@@ -174,7 +167,7 @@ public class NewBooking extends JPanel  {
                 // Merge datePicker with timePicker
                 booking.setName(nameField.getText());
                 booking.setPersons(Integer.parseInt(personsField.getText()));
-                booking.setPhoneNr(Integer.parseInt(phoneNrField.getText()));
+                booking.setPhoneNr(phoneNrField.getText());
 //                mergeDateWithTime(bookingTime, datePicker.getDate());
 
 //                bookingTime.setYear(datePicker.getDate().getYear());

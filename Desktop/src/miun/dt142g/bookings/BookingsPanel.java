@@ -95,7 +95,7 @@ public class BookingsPanel extends JPanel {
         this.addBooking.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Booking b = new Booking(bookings.getUniqueId(), "", new Date(), 0, 0, 0);
+                Booking b = new Booking(bookings.getUniqueId(), "", new Date(), 0, 0, "");
                 bookings.addBooking(b);
                 remote.setViewNewBooking(b);
                 newBookingP = true;
@@ -104,7 +104,7 @@ public class BookingsPanel extends JPanel {
         addBooking.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         this.add(addBooking);
         
-        submit = new JButton("Synkronisera med server");
+        submit = new JButton("Spara ändringar");
         this.submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
