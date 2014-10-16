@@ -5,7 +5,7 @@
  * This code is a piece of a project in the course DT142G on Mid. Sweden university
  * Created by students for this projekt only
  */
-package se.miun.dt142g;
+package se.miun.dt142g.datahandler;
 
 /**
  *

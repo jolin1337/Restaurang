@@ -5,8 +5,9 @@
  * This code is a piece of a project in the course DT142G on Mid. Sweden university
  * Created by students for this projekt only
  */
-package se.miun.dt142g;
+package se.miun.dt142g.datahandler;
 
+import se.miun.dt142g.datahandler.DataSource;
 import android.os.AsyncTask;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -26,7 +27,7 @@ import org.json.JSONObject;
  * @since 2014-10-09
  * @version 1.2
  */
-public abstract class DataSource {
+public abstract class DataSourceNew {
     /**
      * Update event listener
      */
@@ -215,5 +216,59 @@ public abstract class DataSource {
             }
             return "";
         }
+    }
+    
+    
+    /**
+     * Send a post request to server with a suburl of url and some optional
+     * specifik params
+     *
+     * @param url - The sub url to request from the base url
+     * DataSource.serverUrl
+     * @param params - The specifik params to send with the url to the server
+     * @return A string of the requested information (the result of the request)
+     */
+    protected String getRequest(String url, String params) {
+        try {
+            URL obj = new URL(serverUrl + url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+            //add reuqest header
+            con.setRequestMethod("POST");
+            con.setRequestProperty("User-Agent", "User-Agent");
+            con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+
+            // Send post request
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes(params);
+            wr.flush();
+
+            int responseCode = con.getResponseCode();
+            if (!url.equals("test")) {
+                System.out.println("\nSending 'POST' request to URL : " + url);
+                System.out.println("Post parameters : " + params);
+                System.out.println("Response Code : " + responseCode);
+            }
+            if (responseCode != 200) {
+                return "";
+            }
+
+            StringBuilder response;
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            response = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+
+            //print result
+            return response.toString();
+
+        } catch (Exception ex) {
+            Logger.getLogger(DataSource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "";
     }
 }

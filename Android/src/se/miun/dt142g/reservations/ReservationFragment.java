@@ -7,6 +7,8 @@ package se.miun.dt142g.reservations;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,19 +16,43 @@ import android.widget.TextView;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import se.miun.dt142g.R;
 import se.miun.dt142g.data.EntityRep.Reservation;
 import se.miun.dt142g.data.EntityHandler.Reservations;
+import se.miun.dt142g.data.EntityHandler.TableOrders;
+import se.miun.dt142g.datahandler.DataSource;
+import se.miun.dt142g.datahandler.DataSourceListener;
 
 /**
  *
  * @author Ulf
  */
 public class ReservationFragment extends Fragment {
-    
-    
 
-    private static Reservations reservations;
+    // Define the Handler that receives messages from the thread and update the progress
+    private final Handler handler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            Bundle data = msg.getData();
+            if(data != null) {
+                if(data.containsKey("connectionError")) {
+                    // TODO: Print Toast message here
+                }
+                if(data.containsKey("dataUpdated") && data.getInt("dataUpdated") == DataSourceListener.UPDATE_CALL) {
+                    updateViewText();
+                }
+            }
+
+        }
+        
+
+    };
+    DataSourceListener background = null;
+
+    private final Reservations reservations = new Reservations();
     
     /**
      * The argument key for the page number this fragment represents.
@@ -38,6 +64,7 @@ public class ReservationFragment extends Fragment {
      * The fragment's page number, which is set to the argument value for {@link #ARG_PAGE}.
      */
     private int fragmentNumber;
+    private TextView textFieldInfo;
     
     public ReservationFragment() {
     }
@@ -45,6 +72,8 @@ public class ReservationFragment extends Fragment {
 
     /**
      * Factory method for this fragment class. Constructs a new fragment for the given page number.
+     * @param pageNumber
+     * @return 
      */
     public static ReservationFragment create(int pageNumber) {
         ReservationFragment fragment = new ReservationFragment();
@@ -68,26 +97,32 @@ public class ReservationFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.reservations_fragment, container, false);
 
-        /* Take date from device and adapt it for the fragment to represent a 
-        different day of reservations in each fragment. */
-        Date theDay = new Date();
-        theDay.setTime(theDay.getTime()+(fragmentNumber)*(24*3600*1000));
-        DateFormat theDate = new SimpleDateFormat("dd/MM-yy");
+        textFieldInfo = ((TextView) rootView.findViewById(R.id.reservation));
         
-        String reserved=theDate.format(theDay)+"\n\n"; 
-        Reservations reservations = new Reservations(); 
-        reservations.load();
-        for(Reservation r :  reservations.getReservations(theDay.getDate())){
-            reserved+=r.toString();
-        }
-        ((TextView) rootView.findViewById(R.id.reservation)).setText(reserved);
+        background = new DataSourceListener(reservations);
+        background.setHandler(handler);
+        background.start();
         return rootView;
     }
 
     /**
      * Returns the page number represented by this fragment object.
+     * @return The fragment amount of this fragment activity
      */
     public int getPageNumber() {
         return fragmentNumber;
+    }
+    private void updateViewText() {
+        if(background == null) return;
+        /* Take date from device and adapt it for the fragment to represent a
+        different day of reservations in each fragment. */
+        Date theDay = new Date();
+        theDay.setTime(theDay.getTime()+(fragmentNumber)*(24*3600*1000));
+        DateFormat theDate = new SimpleDateFormat("dd/MM-yy");
+        String reserved=theDate.format(theDay)+"\n\n";
+        for(Reservation r :  reservations.getReservations(theDay.getDate())){
+            reserved += r.toString();
+        }
+        textFieldInfo.setText(reserved);
     }
 }

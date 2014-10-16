@@ -34,11 +34,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public Object getChild(int groupPosition, int childPosition) {
         try {
-            synchronized(_listDataHeader) {
-                return this._listDataChild.get(this._listDataHeader.get(groupPosition))
-                        .get(childPosition);
-            }
+            return this._listDataChild.get(this._listDataHeader.get(groupPosition))
+                    .get(childPosition);
         } catch(IndexOutOfBoundsException ex) {
+            return null;
+        }catch(NullPointerException ex) {
             return null;
         }
     }
@@ -70,28 +70,28 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public int getChildrenCount(int groupPosition) {
         try {
-            synchronized(_listDataHeader) {
-                return this._listDataChild.get(this._listDataHeader.get(groupPosition))
-                    .size();
-            }
+            return this._listDataChild.get(this._listDataHeader.get(groupPosition))
+                .size();
         }
         catch(IndexOutOfBoundsException ex) {
+            return 0;
+        }catch(NullPointerException ex) {
             return 0;
         }
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        synchronized(_listDataHeader) {
+        if(_listDataHeader != null)
             return this._listDataHeader.get(groupPosition);
-        }
+        return null;
     }
 
     @Override
     public int getGroupCount() {
-        synchronized(_listDataHeader) {
+        if(_listDataHeader != null)
             return this._listDataHeader.size();
-        }
+        return 0;
     }
 
     @Override
@@ -120,10 +120,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             @Override
             public void onClick(View view) {
                 //Do something with database
-                
-                synchronized(_listDataHeader) {
+                if(_listDataHeader != null)
                     _listDataHeader.remove(groupPosition);
-                }
                 notifyDataSetChanged();
             }
         });

@@ -7,23 +7,22 @@
  */
 package se.miun.dt142g.data.EntityHandler;
 
-import android.os.Looper;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import se.miun.dt142g.DataSource;
+import se.miun.dt142g.datahandler.DataSource;
 import se.miun.dt142g.data.EntityRep.TableOrder;
 
 /**
+ * This class describes all Tableorders in database
  *
- * @author Johannes
+ * @author Johannes Lindén
+ * @since 2014-10-09
+ * @version 1.2
  */
 public class TableOrders extends DataSource implements Iterable<TableOrder> {
 
@@ -37,6 +36,7 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
 
     private void parseTable(String jsonStr) {
         try {
+            tableOrders.clear();
             JSONObject json = new JSONObject(jsonStr);
             JSONArray data = json.getJSONArray("data");
             for(int i=data.length(); i > 0; i--) {
@@ -57,70 +57,8 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
         }
         
     }
-
-    @Override
-    public void loadData(String url, String responseText) throws WrongKeyException {
-        if (url.equals("login")) {
-            key = responseText;
-        } else if (url.equals("gettable")) {
-            parseTable(responseText);
-            if(getTableListener() != null)
-                getTableListener().onReadTable();
-        } else if(url.equals("updaterow")) {
-            load();
-            if(getTableListener() != null)
-                getTableListener().onUpdateTable();
-        }
-    }
-    UpdateTable loader = null;
-    public void stopThread() {
-        
-        if(loader != null) {
-            loader.stopLoop();
-            try {
-                loader.join();
-            } catch (InterruptedException ex) {
-                Logger.getLogger(TableOrders.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-    @Override
-    public void load() {
-        stopThread();
-        loader = new UpdateTable();
-        loader.start();
-    }
-    private class UpdateTable extends Thread {
-        boolean run = true;
-        @Override
-        public void run() {
-            Looper.prepare();
-            while(shouldRun()) {
-                try {
-                    ServerConnect serverOrders = new ServerConnect();
-                    serverOrders.execute("gettable", "&table=" + table);
-                    dishes.load();
-                    serverOrders.get();// Probably not good... TODO: change to time limit instead
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(TableOrders.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ExecutionException ex) {
-                    Logger.getLogger(TableOrders.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                /*try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(TableOrders.class.getName()).log(Level.SEVERE, null, ex);
-                }*/
-                stopLoop();
-            }
-        }
-        boolean shouldRun() {
-            return run;
-        }
-        void stopLoop() {
-            run = false;
-        }
-    }
+    
+    
     @Override
     public void update() throws WrongKeyException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -139,5 +77,11 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
 
     public Iterator<TableOrder> iterator() {
         return tableOrders.iterator();
+    }
+
+    @Override
+    public void loadData() throws WrongKeyException {
+        dbConnect();
+        parseTable(getRequest("gettable", "key=" + key + "&table=" + table));
     }
 }

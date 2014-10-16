@@ -16,15 +16,17 @@ import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import se.miun.dt142g.DataSource;
+import se.miun.dt142g.datahandler.DataSource;
 
 
 /**
  *
  * @author Ulf
  */
-public class Reservations extends DataSource implements Iterable<Reservation>{
-    private static List<Reservation> reservations = new ArrayList<Reservation>(); 
+public class Reservations extends DataSource implements Iterable<Reservation> {
+    protected final String table = "booking";
+    private final List<Reservation> reservations = new ArrayList<Reservation>(); 
+    
     
     public Reservations() {
     }
@@ -51,25 +53,6 @@ public class Reservations extends DataSource implements Iterable<Reservation>{
 
     public Iterator<Reservation> iterator() {
         return reservations.iterator();
-    }
-
-    /**
-     * <Warning> Don't call this function manually. Should only be called by 
-     * ServerConnect Class in DataSource. 
-     * 
-     * Interprets response from server and deals with the response as needed. 
-     * 
-     * @param url Parameter sent with getRequest. 
-     * @param responseText  Response from server
-     * @throws se.miun.dt142g.DataSource.WrongKeyException 
-     */
-    @Override
-    public void loadData(String url, String responseText) throws WrongKeyException {
-        if (url.equals("login")) {
-            key = responseText;
-        } else if (url.equals("gettable")) {
-            parseReservation(responseText);
-        }
     }
 
     /**
@@ -113,7 +96,7 @@ public class Reservations extends DataSource implements Iterable<Reservation>{
     }
 
     @Override
-    public void update() throws WrongKeyException {
+    public void update() {
         //not needed in this class
     }
 
@@ -127,14 +110,9 @@ public class Reservations extends DataSource implements Iterable<Reservation>{
      * Loads dishes from database. Use in activity where appropriate or use for 
      * polling the server for data. 
      */
-    @Override
-    public void load() {
-            //if (key.length()==0)
-            //dbConnect();
-            
-            String params = "key=" + key +"&table=booking"; 
-            System.out.println("Getrequest results: " + sendRequestFromThread("gettable", params));
-            
-        
+    public void loadData() throws WrongKeyException  {
+        dbConnect();
+        parseReservation(getRequest("gettable", "key=" + key + "&table=" + table));
     }
+
 }

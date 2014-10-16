@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import se.miun.dt142g.DataSource;
+import se.miun.dt142g.datahandler.DataSource;
 import se.miun.dt142g.data.EntityRep.Dish;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -71,10 +71,9 @@ public class Dishes extends DataSource implements Iterable<Dish> {
      * Loads dishes from database. Use in activity where appropriate or use for 
      * polling the server for data. 
      */
-    @Override
     public void load() {
         
-        String jsonStr = sendRequestFromThread("gettable", "&table=dish");
+        //String jsonStr = sendRequestFromThread("gettable", "&table=dish");
         /*List<Dish> ds = getDataList();
         dishes.clear();
         for(Dish dish : ds)
@@ -93,7 +92,6 @@ public class Dishes extends DataSource implements Iterable<Dish> {
      * @param responseText  Response from server
      * @throws se.miun.dt142g.DataSource.WrongKeyException 
      */
-    @Override
     public void loadData(String url, String responseText) throws WrongKeyException {
         if (url.equals("login")) {
             key = responseText;
@@ -123,7 +121,7 @@ public class Dishes extends DataSource implements Iterable<Dish> {
      * @throws se.miun.dt142g.DataSource.WrongKeyException 
      */
     @Override
-    public void update() throws WrongKeyException {
+    public void update() throws WrongKeyException {/*
         List<Dish> ds = dishes;
         load(); // changed dishes values to the ones on server
         String str = "&table=dish&data={\"data\":[";
@@ -146,7 +144,7 @@ public class Dishes extends DataSource implements Iterable<Dish> {
         System.out.println("Updatestatus: " + sendRequestFromThread("updaterow", str.substring(0, str.length()-1) + "]}"));
         
         // To make sure that we have the correct id:s/pk:s
-        sendRequestFromThread("gettable", "&table=" + table);
+        sendRequestFromThread("gettable", "&table=" + table);*/
     }
     
     /**
@@ -239,5 +237,10 @@ public class Dishes extends DataSource implements Iterable<Dish> {
 
     void clear() {
         dishes.clear();
+    }
+
+    @Override
+    public void loadData() throws WrongKeyException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
