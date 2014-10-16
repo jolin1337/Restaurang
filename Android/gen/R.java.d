@@ -25,12 +25,4 @@ C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\res\layout\table
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\res\menu\orders.xml \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\res\values\dimens.xml \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\res\values\strings.xml \
-C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\res\drawable-hdpi\ic_launcher.png \
-C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\res\drawable-ldpi\ic_close.png \
-C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\res\drawable-ldpi\ic_done.png \
-C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\res\drawable-ldpi\ic_launcher.png \
-C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\res\drawable-ldpi\special.png \
-C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\res\drawable-ldpi\special_gray.png \
-C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\res\drawable-mdpi\ic_launcher.png \
-C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\res\drawable-xhdpi\ic_launcher.png \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\AndroidManifest.xml \

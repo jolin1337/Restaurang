@@ -7,7 +7,6 @@ package se.miun.dt142g.data.EntityRep;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -17,16 +16,16 @@ import java.util.Date;
 public class Reservation implements Comparable<Reservation>{
     private Date date;
     private String name; 
-    private int id; 
     private int duration; 
     private int persons; 
+    private String phoneNr; 
 
-    public Reservation(int id, String name, Date date, int duration, int persons) {
-        setId(id);
+    public Reservation(String name, Date date, int duration, int persons, String phoneNr) {
         setName(name);
         setDate(date);
         setDuration(duration);
         setPersons(persons);
+        setPhoneNr(phoneNr);
     }
 
     /**
@@ -86,17 +85,19 @@ public class Reservation implements Comparable<Reservation>{
     }
 
     public int compareTo(Reservation another) {
-        if (this.getDate().getTime()<another.getDate().getTime())
-            return -1; 
-        if (this.getDate().getTime()>another.getDate().getTime())
-            return 1; 
-        return 0;
+        return this.getDate().compareTo(another.date);
+//        if (this.getDate().getTime()<another.getDate().getTime())
+//            return -1; 
+//        if (this.getDate().getTime()>another.getDate().getTime())
+//            return 1; 
+//        return 0;
     }
     
     @Override
     public String toString(){
+        DateFormat theDate = new SimpleDateFormat("dd/MM-yy");
         DateFormat theTime = new SimpleDateFormat("HH.mm");
-        return theTime.format(this.getDate()) + "\n"+this.getName()+"\nAntal: "+Integer.toString(this.getPersons())+"\n\n";
+        return theDate.format(this.getDate()) + "\n" + theTime.format(this.getDate()) + "\n"+this.getName()+"\nTel.Nr: " + this.getPhoneNr() + "\nAntal: "+Integer.toString(this.getPersons())+"\n\n";
     }
 
     /**
@@ -111,16 +112,16 @@ public class Reservation implements Comparable<Reservation>{
     }
 
     /**
-     * @return the id
+     * @return the phoneNr
      */
-    public int getId() {
-        return id;
+    public String getPhoneNr() {
+        return phoneNr;
     }
 
     /**
-     * @param id the id to set
+     * @param phoneNr the phoneNr to set
      */
-    public void setId(int id) {
-        this.id = id;
+    public void setPhoneNr(String phoneNr) {
+        this.phoneNr = phoneNr;
     }
 }

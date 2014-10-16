@@ -27,7 +27,11 @@ import org.json.JSONObject;
  * @version 1.2
  */
 public abstract class DataSource {
-
+    /**
+     * Update event listener
+     */
+    DataEntityListener tableListener = null;
+    
     private static String safeKey = "dt142g-awesome";
 
     /**
@@ -46,28 +50,7 @@ public abstract class DataSource {
      * The url to the java ee server
      */
     protected static final String serverUrl = "http://10.0.2.2:8080/Server/";
-
-    /**
-     * This method connects us with key to the server
-     *
-     * @throws miun.dt142g.DataSource.WrongKeyException
-     */
-    protected void dbConnect() throws WrongKeyException{
-        if (!key.isEmpty()) {
-            if (!getRequest("test", "key=" + key).equals("true")) {
-                throw new WrongKeyException("Still not connected");
-            }
-            return;
-        }
-        key = getRequest("login", "key=" + safeKey);
-        String req = getRequest("test", "key=" + key);
-        //System.out.println(req);
-        if (!req.equals("true")) {
-            key = "";
-            throw new WrongKeyException("Not correct key");
-        }
-    }
-
+    
     /**
      * Send a post request to server with a suburl of url and some optional
      * specifik params
@@ -77,24 +60,20 @@ public abstract class DataSource {
      * @param params - The specifik params to send with the url to the server
      * @return A string of the requested information (the result of the request)
      */
-    protected String getRequest(String url, String params) {
+    protected String sendRequestFromThread(String url, String params) {
         String response = "";
 
-        try {
+        //try {
             ServerConnect connection = new ServerConnect();
-            response = connection.get();
             connection.execute(serverUrl + url, params);
+            //response = connection.get();
             return response;
-        } catch (InterruptedException ex) {
+        /*} catch (InterruptedException ex) {
             Logger.getLogger(DataSource.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ExecutionException ex) {
             Logger.getLogger(DataSource.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return response;
-    }
-
-    protected JSONObject getJsonRequest(String table) throws JSONException {
-        return new JSONObject(getRequest("gettable", "table=" + table + "&key=" + key));
+        return response;*/
     }
 
     public abstract void update() throws WrongKeyException;
@@ -108,35 +87,74 @@ public abstract class DataSource {
         }
     }
 
-    static void setSafeKey(String k) {
+    public static void setSafeKey(String k) {
         safeKey = k;
     }
 
     static String getSafeKey() {
         return safeKey;
     }
+
+    public DataEntityListener getTableListener() {
+        return tableListener;
+    }
+
+    public void setTableListener(DataEntityListener tableListener) {
+        this.tableListener = tableListener;
+    }
     
     /**
-     *
-     * @author Johannes
+     * Class to handle requests to the server. 
      */
-    protected class ServerConnect extends AsyncTask<String, Void, String> {
-
+    protected class ServerConnect extends AsyncTask<String, Void, Integer> {
+        boolean run = true;
         public ServerConnect(){}
         @Override
-        protected String doInBackground(String... urls) {
-            try {
-                if (urls.length > 1) {
-                    dbConnect();
-                    String res = processRequest(urls[0], urls[1]);
-                    loadData(urls[0], res);
-                }
+        protected Integer doInBackground(String... urls) {
+            //while(run) {
+                if(!(urls.length > 2 && urls[2].equals( "keep_it" )))
+                    stopAfterRunningCycle();
+                try {
+                    if (urls.length > 1) {
+                        dbConnect();
+                        String res = processRequest(urls[0], "key=" + key + urls[1]);
+                        if(!res.equals("false") && !res.equals("expired_key"))
+                            loadData(urls[0], res);
+                        System.out.println("Updatestatus: " + res);
+                    }
 
-            } catch (Exception e) {
-            }
-            return "Error: Getrequest failed!";
+                } catch (Exception e) {
+                }
+                if(tableListener != null && urls.length > 1)
+                    tableListener.onFaildRequest(urls[0]);
+            //}
+            return 0;
+        }
+        
+        void stopAfterRunningCycle() {
+            run = false;
         }
 
+        /**
+         * This method connects us with key to the server
+         *
+         * @throws miun.dt142g.DataSource.WrongKeyException
+         */
+        protected void dbConnect() throws WrongKeyException{
+            if (!key.isEmpty()) {
+                if (!processRequest("test", "key=" + key).equals("true")) {
+                    throw new WrongKeyException("Still not connected");
+                }
+                return;
+            }
+            key = processRequest("login", "key=" + safeKey);
+            String req = processRequest("test", "key=" + key);
+            //System.out.println(req);
+            if (!req.equals("true")) {
+                key = "";
+                throw new WrongKeyException("Not correct key");
+            }
+        }
         protected void onProgressUpdate(Integer... progress) {
             //setProgressPercent(progress[0]);
         }
@@ -173,7 +191,7 @@ public abstract class DataSource {
                 int responseCode = con.getResponseCode();
                 if (!url.equals("test")) {
                     System.out.println("\nSending 'POST' request to URL : " + url);
-                    //System.out.println("Post parameters : " + params);
+                    System.out.println("Post parameters : " + params);
                     System.out.println("Response Code : " + responseCode);
                 }
                 if (responseCode != 200) {

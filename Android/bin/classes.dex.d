@@ -3,10 +3,13 @@ C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\m
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\BuildConfig.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\EntityHandler\Dishes.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\EntityHandler\Reservations.class \
+C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\EntityHandler\TableOrders$1.class \
+C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\EntityHandler\TableOrders$UpdateTable.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\EntityHandler\TableOrders.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\EntityRep\Dish.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\EntityRep\Reservation.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\data\EntityRep\TableOrder.class \
+C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\DataEntityListener.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\DataSource$ServerConnect.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\DataSource$WrongKeyException.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\DataSource.class \
@@ -16,6 +19,7 @@ C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\m
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\kitchen\Orders$2.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\kitchen\Orders$3.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\kitchen\Orders$4.class \
+C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\kitchen\Orders$5.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\kitchen\Orders.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\LoginActivity.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\R$attr.class \
@@ -28,8 +32,6 @@ C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\m
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\R$string.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\R$style.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\R.class \
-C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\reservations\ReservationFragment$1.class \
-C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\reservations\ReservationFragment$DownloadFilesTask.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\reservations\ReservationFragment.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\reservations\ReservationsActivity$1.class \
 C:\Users\Johannes\Documents\NetBeansProjects\Restaurang\Android\bin\classes\se\miun\dt142g\reservations\ReservationsActivity$ScreenSlidePagerAdapter.class \

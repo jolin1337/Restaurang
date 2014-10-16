@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
@@ -11,43 +12,89 @@ import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.ExpandableListView.OnGroupCollapseListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.Toast;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import se.miun.dt142g.BaseActivity;
-import se.miun.dt142g.DataSource;
+import se.miun.dt142g.DataEntityListener;
 import se.miun.dt142g.R;
 import se.miun.dt142g.data.EntityHandler.TableOrders;
+import se.miun.dt142g.data.EntityRep.TableOrder;
 
 
 public class Orders extends BaseActivity {
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
-    List<String> listDataHeader;
+    final List<String> listDataHeader = new ArrayList<String>();
     HashMap<String, List<String>> listDataChild;
     TableOrders tableOrders = new TableOrders();
 
+    DataEntityListener tableEntityListener = new DataEntityListener() {
+
+        public void onUpdateTable() {
+        }
+        
+        public void onReadTable() {
+            synchronized(listDataHeader) {
+                prepareListData();
+            //listAdapter = new ExpandableListAdapter(Orders.this, listDataHeader, listDataChild);
+            // setting list adapter
+            //expListView.setAdapter(listAdapter);
+                if(listDataHeader.size() > 0)
+                    expListView.expandGroup(0);
+                listDataHeader.notify();
+            }
+            listAdapter.notifyDataSetChanged();
+        }
+
+        public void onFaildRequest(String req) {
+        }
+    };
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        tableOrders.load();
+        tableOrders.setTableListener(tableEntityListener);
         setContentView(R.layout.activity_orders);
         // get the listview
         expListView = (ExpandableListView) findViewById(R.id.ListOrders);
 
+        listDataChild = new HashMap<String, List<String>>();
+
         // preparing list data
         prepareListData();
+        
+        // Adding child data
+        listDataHeader.add("Bord 1");
+        listDataHeader.add("Bord 2");
+        listDataHeader.add("Bord 3");
 
+        // Adding child data
+        List<String> bord1 = new ArrayList<String>();
+        bord1.add("Kyckling");
+        bord1.add("Tonfisk");
+        bord1.add("Lax");
+        bord1.add("Biff");
+        bord1.add("Soppa");
+
+        List<String> bord2 = new ArrayList<String>();
+        bord2.add("The Conjuring");
+        bord2.add("Despicable Me 2 återkomsten: Gubbarna har tänkt klart");
+        bord2.add("Turbo");
+        bord2.add("Grown Ups 2");
+        bord2.add("Red 2");
+        bord2.add("The Wolverine");
+
+        List<String> bord3 = new ArrayList<String>();
+        bord3.add("2 Guns");
+        bord3.add("The Smurfs 2");
+        bord3.add("The Spectacular Now");
+        bord3.add("The Canyons");
+        bord3.add("Europa Report");
+
+        listDataChild.put(listDataHeader.get(0), bord1);
+        listDataChild.put(listDataHeader.get(1), bord2);
+        listDataChild.put(listDataHeader.get(2), bord3);
+        
         listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
 
+        
         // setting list adapter
         expListView.setAdapter(listAdapter);
         expListView.expandGroup(0);
@@ -57,6 +104,13 @@ public class Orders extends BaseActivity {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v,
                                         int groupPosition, long id) {
+                //tableOrders.load();
+                
+                synchronized(listDataHeader) {
+                    listDataHeader.remove(groupPosition);
+                }
+                listAdapter.notifyDataSetChanged();
+                expListView.requestLayout();
                 // Toast.makeText(getApplicationContext(),
                 // "Group Clicked " + listDataHeader.get(groupPosition),
                 // Toast.LENGTH_SHORT).show();
@@ -108,6 +162,7 @@ public class Orders extends BaseActivity {
         });
 
 
+        tableOrders.load();
     }
 
 
@@ -115,78 +170,23 @@ public class Orders extends BaseActivity {
         * Preparing the list data
         */
     private void prepareListData() {
-        listDataHeader = new ArrayList<String>();
-        listDataChild = new HashMap<String, List<String>>();
+        int index = 0;
+        for(TableOrder tblOrder : tableOrders) {
+            listDataHeader.add("Bord " + tblOrder.getId());
 
-        // Adding child data
-        listDataHeader.add("Bord 1");
-        listDataHeader.add("Bord 2");
-        listDataHeader.add("Bord 3");
-
-        // Adding child data
-        List<String> bord1 = new ArrayList<String>();
-        bord1.add("Kyckling");
-        bord1.add("Tonfisk");
-        bord1.add("Lax");
-        bord1.add("Biff");
-        bord1.add("Soppa");
-
-        List<String> bord2 = new ArrayList<String>();
-        bord2.add("The Conjuring");
-        bord2.add("Despicable Me 2 återkomsten: Gubbarna har tänkt klart");
-        bord2.add("Turbo");
-        bord2.add("Grown Ups 2");
-        bord2.add("Red 2");
-        bord2.add("The Wolverine");
-
-        List<String> bord3 = new ArrayList<String>();
-        bord3.add("2 Guns");
-        bord3.add("The Smurfs 2");
-        bord3.add("The Spectacular Now");
-        bord3.add("The Canyons");
-        bord3.add("Europa Report");
-
-        listDataChild.put(listDataHeader.get(0), bord1);
-        listDataChild.put(listDataHeader.get(1), bord2);
-        listDataChild.put(listDataHeader.get(2), bord3);
-        
-        String url = ""; 
-        try{
-            URL obj = new URL("http://localhost:8080/Server/" + url);
-            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-            
-            con.setRequestMethod("POST");
-            con.setRequestProperty("User-Agent", "User-Agent");
-            con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-            
-            con.setDoOutput(true);
-            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-            wr.writeBytes("params- What is this? What format?");
-            wr.flush();
-                        
-            int responseCode = con.getResponseCode();
-            if(!url.equals("test")) {
-                System.out.println("\nSending 'POST' request to URL : " + url);
-                //System.out.println("Post parameters : " + params);
-                System.out.println("Response Code : " + responseCode);
+            // Adding child data
+            List<String> bord1 = new ArrayList<String>();
+            for(Integer dishIndex : tblOrder.getOrderedDishes()) {
+                bord1.add("Rätt nr: " + dishIndex);
             }
-            
-            StringBuilder response;
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            response = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-
-            //print result
-            //response.toString();
-            
-        } catch (Exception e){
-            Logger.getLogger(Orders.class.getName()).log(Level.SEVERE, null, e);
+            listDataChild.put(listDataHeader.get(index), bord1);
+            index++;
         }
         
+        
     }
-
+    @Override
+    protected void onDestroy() {
+        tableOrders.stopThread();
+    }
 }
