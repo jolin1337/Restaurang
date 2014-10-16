@@ -65,6 +65,8 @@ public class Dishes extends DataSource implements Iterable<Dish> {
 
     @Override
     public void load() {
+        
+        String jsonStr = sendRequestFromThread("gettable", "&table=dish");
         /*List<Dish> ds = getDataList();
         dishes.clear();
         for(Dish dish : ds)
@@ -74,7 +76,13 @@ public class Dishes extends DataSource implements Iterable<Dish> {
     }
     @Override
     public void loadData(String url, String responseText) throws WrongKeyException {
-   
+        if(url.equals("gettable")) {
+            List<Dish> ds = getDataList(responseText);
+            dishes.clear();
+            for(Dish d : ds) {
+                dishes.add(d);
+            }
+        }
     }
     
     public CharSequence[] toCharSequence() {
@@ -83,40 +91,37 @@ public class Dishes extends DataSource implements Iterable<Dish> {
 
     @Override
     public void update() throws WrongKeyException {
-        List<Dish> ds = getDataList();
+        List<Dish> ds = dishes;
+        load(); // changed dishes values to the ones on server
         String str = "&table=dish&data={\"data\":[";
         String strRm = "&table=dish&data={\"data\":[";
-        for(Dish dish : ds)
+        for(Dish dish : dishes)
             strRm += "{\"data\":{\"remove\":true,\"id\":" + dish.getId() + "}},";
-        for (Dish dish : dishes) {
+        for (Dish dish : ds) {
             int id = dish.getId();
             dish.setId(-1);
             str += "{\"data\":" + dish.toJsonString() + "},";
             dish.setId(id);
         }
-        if(dishes.isEmpty())
-            str += ",";
         if(ds.isEmpty())
+            str += ",";
+        if(dishes.isEmpty())
             strRm += ",";
         System.out.println(str.substring(0, str.length()-1) + "]}");
         // System.out.println(strRm.substring(0, strRm.length()-1) + "]}");
-        System.out.println("Updatestatus: " + sendRequestFromThread("updaterow", "key=" + key + strRm.substring(0, strRm.length()-1) + "]}"));
-        System.out.println("Updatestatus: " + sendRequestFromThread("updaterow", "key=" + key + str.substring(0, str.length()-1) + "]}"));
+        System.out.println("Updatestatus: " + sendRequestFromThread("updaterow", strRm.substring(0, strRm.length()-1) + "]}"));
+        System.out.println("Updatestatus: " + sendRequestFromThread("updaterow", str.substring(0, str.length()-1) + "]}"));
         
         // To make sure that we have the correct id:s/pk:s
-        sendRequestFromThread("gettable", "key=" + key + "&table=" + table);
+        sendRequestFromThread("gettable", "&table=" + table);
     }
-    private List<Dish> getDataList() throws WrongKeyException {
+    private List<Dish> getDataList(String responseText) throws WrongKeyException {
         List<Dish> currentEvents = new ArrayList<Dish>();
         JSONObject json;
-        String jsonStr = sendRequestFromThread("gettable", "key=" + key + "&table=dish");
-        if(jsonStr.equals("expired_key")) {
-            jsonStr = sendRequestFromThread("gettable", "key=" + key + "&table=dish");
-        }
         try {
-            json = new JSONObject(jsonStr);
+            json = new JSONObject(responseText);
         } catch (JSONException ex) {
-            System.out.println("Could not verify the JSON parse of json object: " + jsonStr);
+            System.out.println("Could not verify the JSON parse of json object: " + responseText);
             return currentEvents;
         }
 

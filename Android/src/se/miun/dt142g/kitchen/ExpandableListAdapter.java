@@ -19,7 +19,7 @@ import se.miun.dt142g.R;
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     private Context _context;
-    private List<String> _listDataHeader; // header titles
+    final private List<String> _listDataHeader; // header titles
     // child data in format of header title, child title
     private HashMap<String, List<String>> _listDataChild;
 
@@ -33,8 +33,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return this._listDataChild.get(this._listDataHeader.get(groupPosition))
-                .get(childPosition);
+        try {
+            synchronized(_listDataHeader) {
+                return this._listDataChild.get(this._listDataHeader.get(groupPosition))
+                        .get(childPosition);
+            }
+        } catch(IndexOutOfBoundsException ex) {
+            return null;
+        }
     }
 
     @Override
@@ -64,8 +70,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public int getChildrenCount(int groupPosition) {
         try {
-            return this._listDataChild.get(this._listDataHeader.get(groupPosition))
-                .size();
+            synchronized(_listDataHeader) {
+                return this._listDataChild.get(this._listDataHeader.get(groupPosition))
+                    .size();
+            }
         }
         catch(IndexOutOfBoundsException ex) {
             return 0;
@@ -74,12 +82,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getGroup(int groupPosition) {
-        return this._listDataHeader.get(groupPosition);
+        synchronized(_listDataHeader) {
+            return this._listDataHeader.get(groupPosition);
+        }
     }
 
     @Override
     public int getGroupCount() {
-        return this._listDataHeader.size();
+        synchronized(_listDataHeader) {
+            return this._listDataHeader.size();
+        }
     }
 
     @Override
@@ -108,7 +120,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             @Override
             public void onClick(View view) {
                 //Do something with database
-                _listDataHeader.remove(groupPosition);
+                
+                synchronized(_listDataHeader) {
+                    _listDataHeader.remove(groupPosition);
+                }
                 notifyDataSetChanged();
             }
         });

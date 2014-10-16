@@ -7,10 +7,12 @@
  */
 package se.miun.dt142g.data.EntityHandler;
 
+import android.os.Looper;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.JSONArray;
@@ -26,6 +28,7 @@ import se.miun.dt142g.data.EntityRep.TableOrder;
 public class TableOrders extends DataSource implements Iterable<TableOrder> {
 
     List<TableOrder> tableOrders;
+    Dishes dishes = new Dishes();
     String table = "tableorder";
 
     public TableOrders() {
@@ -69,13 +72,55 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
                 getTableListener().onUpdateTable();
         }
     }
-
+    UpdateTable loader = null;
+    public void stopThread() {
+        
+        if(loader != null) {
+            loader.stopLoop();
+            try {
+                loader.join();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(TableOrders.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
     @Override
     public void load() {
-        String params = "&table=" + table;
-        new ServerConnect().execute("gettable", params);
+        stopThread();
+        loader = new UpdateTable();
+        loader.start();
     }
-
+    private class UpdateTable extends Thread {
+        boolean run = true;
+        @Override
+        public void run() {
+            Looper.prepare();
+            while(shouldRun()) {
+                try {
+                    ServerConnect serverOrders = new ServerConnect();
+                    serverOrders.execute("gettable", "&table=" + table);
+                    dishes.load();
+                    serverOrders.get();// Probably not good... TODO: change to time limit instead
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(TableOrders.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ExecutionException ex) {
+                    Logger.getLogger(TableOrders.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                /*try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(TableOrders.class.getName()).log(Level.SEVERE, null, ex);
+                }*/
+                stopLoop();
+            }
+        }
+        boolean shouldRun() {
+            return run;
+        }
+        void stopLoop() {
+            run = false;
+        }
+    }
     @Override
     public void update() throws WrongKeyException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
