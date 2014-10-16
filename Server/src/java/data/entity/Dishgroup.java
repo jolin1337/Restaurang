@@ -44,13 +44,13 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Dishgroup.alaCarte", query = "SELECT d FROM Dishgroup d WHERE "
-            + "d.name != 'mon' AND d.name != 'tue' AND d.name != 'wed' AND "
-            + "d.name != 'thu' AND d.name != 'fri' AND d.name != 'sat' AND "
-            + "d.name != 'sun'"), 
+            + "d.name != 'Måndag' AND d.name != 'Tisdag' AND d.name != 'Onsdag' AND "
+            + "d.name != 'Torsdag' AND d.name != 'Fredag' AND d.name != 'Lördag' AND "
+            + "d.name != 'Söndag' ORDER BY d.name"), 
     @NamedQuery(name = "Dishgroup.weekMenu", query = "SELECT d FROM Dishgroup d WHERE "
-            + "d.name = 'mon' OR d.name = 'tue' OR d.name = 'wed' OR "
-            + "d.name = 'thu' OR d.name = 'fri' OR d.name = 'sat' OR "
-            + "d.name = 'sun'"),
+            + "d.name = 'Måndag' OR d.name = 'Tisdag' OR d.name = 'Onsdag' OR "
+            + "d.name = 'Torsdag' OR d.name = 'Fredag' OR d.name = 'Lördag' OR "
+            + "d.name = 'Söndag' ORDER BY d.name ASC"),
     @NamedQuery(name = "Dishgroup.findAll", query = "SELECT d FROM Dishgroup d"),
     @NamedQuery(name = "Dishgroup.findByName", query = "SELECT d FROM Dishgroup d WHERE d.name = :name")})
 public class Dishgroup extends JsonEntity implements Serializable {

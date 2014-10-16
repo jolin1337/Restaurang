@@ -4,9 +4,13 @@ body {
   background: #e1e1e1; }
 
 h2 {
-  font-size: 20px;
+  font-size: 20pt;
   font-weight: normal; }
 
+h3 {
+    text-decoration: underline;
+    font-weight: normal;
+    font-size: 15pt; }
 input.long {
   width: 100%; }
 input[type="text"] {

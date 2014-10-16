@@ -2,14 +2,18 @@ $color: #911;
 body {margin: 0;padding: 0;background: #e1e1e1;}
 
 h2 {
-	font-size: 20px;
+	font-size: 20pt;
 	font-weight: normal;
+}
+h3 {
+    font-weight: normal;
+    font-size: 15pt;
 }
 
 input.long {
 	width: 100%;
 }
-    input[type="text"] {
+    input[type="text"] { 
     padding: 10px 5px;
     background-color: #f4f4f4;
     border: 1px solid #555;

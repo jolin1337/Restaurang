@@ -72,6 +72,13 @@ public class Dish extends JsonEntity implements Serializable {
         @JoinColumn(name = "INVENTORY_ID", referencedColumnName = "ID")})
     @ManyToMany
     private List<Inventory> inventoryList;
+    
+    
+    @JoinTable(name = "TABLE_HAS_ORDER", joinColumns = {
+        @JoinColumn(name = "DISH_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
+        @JoinColumn(name = "TABLE_ID", referencedColumnName = "tableID")})
+    @ManyToMany
+    private List<TableOrder> tableOrder;
 
     public Dish() {
     }
@@ -137,6 +144,25 @@ public class Dish extends JsonEntity implements Serializable {
         if(inv != null && inventoryList != null && inventoryList.indexOf(inv) > -1)
             inventoryList.remove(inv);
     }
+
+    public List<TableOrder> getTableOrder() {
+        return tableOrder;
+    }
+
+    public void setTableOrder(List<TableOrder> tableOrder) {
+        this.tableOrder = tableOrder;
+    }
+    public void addToTableOrder(TableOrder inv) {
+        if(tableOrder == null)
+            tableOrder = new ArrayList<>();
+        if(inv != null && tableOrder.indexOf(inv) < 0)
+            tableOrder.add(inv);
+    }
+    public void removeTableOrder(TableOrder inv) {
+        if(inv != null && tableOrder != null && tableOrder.indexOf(inv) > -1)
+            tableOrder.remove(inv);
+    }
+    
 
     @Override
     public int hashCode() {

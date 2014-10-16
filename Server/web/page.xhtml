@@ -26,15 +26,13 @@
             </ul>
             <div class="right-col">
                 <h2>Veckans meny</h2>
-                <pre><code>
-<c:forEach items="#{dishGroupSessionBean.weekMenu}" var="dishGroup">
-#{dishGroup.name}
+                <c:forEach items="#{dishGroupSessionBean.weekMenu}" var="dishGroup">
+                    <h3>#{dishGroup.name}</h3>
 
-<c:forEach items="#{dishGroup.dishList}" var="dish">
-#{dish.name}
-</c:forEach>
-</c:forEach>
-</code></pre>
+                    <c:forEach items="#{dishGroup.dishList}" var="dish">
+                        <p>#{dish.name}</p>
+                    </c:forEach>
+                </c:forEach>
                 <hr/>
                 <h2>Kontakt</h2>
                 <script>
