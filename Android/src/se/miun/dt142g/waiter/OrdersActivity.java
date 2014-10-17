@@ -10,6 +10,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -18,12 +20,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import se.miun.dt142g.BaseActivity;
-import se.miun.dt142g.data.entityhandler.DataSource;
 import se.miun.dt142g.R;
 import se.miun.dt142g.data.EntityRep.Dish;
+import se.miun.dt142g.data.entityhandler.DataSourceListener;
 import se.miun.dt142g.data.handler.Dishes;
 
 /**
@@ -35,6 +35,26 @@ public class OrdersActivity extends BaseActivity {
     private ArrayAdapter<Dish> orders = null;
     private final List<Dish> values = new ArrayList<Dish>();
     private final Dishes availableMenus = new Dishes();
+    DataSourceListener dishesDataSource = null; 
+    
+        // Define the Handler that receives messages from the thread and update the progress
+    private final Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            Bundle data = msg.getData();
+            if(data != null) {
+                if(data.containsKey("connectionError")) {
+                    // TODO: Print Toast message here
+                }
+                if(data.containsKey("dataUpdated") && data.getInt("dataUpdated") == DataSourceListener.UPDATE_CALL) {
+
+                }
+            }
+
+        }
+        
+
+    };
     
     /**
      * Called when the activity is first created.
@@ -43,7 +63,10 @@ public class OrdersActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-       
+        dishesDataSource = new DataSourceListener(availableMenus);
+        dishesDataSource.setHandler(handler);
+        dishesDataSource.setIntervallSpeed(DataSourceListener.SLOW_SYNC_SPPED);
+        dishesDataSource.start();
         setContentView(R.layout.order_menu);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);

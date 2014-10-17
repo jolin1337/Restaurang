@@ -110,7 +110,7 @@ public class NewBooking extends JPanel  {
         datePicker.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         
         this.add(datePicker);
-        addLabel("Varaktighet: ");
+        addLabel("Varaktighet i timmar: ");
         durationField = addTextField("");
                 
         add(Box.createRigidArea(new Dimension(0, 10)));

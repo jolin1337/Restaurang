@@ -11,10 +11,13 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -22,7 +25,9 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import se.miun.dt142g.Controller;
 import se.miun.dt142g.DataSource;
+import se.miun.dt142g.Settings;
 import se.miun.dt142g.data.Booking;
+import se.miun.dt142g.food.DishesPanel;
 
 /**
  *
@@ -79,7 +84,7 @@ public class BookingsPanel extends JPanel {
         }
 
         // Append a row 
-        model.addRow(new Object[]{"Namn","Telefon", "Antal", "Datum", "Varaktighet"});
+        model.addRow(new Object[]{"Namn","Telefon", "Antal", "Datum", "Varaktighet (timmar)"});
         for (Booking bok : bookings) {
             model.addRow(new Object[]{bok.getName(), bok.getPhoneNr(), bok.getPersons(),
                 bok.getDateString(), bok.getDuration()});
@@ -108,7 +113,17 @@ public class BookingsPanel extends JPanel {
         this.submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                bookings.update();
+                
+                try {
+                    bookings.update();
+                } catch (DataSource.WrongKeyException ex) {
+                    JOptionPane.showMessageDialog(BookingsPanel.this,
+                        Settings.Strings.serverConnectionError,
+                        "Server error",
+                        JOptionPane.ERROR_MESSAGE);
+                    if(remote != null)
+                        remote.setConnectionView();
+                }
             }
         });
         submit.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));

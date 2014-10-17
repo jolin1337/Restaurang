@@ -25,6 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.inject.Named;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -60,7 +61,7 @@ import javax.transaction.UserTransaction;
     @WebInitParam(name = "id", value = ""),
     @WebInitParam(name = "data", value = "")})
 @Named
-@Stateful
+@Stateless
 public class UpdateRow extends HttpServlet {
 
     /**
