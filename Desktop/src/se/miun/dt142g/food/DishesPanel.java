@@ -9,10 +9,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -20,6 +23,7 @@ import se.miun.dt142g.Controller;
 import se.miun.dt142g.DataSource;
 import se.miun.dt142g.Settings;
 import se.miun.dt142g.data.Dish;
+import se.miun.dt142g.website.EventPostPanel;
 import se.miun.dt142g.website.WebsitePanel;
 
 /**
@@ -94,6 +98,7 @@ public class DishesPanel extends JPanel {
                 }
                 try {
                     dishes.update();
+                    remote.setSavedTab(DishesPanel.this, true);
                 } catch (DataSource.WrongKeyException ex) {
                     JOptionPane.showMessageDialog(DishesPanel.this,
                         Settings.Strings.serverConnectionError,
@@ -117,6 +122,7 @@ public class DishesPanel extends JPanel {
                 add(addDishBtn);
                 add(submitBtn);
                 dishPanels.add(dp);
+                remote.setSavedTab(DishesPanel.this, false);
                 DishesPanel.this.revalidate();
             }
         };
