@@ -86,11 +86,13 @@ public class BookingServlet extends HttpServlet {
             EntityManager em = emf.createEntityManager();
             //This commented code is for checking the total amount of persons booked in this period...
             // Getting error: java.lang.IllegalArgumentException, Syntax error parsing [SELECT SUM(b) FROM Booking b]. 
-            // Query query = em.createQuery("SELECT SUM(b) FROM Booking b");
-            Integer sum = 0;//(Integer)query.getSingleResult();
+            Query query = em.createQuery("SELECT count(b.id) FROM Booking b");
+            Long sum = (Long)query.getSingleResult();
             if(name.isEmpty() || tel.isEmpty() || sdate.isEmpty() || sdate.length() != "20141017:0130".length()
-                    || count <= 0 || count+sum > 6)
-                response.sendRedirect(response.encodeRedirectURL("/Server/?page=bord&s=false") );
+                    || count <= 0 || count+sum > 6){
+                    response.sendRedirect(response.encodeRedirectURL("/Server/?page=bord&s=false") );
+                    return;
+            }
             Booking newBooking = new Booking();
             newBooking.setName(name);
             SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMdd:HHmm");
