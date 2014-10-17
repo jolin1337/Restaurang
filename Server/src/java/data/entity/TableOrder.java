@@ -54,7 +54,7 @@ public class TableOrder extends JsonEntity implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
-    @Column(name = "tableID")
+    @Column(name = "ID")
     /**
      * The primary key of this entity
      */
@@ -62,13 +62,13 @@ public class TableOrder extends JsonEntity implements Serializable {
     @Column(name = "TIMEOFORDER")
     @Temporal(TemporalType.DATE) 
     private Date timeOfOrder;
+    @Column(name = "SPECIAL")
+    private Boolean special;
     @JoinTable(name = "TABLE_HAS_ORDER", joinColumns = {
         @JoinColumn(name = "TABLE_ID", referencedColumnName = "tableID")}, inverseJoinColumns = {
         @JoinColumn(name = "DISH_ID", referencedColumnName = "ID")})
     @ManyToMany
     private List<Dish> orderedDishes;
-    @Column(name = "SPECIAL")
-    private Boolean special;
 
     /**
      * Getter of the table ID

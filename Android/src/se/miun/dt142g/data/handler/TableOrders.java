@@ -7,6 +7,7 @@
  */
 package se.miun.dt142g.data.handler;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -34,9 +35,9 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
         tableOrders = new ArrayList<TableOrder>();
     }
 
-    private void parseTable(String jsonStr) {
-        try {
-            tableOrders.clear();
+    private List<TableOrder> parseTable(String jsonStr) {
+        List<TableOrder> res = new ArrayList<TableOrder>();
+        try { 
             JSONObject json = new JSONObject(jsonStr);
             JSONArray data = json.getJSONArray("data");
             for(int i=data.length(); i > 0; i--) {
@@ -44,25 +45,69 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
                 TableOrder order = new TableOrder();
                 order.setId(row.getInt("id"));
                 order.setTimeOfOrder(new Date(row.getInt("timeOfOrder")));
-                JSONArray dishes = row.getJSONArray("orders");
+                JSONArray ds = row.getJSONArray("orders");
                 List<Integer> dishesIndicies = new ArrayList<Integer>();
-                for(int j=dishes.length(); j > 0; j--) {
-                    int dishIndex = dishes.getInt(j-1);
+                for(int j=ds.length(); j > 0; j--) {
+                    int dishIndex = ds.getInt(j-1);
                     dishesIndicies.add(dishIndex);
                 }
                 order.setOrderedDishes(dishesIndicies);
-                tableOrders.add(order);
+                res.add(order);
             }
         } catch (JSONException ex) {
         }
+        
+        return res;
         
     }
     
     
     @Override
     public void update() throws WrongKeyException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<TableOrder> tableOs = parseTable(getRequest("gettable", "key=" + key + "&table=" + table));
+        
+        List<TableOrder> toRemove = new ArrayList<TableOrder>();
+        for(TableOrder t1 : tableOs) {
+            boolean found = false;
+            for(TableOrder t2 : tableOrders) {
+                if(t1.getId() == t2.getId()) {
+                    found = true;
+                }
+            }
+            if(found == false)
+                toRemove.add(t1);
+        }
+        
+        String str = "key=" + key + "&table=" + table + "&data=" + toJsonStringOf(tableOrders, false);
+        String strRm = "key=" + key + "&table=" + table + "&data=" + toJsonStringOf(toRemove, true);
+        System.out.println("Updatestatus: " + getRequest("updaterow", strRm));
+        System.out.println("Updatestatus: " + getRequest("updaterow", str));
+        
     }
+    
+    private String toJsonStringOf(List<TableOrder> tblOrders, boolean removeFlag) {
+        try {
+            JSONObject json = new JSONObject();
+            JSONArray data = new JSONArray();
+            for(TableOrder rm : tblOrders) {
+                JSONObject data2 = new JSONObject();
+                JSONObject item = new JSONObject();
+                item.put("id", rm.getId());
+                if(!removeFlag) {
+                    item.put("timeOfOrder", rm.getTimeOfOrder().getTime());
+                    JSONArray orders = new JSONArray(rm.getOrderedDishes());
+                    item.put("orders", orders);
+                }
+                else item.put("remove", true);
+                data2.put("data", item);
+                data.put(data);
+            }
+            json.put("data", data);
+            return json.toString();
+        }
+        catch(JSONException ex) {}
+        return "";
+    } 
 
     @Override
     public int getUniqueId() {
@@ -82,6 +127,26 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
     @Override
     public void loadData() throws WrongKeyException {
         dbConnect();
-        parseTable(getRequest("gettable", "key=" + key + "&table=" + table));
+        dishes.loadData();
+        tableOrders.clear();
+        List<TableOrder> tbos = parseTable(getRequest("gettable", "key=" + key + "&table=" + table));
+        if(tbos.size() != 6) {
+            tableOrders.clear();
+            for(int i=0;i<6;i++) {
+                tableOrders.add(new TableOrder());
+            }
+            update();
+            return;
+        }
+        for(TableOrder tableOrder : tbos)
+            tableOrders.add(tableOrder);
+    }
+    
+    public Dishes getDishes() {
+        return dishes;
+    }
+    
+    public TableOrder getTableOrderByIndex(int index) {
+        return tableOrders.get(index);
     }
 }

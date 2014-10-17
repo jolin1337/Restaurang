@@ -7,24 +7,19 @@ package se.miun.dt142g.data.handler;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import se.miun.dt142g.data.entityhandler.DataSource;
 import se.miun.dt142g.data.EntityRep.Dish;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import se.miun.dt142g.data.EntityRep.Reservation;
+import se.miun.dt142g.data.entityhandler.DataSource;
 
 /**
  *
  * @author Ulf
  */
 public class Dishes extends DataSource implements Iterable<Dish> {
-    private final String table="dish";
     private final List<Dish> dishes = new ArrayList<Dish>();
     
     public Dishes(){
@@ -67,131 +62,55 @@ public class Dishes extends DataSource implements Iterable<Dish> {
         }
     }
 
-    /**
-     * Loads dishes from database. Use in activity where appropriate or use for 
-     * polling the server for data. 
-     */
-    public void load() {
-        
-        //String jsonStr = sendRequestFromThread("gettable", "&table=dish");
-        /*List<Dish> ds = getDataList();
+    @Override
+    public void loadData() throws WrongKeyException {
+        List<Dish> ds = getDataList();
         dishes.clear();
         for(Dish dish : ds)
             dishes.add(dish);
         
-        Collections.sort(dishes);*/
-    }
-    
-    /**
-     * <Warning> Don't call this function manually. Should only be called by 
-     * ServerConnect Class in DataSource. 
-     * 
-     * Interprets response from server and deals with the response as needed. 
-     * 
-     * @param url Parameter sent with getRequest. 
-     * @param responseText  Response from server
-     * @throws se.miun.dt142g.DataSource.WrongKeyException 
-     */
-    public void loadData(String url, String responseText) throws WrongKeyException {
-        if (url.equals("login")) {
-            key = responseText;
-        } else if (url.equals("gettable")) {
-            parseDishes(responseText);
-        } else if(url.equals("updaterow")) {
-            load();
-        }
-    }
-    
-    /**
-     * Creates a CharSequence representation of dishes. 
-     * @return Returns CharSequence array of dishes. 
-     */
-    public CharSequence[] toCharSequence() {
-        CharSequence[] charDishes = new CharSequence[dishes.size()];
-        int i = 0;
-        for(Dish dish : dishes){
-            charDishes[i] = dish.toString();
-            i++;
-        }
-        return charDishes;
+        Collections.sort(dishes);
     }
 
-    /**
-     * Sends update order updates to server
-     * @throws se.miun.dt142g.DataSource.WrongKeyException 
-     */
     @Override
-    public void update() throws WrongKeyException {/*
-        List<Dish> ds = dishes;
-        load(); // changed dishes values to the ones on server
+    public void update() throws WrongKeyException {
+        /*
+        List<Dish> ds = getDataList();
         String str = "&table=dish&data={\"data\":[";
         String strRm = "&table=dish&data={\"data\":[";
-        for(Dish dish : dishes)
+        for(Dish dish : ds)
             strRm += "{\"data\":{\"remove\":true,\"id\":" + dish.getId() + "}},";
-        for (Dish dish : ds) {
+        for (Dish dish : dishes) {
             int id = dish.getId();
             dish.setId(-1);
             str += "{\"data\":" + dish.toJsonString() + "},";
             dish.setId(id);
         }
-        if(ds.isEmpty())
-            str += ",";
         if(dishes.isEmpty())
+            str += ",";
+        if(ds.isEmpty())
             strRm += ",";
         System.out.println(str.substring(0, str.length()-1) + "]}");
         // System.out.println(strRm.substring(0, strRm.length()-1) + "]}");
-        System.out.println("Updatestatus: " + sendRequestFromThread("updaterow", strRm.substring(0, strRm.length()-1) + "]}"));
-        System.out.println("Updatestatus: " + sendRequestFromThread("updaterow", str.substring(0, str.length()-1) + "]}"));
+        System.out.println("Updatestatus: " + getRequest("updaterow", "key=" + key + strRm.substring(0, strRm.length()-1) + "]}"));
+        System.out.println("Updatestatus: " + getRequest("updaterow", "key=" + key + str.substring(0, str.length()-1) + "]}"));
         
         // To make sure that we have the correct id:s/pk:s
-        sendRequestFromThread("gettable", "&table=" + table);*/
+        loadData();*/
+        loadData();
     }
-    
-    /**
-     * Parses a string to json objects and calls addJsonDish for each object to
-     * add them in dishes.
-     * @param jsonStr Json string representation to parse into json objects.
-     */
-    private void parseDishes(String jsonStr) {
-        dishes.clear();
-        JSONObject response;
-        JSONArray data = null; 
-        try {
-            response = new JSONObject(jsonStr);
-            data = response.getJSONArray("data");
-        } catch (JSONException ex) {
-            Logger.getLogger(Reservations.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        for(int i = 0;i<data.length();i++){
-            try {
-                addJsonDish(data.getJSONObject(i));
-            } catch (JSONException ex) {
-                Logger.getLogger(Reservations.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-    
-    /**
-     * Adds a dish from a JSONObject
-     * @param dish JSONObject of dish to add
-     */
-    private void addJsonDish(JSONObject dish){
-        try { 
-            Dish d = new Dish(dish.getInt("id"), dish.getString("name"), (float)dish.getInt("price"));
-            dishes.add(d);
-        } catch (JSONException ex) {
-            Logger.getLogger(Reservations.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-    }
-    
-    private List<Dish> getDataList(String responseText) throws WrongKeyException {
+    private List<Dish> getDataList() throws WrongKeyException {
         List<Dish> currentEvents = new ArrayList<Dish>();
         JSONObject json;
+        String jsonStr = getRequest("gettable", "key=" + key + "&table=dish");
+        if(jsonStr.equals("expired_key")) {
+            dbConnect();
+            jsonStr = getRequest("gettable", "key=" + key + "&table=dish");
+        }
         try {
-            json = new JSONObject(responseText);
+            json = new JSONObject(jsonStr);
         } catch (JSONException ex) {
-            System.out.println("Could not verify the JSON parse of json object: " + responseText);
+            System.out.println("Could not verify the JSON parse of json object: " + jsonStr);
             return currentEvents;
         }
 
@@ -238,9 +157,19 @@ public class Dishes extends DataSource implements Iterable<Dish> {
     void clear() {
         dishes.clear();
     }
-
-    @Override
-    public void loadData() throws WrongKeyException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+    
+    /**
+     * Creates a CharSequence representation of dishes. 
+     * @return Returns CharSequence array of dishes. 
+     */
+    public CharSequence[] toCharSequence() {
+        CharSequence[] charDishes = new CharSequence[dishes.size()];
+        int i = 0;
+        for(Dish dish : dishes){
+            charDishes[i] = dish.toString();
+            i++;
+        }
+        return charDishes;
     }
 }

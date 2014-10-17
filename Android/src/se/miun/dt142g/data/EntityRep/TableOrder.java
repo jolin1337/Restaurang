@@ -7,6 +7,7 @@
  */
 package se.miun.dt142g.data.EntityRep;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.json.JSONArray;
@@ -22,6 +23,12 @@ public class TableOrder {
     private Date timeOfOrder;
     private List<Integer> orderedDishes;
 
+    public TableOrder() {
+        id = -1;
+        timeOfOrder = new Date();
+        orderedDishes = new ArrayList<Integer>();
+    }
+    
     public int getId() {
         return id;
     }

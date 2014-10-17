@@ -10,6 +10,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -18,23 +20,55 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import se.miun.dt142g.BaseActivity;
-import se.miun.dt142g.data.entityhandler.DataSource;
 import se.miun.dt142g.R;
 import se.miun.dt142g.data.EntityRep.Dish;
+import se.miun.dt142g.data.entityhandler.DataSourceListener;
 import se.miun.dt142g.data.handler.Dishes;
+import se.miun.dt142g.data.handler.TableOrders;
 
 /**
  *
  * @author Johannes
  */
 public class OrdersActivity extends BaseActivity {
-    private ListView listView;
+    private ListView listView = null;
     private ArrayAdapter<Dish> orders = null;
     private final List<Dish> values = new ArrayList<Dish>();
-    private final Dishes availableMenus = new Dishes();
+    
+    private final TableOrders tableOrders;
+    private final Dishes dishes;
+    private int tableNr;
+
+    // Define the Handler that receives messages from the thread and update the progress
+    private final Handler handler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            Bundle data = msg.getData();
+            if(data != null) {
+                if(data.containsKey("connectionError")) {
+                    // TODO: Print Toast message here
+                }
+                if(data.containsKey("dataUpdated") && data.getInt("dataUpdated") == DataSourceListener.UPDATE_CALL) {
+                    if(listView != null) {
+                        // TODO Do stuff..
+                    }
+                }
+            }
+
+        }
+        
+
+    };
+    DataSourceListener background = null;
+
+    public OrdersActivity() {
+        
+        tableOrders = new TableOrders();
+        dishes = tableOrders.getDishes();
+        
+    }
     
     /**
      * Called when the activity is first created.
@@ -51,7 +85,7 @@ public class OrdersActivity extends BaseActivity {
         
         Intent thisActivity = getIntent();
         setTitle(thisActivity.getExtras().getString("bord_str"));
-        
+        tableNr = Integer.parseInt(thisActivity.getExtras().getString("bord_str").replace("Bord ", ""));
 
         // Get ListView ob ject from xml
         listView = (ListView) findViewById(R.id.orderView);
@@ -65,6 +99,10 @@ public class OrdersActivity extends BaseActivity {
         
         // Assign adapter to ListView
         listView.setAdapter(orders);
+        
+        background = new DataSourceListener(tableOrders, DataSourceListener.SLOW_SYNC_SPPED);
+        background.setHandler(handler);
+        background.start();
     }
     
     public void removeBtnClicked(View btn) {
@@ -75,6 +113,7 @@ public class OrdersActivity extends BaseActivity {
         if(value.isDeleted())  {
             values.remove(position);
             orders.remove(value);
+            // TODO Update Tableorder here
         }
         else
             value.setDeleted(true);
@@ -105,7 +144,7 @@ public class OrdersActivity extends BaseActivity {
         makeChoiseOfMenu(new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Dish m = availableMenus.getDishByIndex(which);
+                Dish m = dishes.getDishByIndex(which);
                 values.set(position, m);
                 orders.notifyDataSetChanged();
                 tv.setTextColor(Color.BLACK);
@@ -117,15 +156,17 @@ public class OrdersActivity extends BaseActivity {
         makeChoiseOfMenu(new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Dish m = availableMenus.getDishByIndex(which);
+                Dish m = dishes.getDishByIndex(which);
                 values.add(m);
                 orders.notifyDataSetChanged();
+                tableOrders.getTableOrderByIndex(tableNr-1).getOrderedDishes().add(m.getId());
+                background.writeData();
             }
         });
     }
     
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         Intent data = new Intent();
         data.putExtra("status", "ordered");
         setResult(1337, data);
@@ -133,15 +174,14 @@ public class OrdersActivity extends BaseActivity {
     }
 
     private void makeChoiseOfMenu(DialogInterface.OnClickListener blob) {
-        availableMenus.load();
             
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Väj en meny till vår gäst");
-        builder.setItems(availableMenus.toCharSequence(), blob);
+        builder.setItems(dishes.toCharSequence(), blob);
         builder.show();
     }
     
-    public void toggleSpecial(View v){
+    public void toggleSpecial(View v) {
         if(v instanceof ImageView){
             ImageView special = (ImageView)v;
             if (special.getTag().equals(R.drawable.special)) {

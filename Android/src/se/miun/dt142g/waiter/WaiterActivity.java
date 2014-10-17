@@ -1,3 +1,10 @@
+/*
+ * This code is created for one purpose only. And should not be used for any 
+ * other purposes unless the author of this file has apporved. 
+ * 
+ * This code is a piece of a project in the course DT142G on Mid. Sweden university
+ * Created by students for this projekt only
+ */
 package se.miun.dt142g.waiter;
 
 import android.content.Intent;
@@ -9,7 +16,10 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 import se.miun.dt142g.BaseActivity;
 import se.miun.dt142g.R;
-
+/**
+ * 
+ * @author Johannes
+ */
 public class WaiterActivity extends BaseActivity
 {
     /** Called when the activity is first created. */
@@ -18,19 +28,6 @@ public class WaiterActivity extends BaseActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.table_menu);
-        LinearLayout parent = (LinearLayout)findViewById(R.id.order_btns);
-        for(int i=0;i<0 ;i++) {
-            
-            Button btnTmp = new Button(this);
-            btnTmp.setTextColor(Color.WHITE);
-            btnTmp.setTextSize(30);
-            btnTmp.layout(5, 5, 5, 5);
-            btnTmp.setShadowLayer(2, 1, 1, Color.BLACK);
-            btnTmp.setText("Bord " + (i+7));
-            
-            btnTmp.setBackgroundResource(R.drawable.default_button);
-            parent.addView(btnTmp);
-        }
     }
     public void table_click(View v) throws Exception {
         if(v.getClass() != Button.class)
