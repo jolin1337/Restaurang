@@ -17,6 +17,7 @@ import se.miun.dt142g.data.Booking;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import se.miun.dt142g.data.Dish;
 
 /**
  *
@@ -24,6 +25,7 @@ import org.json.JSONObject;
  */
 public class Bookings extends DataSource implements Iterable<Booking> {
     private final List<Booking> bookings = new ArrayList<>();
+    private final String table = "booking";
 
     public Bookings() {
     }
@@ -61,69 +63,43 @@ public class Bookings extends DataSource implements Iterable<Booking> {
     }
     
     @Override
-    public void loadData() {
-        JSONObject response = null;
-        JSONArray data = null; 
-        try {
-            response = getJsonRequest("booking");
-            data = response.getJSONArray("data");
-        } catch (JSONException ex) {
-            Logger.getLogger(Bookings.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        for(int i = 0;i<data.length();i++){
-            try {
-                addJsonBooking(data.getJSONObject(i));
-            } catch (JSONException ex) {
-                Logger.getLogger(Bookings.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+    public void loadData() throws WrongKeyException {
+        List<Booking> bks = getDataList();
+        bookings.clear();
+        for(Booking booking : bks)
+            bookings.add(booking);
     }
 
     /**
-    * Attempts to create a new booking instance and add it to the bookings iterator 
+    * Attempts to create a new booking instance
     * @param bok the booking to be added.
     */
-    private void addJsonBooking(JSONObject bok){
+    private Booking getJsonBooking(JSONObject bok){
         try { 
             Booking b = new Booking(bok.getInt("id"), bok.getString("name"), new Date(bok.getLong("date")), bok.getInt("duration"), bok.getInt("persons"), bok.getString("phone"));
-            bookings.add(b);
+            return b;
         } catch (JSONException ex) {
             Logger.getLogger(Bookings.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        return null;
     }
     
         @Override
-    public void update() {
-        try {
-            JSONArray data = new JSONArray(); 
-            for(Booking bok : this.bookings) {
-                JSONObject jsonDataElement = new JSONObject();
-                JSONObject jsonBooking = new JSONObject();
-                if (bok.getId()<0)
-                    jsonBooking.put("id", -1);
-                else
-                if (bok.getName().isEmpty() || bok.getPhoneNr().isEmpty() || !(bok.getDuration() == 0) || (bok.getPersons() == 0) ){
-                    return;
-                }
-                jsonBooking.put("id", bok.getId());
-                jsonBooking.put("name", bok.getName());
-                jsonBooking.put("phone", bok.getPhoneNr());
-                jsonBooking.put("date", Long.toString(bok.getDate().getTime()));
-                
-                jsonBooking.put("duration", bok.getDuration());
-                jsonBooking.put("persons", bok.getPersons());
-                jsonDataElement.put("data", jsonBooking);
-                data.put(jsonDataElement);
-            }
-            JSONObject send = new JSONObject(); 
-            send.put("data", data);
-            String urlParams = "key=" + key + "&table=booking&data="+send.toString();
-            System.out.println("Update status: " +getRequest("updaterow", urlParams));
-        } 
-        catch (JSONException ex) {
-            Logger.getLogger(Booking.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void update() throws WrongKeyException {
+        List<Booking> bks = getDataList();
+        
+        String strRm = "&table=" + table + "&data={\"data\":[";
+        String str = "&table=" + table + "&data=" + toJsonString(true);
+        for(Booking booking : bks)
+            strRm += "{\"data\":{\"remove\":true,\"id\":" + booking.getId() + "}},";
+        
+        if(strRm.charAt(strRm.length()-1) == ',')
+            strRm = strRm.substring(0, strRm.length()-1);
+        
+        // System.out.println(str.substring(0, str.length()-1) + "]}");
+        // System.out.println(strRm.substring(0, strRm.length()-1) + "]}");
+        System.out.println("Updatestatus: " + getRequest("updaterow", "key=" + key + strRm + "]}"));
+        System.out.println("Updatestatus: " + getRequest("updaterow", "key=" + key + str));
     }
 
     @Override
@@ -146,7 +122,7 @@ public class Bookings extends DataSource implements Iterable<Booking> {
     * @param id is the ID of the booking instance to be removed
     * @return returns whether the instance has successfully been remoeved or not
     */
-    public boolean removeBookingDb(int id) {
+    private boolean removeBookingDb(int id) {
         JSONObject objectToRemove = new JSONObject();
         JSONObject jsonData = new JSONObject();
         JSONArray jsonArray = new JSONArray();
@@ -161,8 +137,47 @@ public class Bookings extends DataSource implements Iterable<Booking> {
             Logger.getLogger(Bookings.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
-        String params = "key=" +key + "&table=booking&data="+containerToSend.toString();
+        String params = "key=" +key + "&table=" + table + "&data="+containerToSend.toString();
         System.out.println("Update status: " +getRequest("updaterow", params));
     return true;
+    }
+    
+    public String toJsonString(boolean newId) {
+        String str = "{\"data\":[";
+        JSONArray data = new JSONArray(); 
+        for (Booking booking : bookings) {
+            int id = booking.getId();
+            if(newId){
+                booking.setId(-1);
+            }
+            str += "{\"data\":" + booking.toJsonString() + "},";
+            if(newId)
+                booking.setId(id);
+        }
+        if(str.charAt(str.length()-1) == ',')
+            str = str.substring(0, str.length()-1);
+        return str + "]}";
+    }
+    
+    private List<Booking> getDataList() throws WrongKeyException {
+        List<Booking> res = new ArrayList<>();
+        JSONObject response = null;
+        JSONArray data = null; 
+        try {
+            response = getJsonRequest(table);
+            data = response.getJSONArray("data");
+        } catch (JSONException ex) {
+            Logger.getLogger(Bookings.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        for(int i = 0;i<data.length();i++){
+            try {
+                Booking b =getJsonBooking(data.getJSONObject(i));
+                if(b != null)
+                    res.add(b);
+            } catch (JSONException ex) {
+                Logger.getLogger(Bookings.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return res;
     }
 }

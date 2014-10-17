@@ -9,6 +9,10 @@ package se.miun.dt142g.data;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 /**
@@ -123,4 +127,30 @@ public class Booking {
     }
     
     
+    public String toJsonString() {
+        
+        try {
+            JSONObject jsonDataElement = new JSONObject();
+            JSONObject jsonBooking = new JSONObject();
+            if (getId()<0)
+                jsonBooking.put("id", -1);
+            if ( isValid() )
+                    return "";
+            jsonBooking.put("id", getId());
+            jsonBooking.put("name", getName());
+            jsonBooking.put("phone", getPhoneNr());
+            jsonBooking.put("date", Long.toString(getDate().getTime()));
+            
+            jsonBooking.put("duration", getDuration());
+            jsonBooking.put("persons", getPersons());
+            jsonDataElement.put("data", jsonBooking);
+            return jsonBooking.toString();
+        } catch (JSONException ex) {
+            Logger.getLogger(Booking.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "";
+    }
+    public boolean isValid() {
+        return getName().isEmpty() || getPhoneNr().isEmpty() || (getDuration() == 0) || (getPersons() == 0);
+    }
 }

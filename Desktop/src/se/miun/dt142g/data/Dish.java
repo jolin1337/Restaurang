@@ -101,6 +101,8 @@ public class Dish implements Comparable<Dish> {
     }
 
     public boolean equals(Dish x) {
+        if(x == null)
+            return false;
         return this.id == x.id;
     }
 

@@ -18,6 +18,8 @@ import data.entity.RestaurantUser;
 import data.entity.TableOrder;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URLEncoder;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -38,6 +40,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "GetTable", urlPatterns = {"/gettable"}, initParams = {
     @WebInitParam(name = "key", value = ""),
     @WebInitParam(name = "table", value = "")})
+@Stateless
 public class GetTable extends HttpServlet {
 
     @PersistenceContext(unitName = "WebApplication1PU")
@@ -122,7 +125,7 @@ public class GetTable extends HttpServlet {
                 if(jsonString.length() > "{\"data\": [".length())
                     jsonString = jsonString.substring(0, jsonString.length()-1);
                 jsonString += "]}";
-                out.print(jsonString);
+                out.print(URLEncoder.encode(jsonString, "UTF-8"));
             }
             else if(authCode == Settings.AuthCode.expired)
                 out.print("expired_key");

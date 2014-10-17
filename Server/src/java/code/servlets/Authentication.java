@@ -42,6 +42,10 @@ public class Authentication extends HttpServlet {
         response.setContentType("text/plain;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             String k = request.getParameter("key");
+            if(k == null) {
+                System.out.println("djfhdsjkfhsdjkfhdsjkfh");
+                return;
+            }
             for (String key : Settings.allowedKeys) {
                 if (k.equals(key)) {
                     String responseKey = Settings.tempPrefixKey + Long.toString(new Date().getTime());
