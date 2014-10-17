@@ -58,6 +58,10 @@ public class SharedTabs extends JPanel {
             dishesPanel.updateTextFieldContents();
             tabbedPane.setSelectedIndex(0);
         }
+        public void setViewDishes(boolean saved){
+            setViewDishes();
+            setSavedTab(dishesPanel, saved);
+        }
 
         @Override
         public void setViewWebsite() {
@@ -73,7 +77,7 @@ public class SharedTabs extends JPanel {
                 this.setConnectionView();
             }
 
-            tabbedPane.addTab("Rätten i detaij", dishDetailView);
+            tabbedPane.addTab("Rätten i detalj", dishDetailView);
             tabbedPane.revalidate();
             tabbedPane.setSelectedComponent(dishDetailView);
         }
@@ -125,21 +129,27 @@ public class SharedTabs extends JPanel {
             int tabIndex = 0;
             for(JComponent tabToChange : panels) {
                 if(tabToChange == tabView) {
-                    if(!savedState) {
-                        String c = tabbedPane.getTitleAt(tabIndex);
-                        if(c.charAt(0) != '*')
-                            tabbedPane.setTitleAt(tabIndex, "*" + tabbedPane.getTitleAt(tabIndex));
-                    }
-                    else {
-                        String c = tabbedPane.getTitleAt(tabIndex);
-                        if(c.charAt(0) == '*')
-                            tabbedPane.setTitleAt(tabIndex, c.substring(1));
-                    }
+                        showStar(savedState,tabIndex);
                     return;
                 }
                 tabIndex++;
             }
+            showStar(savedState,tabIndex);
         }
+          
+        private void showStar(boolean savedState,int tabIndex){
+            if(!savedState) {
+                String c = tabbedPane.getTitleAt(tabIndex);
+                if(c.charAt(c.length()-1) != '*')
+                tabbedPane.setTitleAt(tabIndex, tabbedPane.getTitleAt(tabIndex) + "*" );
+            }
+            else {
+                String c = tabbedPane.getTitleAt(tabIndex);
+                if(c.charAt(c.length()-1) == '*')
+                    tabbedPane.setTitleAt(tabIndex, c.substring(0,c.length()-1));
+            }
+        }
+             
     };
 
     public SharedTabs() throws DataSource.WrongKeyException {
@@ -171,7 +181,7 @@ public class SharedTabs extends JPanel {
             sp.setMinimumSize(new Dimension(700,700));
             //sp.add(panel);
             panel.setBorder(new EmptyBorder(10, 10, 10, 10));
-            tabbedPane.addTab(" " + titles[i], sp);
+            tabbedPane.addTab(titles[i] + " ", sp);
             i++;
         }
 

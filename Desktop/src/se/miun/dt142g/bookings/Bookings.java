@@ -46,9 +46,13 @@ public class Bookings extends DataSource implements Iterable<Booking> {
         return null; 
     }
     public Booking getBookingByIndex(int index){
-        return bookings.get(bookings.size()-1);
+        return bookings.get(index);
     }
     
+   public void updateBooking(Booking b){
+       
+   }
+   
    public void addBooking(Booking booking){
         bookings.add(booking);
     }
@@ -84,7 +88,7 @@ public class Bookings extends DataSource implements Iterable<Booking> {
         return null;
     }
     
-        @Override
+    @Override
     public void update() throws WrongKeyException {
         List<Booking> bks = getDataList();
         
@@ -100,6 +104,7 @@ public class Bookings extends DataSource implements Iterable<Booking> {
         // System.out.println(strRm.substring(0, strRm.length()-1) + "]}");
         System.out.println("Updatestatus: " + getRequest("updaterow", "key=" + key + strRm + "]}"));
         System.out.println("Updatestatus: " + getRequest("updaterow", "key=" + key + str));
+        loadData();
     }
 
     @Override
@@ -139,7 +144,13 @@ public class Bookings extends DataSource implements Iterable<Booking> {
         }
         String params = "key=" +key + "&table=" + table + "&data="+containerToSend.toString();
         System.out.println("Update status: " +getRequest("updaterow", params));
-    return true;
+        return true;
+    }
+    
+    public boolean addBookingDb(Booking b){
+        String str = "key="+key+"&table=" + table + "&data={\"data\":["+b.toJsonString()+"]}";
+        System.out.println("Update status: " +getRequest("updaterow", str));
+        return true;
     }
     
     public String toJsonString(boolean newId) {

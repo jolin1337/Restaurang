@@ -20,6 +20,7 @@ import org.json.JSONObject;
  */
 public class TableOrder {
     private int id;
+    private int table;
     private Date timeOfOrder;
     private List<Integer> orderedDishes;
 
@@ -64,5 +65,19 @@ public class TableOrder {
         } catch (JSONException ex) {
         }
         return value.toString();
+    }
+
+    /**
+     * @return the table
+     */
+    public int getTable() {
+        return table;
+    }
+
+    /**
+     * @param table the table to set
+     */
+    public void setTable(int table) {
+        this.table = table;
     }
 }

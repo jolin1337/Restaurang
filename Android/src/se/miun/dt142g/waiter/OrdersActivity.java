@@ -77,7 +77,10 @@ public class OrdersActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-       
+        dishesDataSource = new DataSourceListener(availableMenus);
+        dishesDataSource.setHandler(handler);
+        dishesDataSource.setIntervallSpeed(DataSourceListener.SLOW_SYNC_SPPED);
+        dishesDataSource.start();
         setContentView(R.layout.order_menu);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);

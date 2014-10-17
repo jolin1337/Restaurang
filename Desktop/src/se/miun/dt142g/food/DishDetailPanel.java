@@ -10,6 +10,8 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -25,6 +28,7 @@ import se.miun.dt142g.Controller;
 import se.miun.dt142g.DataSource;
 import se.miun.dt142g.data.Dish;
 import se.miun.dt142g.data.Ingredient;
+import se.miun.dt142g.website.EventPostPanel;
 
 /**
  *
@@ -42,6 +46,9 @@ public class DishDetailPanel extends JPanel {
     List<JPanel> ingredientPanelList;
     ActionListener removeEvent = null;
     JLabel inputErrorLabel = new JLabel("Vänligen ange ett pris.");
+    JTextField price;
+    JTextField name;
+    boolean saved = true;
     
     public DishDetailPanel(Dish dish, final Controller c) throws DataSource.WrongKeyException {
         remote = c;
@@ -90,7 +97,8 @@ public class DishDetailPanel extends JPanel {
         }
         
         addLabel("Namn");
-        final JTextField name = addTextField(dish.getName());
+        name = addTextField(dish.getName());
+        name.addKeyListener(textFieldKeyListener);
         ingredientsContainer = new JPanel();
         ingredientsContainer.setLayout(new BoxLayout(ingredientsContainer, BoxLayout.Y_AXIS));
         addLabel("Ingredienser");
@@ -103,12 +111,14 @@ public class DishDetailPanel extends JPanel {
                 remove.setMaximumSize(new Dimension(35, 35));
                 remove.addActionListener(removeIngredientListener);
                 JComboBox jListInventory = new JComboBox();
+                
                 for (Ingredient ing : inv) {
                     jListInventory.addItem(ing);
                     if (ing.getId() == ingredient) {
                         jListInventory.setSelectedItem(ing);
                     }
                 }
+                jListInventory.addActionListener(itemChangeListener);
                 //JTextField ingEdit = new JTextField(name);
                 JPanel horiView = new JPanel();
                 horiView.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
@@ -145,12 +155,15 @@ public class DishDetailPanel extends JPanel {
                 ingredientsContainer.add(horiView);
                 ingredientsContainer.setMaximumSize(new Dimension(Integer.MAX_VALUE, ingredientsContainer.getPreferredSize().height));
                 ingredientsContainer.revalidate();
+                saved = false;
+                remote.setSavedTab(DishDetailPanel.this, saved);
             }
         });
         addLabel("Pris (kr)");
         NumberFormat moneyFormat = new DecimalFormat("#0.00");
         
-        final JTextField price = addTextField( moneyFormat.format(dish.getPrice()));
+        price = addTextField( moneyFormat.format(dish.getPrice()));
+        price.addKeyListener(textFieldKeyListener);
         
         saveDishBtn = new JButton("Spara rätt");
         saveDishBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
@@ -184,7 +197,7 @@ public class DishDetailPanel extends JPanel {
                     }
                 }
 
-                remote.setViewDishes();
+                remote.setViewDishes(saved);
             }
         });
     }
@@ -204,8 +217,33 @@ public class DishDetailPanel extends JPanel {
             ingredientsComboBoxes.remove(ingredientIndex);
             Container parent = btn.getParent().getParent();
             parent.remove(btn.getParent());
+            saved = false;
+            remote.setSavedTab(DishDetailPanel.this, saved);
             parent.revalidate();
             parent.repaint();
+        }
+    };
+        KeyListener textFieldKeyListener = new KeyListener() {
+
+        @Override
+        public void keyTyped(KeyEvent ke) {
+            saved = false;
+            remote.setSavedTab(DishDetailPanel.this, saved);
+        }
+
+        @Override
+        public void keyPressed(KeyEvent ke) {
+        }
+
+        @Override
+        public void keyReleased(KeyEvent ke) {
+        }
+    };
+        
+    ActionListener itemChangeListener = new ActionListener () {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            remote.setSavedTab(DishDetailPanel.this, false);
         }
     };
 }

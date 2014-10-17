@@ -132,10 +132,10 @@ public class Inventory extends DataSource implements Iterable<Ingredient> {
                     }
                 }
                 else {
-                    /*if(ing.getId()<0)
-                        jsonIngredient.put("id", -1);*/
-                    //else
-                    jsonIngredient.put("id", ing.getId());
+                    if(ing.getId()<0)
+                        jsonIngredient.put("id", -1);
+                    else
+                        jsonIngredient.put("id", ing.getId());
                     jsonIngredient.put("name", ing.getName());
                     jsonIngredient.put("amount", ing.getAmount());
                     jsonDataElement.put("data", jsonIngredient);

@@ -19,6 +19,8 @@ public interface Controller {
     
     public void setViewDishes();
     
+    public void setViewDishes(boolean saved);
+    
     public void setViewDishDetail(Dish d, ActionListener removeEvent);
     
     public void setViewNewBooking(Booking b);
