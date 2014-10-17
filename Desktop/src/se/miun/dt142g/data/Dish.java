@@ -103,7 +103,9 @@ public class Dish implements Comparable<Dish> {
     }
 
     public boolean equals(Dish x) {
-        return this.id == x.id;
+        if(x == null)
+            return false;
+        return this.id == x.getId();
     }
 
     @Override
