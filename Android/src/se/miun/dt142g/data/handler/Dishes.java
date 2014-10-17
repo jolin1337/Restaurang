@@ -241,6 +241,7 @@ public class Dishes extends DataSource implements Iterable<Dish> {
 
     @Override
     public void loadData() throws WrongKeyException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        dbConnect();
+        parseDishes(getRequest("gettable", "key=" + key + "&table=" + table));
     }
 }
