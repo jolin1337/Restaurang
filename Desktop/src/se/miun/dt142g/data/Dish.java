@@ -5,6 +5,8 @@
  */
 package se.miun.dt142g.data;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import se.miun.dt142g.food.Inventory;
@@ -103,12 +105,13 @@ public class Dish implements Comparable<Dish> {
     public boolean equals(Dish x) {
         if(x == null)
             return false;
-        return this.id == x.id;
+        return this.id == x.getId();
     }
 
     @Override
     public String toString() {
-        return this.getName() + "\n" + Float.toString(this.getPrice()) + ":-";
+        NumberFormat moneyFormat = new DecimalFormat("#0.00");
+        return this.getName() + " " + moneyFormat.format(this.getPrice()) + " kr";
     }
 
     public String toJsonString() {

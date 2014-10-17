@@ -10,6 +10,8 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Box;
@@ -39,7 +41,8 @@ public class DishDetailPanel extends JPanel {
     List<JComboBox> ingredientsComboBoxes;
     List<JPanel> ingredientPanelList;
     ActionListener removeEvent = null;
-
+    JLabel inputErrorLabel = new JLabel("Vänligen ange ett pris.");
+    
     public DishDetailPanel(Dish dish, final Controller c) throws DataSource.WrongKeyException {
         remote = c;
 
@@ -129,7 +132,6 @@ public class DishDetailPanel extends JPanel {
                 remove.addActionListener(removeIngredientListener);
 
                 JComboBox jListInventory = new JComboBox();
-                String name = "";
                 for (Ingredient ing : inv) {
                     jListInventory.addItem(ing);
                 }
@@ -145,17 +147,34 @@ public class DishDetailPanel extends JPanel {
                 ingredientsContainer.revalidate();
             }
         });
-        addLabel("Pris");
-        final JTextField price = addTextField(Float.toString(dish.getPrice()));
+        addLabel("Pris (kr)");
+        NumberFormat moneyFormat = new DecimalFormat("#0.00");
+        
+        final JTextField price = addTextField( moneyFormat.format(dish.getPrice()));
+        
         saveDishBtn = new JButton("Spara rätt");
         saveDishBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         add(saveDishBtn);
+        
+        add(inputErrorLabel);
+        inputErrorLabel.setVisible(false);
         saveDishBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 dish.setName(name.getText());
-                dish.setPrice(Float.parseFloat(price.getText()));
-
+                inputErrorLabel.setVisible(false);
+                //reformat the price string 
+                try{
+                String formattedPrice = price.getText();
+                formattedPrice = formattedPrice.replaceAll(",", ".");//change , to .
+                formattedPrice = formattedPrice.replaceAll("[^0-9.]", ""); // remove all nonnumerics, except for .
+                
+                dish.setPrice(Float.parseFloat(formattedPrice));
+                } catch(NumberFormatException e){
+                inputErrorLabel.setVisible(true);
+                System.out.println("NumberFormatException");
+                return;
+                }
                 dish.getIngredients().clear();
 
                 for (JComboBox ingredientsComboBox : ingredientsComboBoxes) {
