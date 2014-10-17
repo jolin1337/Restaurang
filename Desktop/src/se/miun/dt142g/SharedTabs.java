@@ -58,6 +58,10 @@ public class SharedTabs extends JPanel {
             dishesPanel.updateTextFieldContents();
             tabbedPane.setSelectedIndex(0);
         }
+        public void setViewDishes(boolean saved){
+            setViewDishes();
+            setSavedTab(dishesPanel, saved);
+        }
 
         @Override
         public void setViewWebsite() {

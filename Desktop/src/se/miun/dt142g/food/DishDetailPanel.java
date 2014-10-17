@@ -48,6 +48,7 @@ public class DishDetailPanel extends JPanel {
     JLabel inputErrorLabel = new JLabel("Vänligen ange ett pris.");
     JTextField price;
     JTextField name;
+    boolean saved = true;
     
     public DishDetailPanel(Dish dish, final Controller c) throws DataSource.WrongKeyException {
         remote = c;
@@ -154,7 +155,8 @@ public class DishDetailPanel extends JPanel {
                 ingredientsContainer.add(horiView);
                 ingredientsContainer.setMaximumSize(new Dimension(Integer.MAX_VALUE, ingredientsContainer.getPreferredSize().height));
                 ingredientsContainer.revalidate();
-                remote.setSavedTab(DishDetailPanel.this, false);
+                saved = false;
+                remote.setSavedTab(DishDetailPanel.this, saved);
             }
         });
         addLabel("Pris (kr)");
@@ -195,7 +197,7 @@ public class DishDetailPanel extends JPanel {
                     }
                 }
 
-                remote.setViewDishes();
+                remote.setViewDishes(saved);
             }
         });
     }
@@ -215,7 +217,8 @@ public class DishDetailPanel extends JPanel {
             ingredientsComboBoxes.remove(ingredientIndex);
             Container parent = btn.getParent().getParent();
             parent.remove(btn.getParent());
-            remote.setSavedTab(DishDetailPanel.this, false);
+            saved = false;
+            remote.setSavedTab(DishDetailPanel.this, saved);
             parent.revalidate();
             parent.repaint();
         }
@@ -224,7 +227,8 @@ public class DishDetailPanel extends JPanel {
 
         @Override
         public void keyTyped(KeyEvent ke) {
-            remote.setSavedTab(DishDetailPanel.this, false);
+            saved = false;
+            remote.setSavedTab(DishDetailPanel.this, saved);
         }
 
         @Override
