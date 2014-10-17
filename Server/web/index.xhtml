@@ -73,21 +73,21 @@
                                         </span>
                                         <span class="select-wrapper sday">
                                             <select name="sday">
-                                            <c:forEach items="#{dateFormat.getIntegerItems(31)}" var="itemStr">
+                                            <c:forEach begin="1" end="31" var="itemStr">
                                                 <option value="#{itemStr}"> #{itemStr}</option>
                                             </c:forEach>
                                             </select>
                                         </span>
                                         <span class="select-wrapper shours">
                                             <select name="shour">
-                                                <c:forEach items="#{dateFormat.getIntegerItems(24)}" var="itemStr">
+                                                <c:forEach begin="17" end="21" var="itemStr">
                                                     <option value="#{itemStr}"> #{itemStr}</option>
                                                 </c:forEach>
                                             </select>
                                         </span>
                                         <span class="select-wrapper smin">
                                             <select name="smin">
-                                                <c:forEach items="#{dateFormat.getIntegerItems(60)}" var="itemStr">
+                                                <c:forEach begin="0" end="59" var="itemStr">
                                                     <option value="#{itemStr}"> #{itemStr}</option>
                                                 </c:forEach>
                                             </select>
