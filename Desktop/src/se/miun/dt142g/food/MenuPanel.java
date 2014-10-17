@@ -231,8 +231,7 @@ public class MenuPanel extends JPanel {
         
         final void populateComboBox(Dish dish) {
             for (Dish d : dishGroups.getDishes()) {
-                NumberFormat moneyFormat = new DecimalFormat("#0.00");
-                myComboBox.addItem(d.getName()+" "+moneyFormat.format(d.getPrice())+" kr");
+                myComboBox.addItem(d);
                 if(d.equals(dish))
                     myComboBox.setSelectedItem(d);
             }
