@@ -84,17 +84,6 @@ public class BookingServlet extends HttpServlet {
         try {
             utx.begin();
             EntityManager em = emf.createEntityManager();
-            //This commented code is for checking the total amount of persons booked in this period...
-            // Getting error: java.lang.IllegalArgumentException, Syntax error parsing [SELECT SUM(b) FROM Booking b]. 
-            Query query = em.createQuery("SELECT count(b.id) FROM Booking b");
-            Long sum = (Long)query.getSingleResult();
-            if(name.isEmpty() || tel.isEmpty() || sdate.isEmpty() || sdate.length() != "20141017:0130".length()
-                    || count <= 0 || count+sum > 6){
-                    response.sendRedirect(response.encodeRedirectURL("/Server/?page=bord&s=false") );
-                    return;
-            }
-            Booking newBooking = new Booking();
-            newBooking.setName(name);
             SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMdd:HHmm");
             Date d = new Date(); 
             d.setTime(0);
@@ -103,8 +92,29 @@ public class BookingServlet extends HttpServlet {
             } catch (ParseException ex) {
                 System.out.println("Error: " + ex.getMessage());
                 System.out.println("In BookingServlet.java");
+                response.sendRedirect(response.encodeRedirectURL("/Server/?page=bord&s=false"));
                 return;
             }
+            
+            //Count the amount of bookings which overlap the new booking
+            String countBookings = 
+                    "SELECT count(b.id) FROM Booking b "
+                    + "WHERE b.startDate < :dateValue + 2*3600000 "
+                    + "AND :dateValue < b.startDate + b.duration*3600000";
+            Query query = em.createQuery(countBookings);
+            query.setParameter("dateValue", d.getTime());
+            Long sum = (Long)query.getSingleResult();
+            if(name.isEmpty() || tel.isEmpty() || sdate.isEmpty() || count <= 0){
+                    response.sendRedirect(response.encodeRedirectURL("/Server/?page=bord&s=false"));
+                    return;
+            }
+            if(1+sum > 6){
+                    response.sendRedirect(response.encodeRedirectURL("/Server/?page=bord&s=full"));
+                    return;
+            }
+            Booking newBooking = new Booking();
+            newBooking.setName(name);
+            
             try {
                 newBooking.setPhone(tel);
                 newBooking.setDuration(2);

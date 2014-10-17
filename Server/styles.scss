@@ -1,0 +1,94 @@
+$color: #911;
+body {margin: 0;padding: 0;background: #e1e1e1;}
+
+h2 {
+	font-size: 20px;
+	font-weight: normal;
+}
+
+input.long {
+	width: 100%;
+}
+    input[type="text"] {
+    padding: 10px 5px;
+    background-color: #f4f4f4;
+    border: 1px solid #555;
+    box-shadow: 0 0 3px rgba(0,0,0,0.4), inset 0 0 10px rgba(0,0,0,0.1);
+}
+input[type="text"]:focus {
+    background-color: #ffffff;
+    border: 1px solid #555;
+    
+}
+
+#content {
+	.menu {
+		margin: 0;
+		font-size: 	0;
+		border-bottom: 1px solid $color;
+		background: #fff;
+		li {
+			font-size: 	14px;
+			display: inline-block;
+			list-style: none;
+			padding: 10px 0px;
+
+			a {
+				padding: 10px 20px;
+				text-decoration: none;
+				color: darken($color, 3);
+			}
+			a:hover {
+				background: rgba(100,0,0,0.1);
+				text-decoration: underline;
+			}
+		}
+	}
+	.logo{
+		height: 80px;
+	}
+	.logo-container {
+		display: block;
+		background: #fff;
+		text-align: center;
+	}
+	.page .post {
+		margin: 20px 0 0 0;
+		background: #fff;
+		box-shadow: 0 0 4px rgba(0,0,0,0.5);
+		overflow: auto;
+		float:left;
+		padding: 30px;
+		width: 70%;
+		box-sizing: border-box;
+	}
+	.right-col {
+		box-shadow: 0 0 4px rgba(0,0,0,0.5);
+		background: #fff;
+		margin: 20px 0;
+		width: 29%;
+		float:right;
+		padding: 10px;
+		box-sizing: border-box;
+		overflow: auto;
+	}
+	.hidden-event {
+		height: 200px;
+		overflow: hidden;
+		transition: height 1s;
+	}
+	.hidden-event:hover,.hidden-event:focus {
+		height: auto;
+		overflow: auto;
+	}
+}
+
+@media (max-width: 500px) {
+	#content .right-col {
+		width: 100%;
+	}
+	#content .page .post {
+		width: 100%;
+		margin: 0px 0;
+	}
+}

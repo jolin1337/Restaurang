@@ -49,7 +49,10 @@
                                             Vi lyckades att hitta ett bord till er, tack för att du väljer att äta på vår restaurang.
                                         </c:when>
                                         <c:when test="${bookingState == 'false'}">
-                                            Tyvärr så gick det inte att boka ett bord just nu. Det kan bero på att det är fullbokat eller att du matat in fel värden i formuläret nedan.
+                                            Tyvärr så gick det inte att boka ett bord just nu. Kontrollera att du har matat in rätt värden i formuläret nedan.
+                                        </c:when>
+                                            <c:when test="${bookingState == 'full'}">
+                                            Tyvärr är vi fullbokade vid det tillfället.
                                         </c:when>
                                     </c:choose>
                                 </p>
