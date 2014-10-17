@@ -13,28 +13,33 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import se.miun.dt142g.ConfirmationBox;
+import se.miun.dt142g.Controller;
 
 /**
  *
  * @author Ali Omran
  */
-public class UserPanel extends JPanel  implements FocusListener{
+public class UserPanel extends JPanel {
     
     private JButton remove;
     private final JLabel name,tele, epost, password;
-    private final JTextField user, pwd, mail, telenr;
-    private User usr;
+    private final JTextField editUser, pwd, mail, telenr;
+    private final User usr;
+    private final Controller remote;
     
-    public UserPanel(final User user){
-        
+    public UserPanel(final User user, Controller c){
+        remote = c;
         this.usr = user;
         setBackground(Color.WHITE);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -57,21 +62,25 @@ public class UserPanel extends JPanel  implements FocusListener{
         epost = new JLabel("Mail:");
         tele = new JLabel("Tel:");
         
-        this.user = new JTextField(user.getUsername());
-        this.user.setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
-        this.user.addFocusListener(this);
+        editUser = new JTextField(user.getUsername());
+        editUser.setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
+        editUser.addFocusListener(userPanelFocusListener);
+        editUser.addKeyListener(userPanelKeyListener);
         pwd = new JTextField(user.getPassword());        
         pwd.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-        pwd.addFocusListener(this);
+        pwd.addFocusListener(userPanelFocusListener);
+        pwd.addKeyListener(userPanelKeyListener);
         mail = new JTextField(user.getMail());
         mail.setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
-        mail.addFocusListener(this);
+        mail.addFocusListener(userPanelFocusListener);
+        mail.addKeyListener(userPanelKeyListener);
         telenr = new JTextField(user.getPhoneNumber());
         telenr.setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
-        telenr.addFocusListener(this);
+        telenr.addFocusListener(userPanelFocusListener);
+        telenr.addKeyListener(userPanelKeyListener);
 
         leftAlignLabel(name, inputs);
-        inputs.add(this.user);
+        inputs.add(this.editUser);
         leftAlignLabel(password, inputs);
         inputs.add(pwd);
         leftAlignLabel(epost, inputs);
@@ -86,23 +95,7 @@ public class UserPanel extends JPanel  implements FocusListener{
         add(Box.createRigidArea(new Dimension(1, 10)));
         add(new JSeparator());
 
-        remove.addActionListener(new ActionListener(){
-            
-            @Override
-            public void actionPerformed(ActionEvent event)
-            {
-                int n = ConfirmationBox.confirm(UserPanel.this, UserPanel.this.user.getText());
-                if(n == 0){
-                    user.setRemove();
-                    Container parent = UserPanel.this.getParent();
-                    parent.remove(UserPanel.this);
-                    remove= new JButton("X");
-                    parent.revalidate();
-                    
-                }
-            }
-            
-        });
+        remove.addActionListener(userPanelActionListener);
     }
     
     public static void leftAlignLabel(JLabel label, JPanel c){
@@ -112,20 +105,54 @@ public class UserPanel extends JPanel  implements FocusListener{
         c.add(b);
         
     }
+    
+    ActionListener userPanelActionListener = new ActionListener() {
 
-    @Override
-    public void focusGained(FocusEvent e) {
-        
-    }
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            int n = ConfirmationBox.confirm(UserPanel.this, UserPanel.this.editUser.getText());
+            if(n == 0){
+                usr.setRemove();
+                Container parent = UserPanel.this.getParent();
+                parent.remove(UserPanel.this);
+                remove= new JButton("X");
+                parent.revalidate();
+                remote.setSavedTab((JComponent)parent, false);
+            }
+        }
+    };
+    
+    FocusListener userPanelFocusListener = new FocusListener() {
+        @Override
+        public void focusGained(FocusEvent e) {
 
-    @Override
-    public void focusLost(FocusEvent e) {
-        usr.setUsername(user.getText());
-        usr.setPassword(pwd.getText());
-        usr.setMail(mail.getText());
-        usr.setPhoneNumber(telenr.getText());
+        }
 
-    }
+        @Override
+        public void focusLost(FocusEvent e) {
+            usr.setUsername(editUser.getText());
+            usr.setPassword(pwd.getText());
+            usr.setMail(mail.getText());
+            usr.setPhoneNumber(telenr.getText());
+
+        }
+    };
+    KeyListener userPanelKeyListener = new KeyListener() {
+
+        @Override
+        public void keyTyped(KeyEvent ke) {
+            remote.setSavedTab((JComponent)UserPanel.this.getParent(), false);
+        }
+
+        @Override
+        public void keyPressed(KeyEvent ke) {
+        }
+
+        @Override
+        public void keyReleased(KeyEvent ke) {
+        }
+    };
+
     
     public User getUser(){
         return this.usr;

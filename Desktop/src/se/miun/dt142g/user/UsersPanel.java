@@ -22,7 +22,8 @@ import se.miun.dt142g.DataSource;
  */
 public class UsersPanel extends JPanel {
     
-    private JButton addUserBtn;
+    private final JButton addUserBtn = new JButton("Lägg till användare");
+    private final JButton serverSyncBtn = new JButton("Synkronisera med servern");
     private Users usrs = new Users();
     final Controller remote;
     
@@ -34,8 +35,6 @@ public class UsersPanel extends JPanel {
         
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setBackground(Color.WHITE);
-        addUserBtn = new JButton("Lägg till användare");
-        final JButton serverSyncBtn = new JButton("Synkronisera med servern");
         
         addUserBtn.setMinimumSize(new Dimension(50, 25));
         addUserBtn.setPreferredSize(new Dimension(50, 25));
@@ -43,53 +42,52 @@ public class UsersPanel extends JPanel {
         
         
         for (User user : usrs) {
-            UserPanel pn = new UserPanel(user);
+            UserPanel pn = new UserPanel(user, remote);
             add(pn);
         }
 
         addUserBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
         add(addUserBtn);  
         add(serverSyncBtn);
-        addUserBtn.addActionListener(new ActionListener(){
-            
-            @Override
-            public void actionPerformed(ActionEvent event)
-            {
-                remove(addUserBtn);
-                remove(serverSyncBtn);
+        addUserBtn.addActionListener(userPanelActionListener);
+        
+        serverSyncBtn.addActionListener(userPanelActionListener);
+           
+    }
+
+    ActionListener userPanelActionListener = new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            Object src = ae.getSource();
+            if(src == addUserBtn) {
+                UsersPanel.this.remove(addUserBtn);
+                UsersPanel.this.remove(serverSyncBtn);
                 User a =new User(-1,"","","","");
                 usrs.addUser(a);
-                UserPanel p = new UserPanel(a);
-                add(p);
-                add(addUserBtn);
-                add(serverSyncBtn);
-                revalidate();
-                
+                UserPanel p = new UserPanel(a, remote);
+                UsersPanel.this.add(p);
+                UsersPanel.this.add(addUserBtn);
+                UsersPanel.this.add(serverSyncBtn);
+                UsersPanel.this.revalidate();
+                remote.setSavedTab(UsersPanel.this, false);
             }
-            
-        });
-        
-        serverSyncBtn.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
+            else if(src == serverSyncBtn) {
                 remove(addUserBtn);
                 remove(serverSyncBtn);
                 usrs.update();
                 removeAll();
                 for (User user : usrs) {
-                    UserPanel pn = new UserPanel(user);
+                    UserPanel pn = new UserPanel(user, remote);
                     add(pn);
                 }
                 add(addUserBtn);
                 add(serverSyncBtn);
                 revalidate();
-                    
+                remote.setSavedTab(UsersPanel.this, true);
             }
-        });
-           
-    }
-
+        }
+    };
 
     
 }
