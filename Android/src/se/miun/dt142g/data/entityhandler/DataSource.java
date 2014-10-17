@@ -12,6 +12,8 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -76,7 +78,8 @@ public abstract class DataSource {
             con.setDoOutput(true);
             
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-            wr.writeBytes(params);
+            String str = URLEncoder.encode(params, "UTF-8").replace("%3D", "=").replace("%26", "&");
+            wr.writeBytes(str);
             wr.flush();
 
             int responseCode = con.getResponseCode();
@@ -97,7 +100,7 @@ public abstract class DataSource {
             }
 
             //print result
-            return response.toString();
+            return URLDecoder.decode(response.toString(), "UTF-8");
 
         } catch (Exception ex) {
             Logger.getLogger(DataSource.class.getName()).log(Level.SEVERE, null, ex);

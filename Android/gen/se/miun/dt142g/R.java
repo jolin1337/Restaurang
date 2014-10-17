@@ -91,10 +91,12 @@ public final class R {
         public static final int bord_text6=0x7f050005;
         public static final int kitchen=0x7f050006;
         public static final int login=0x7f05000e;
+        public static final int logodesc=0x7f050011;
         public static final int password=0x7f050010;
         public static final int remove_text=0x7f050009;
         public static final int reservations=0x7f05000d;
         public static final int test=0x7f05000c;
+        public static final int textfieldhint=0x7f050012;
         public static final int username=0x7f05000f;
         public static final int waiter=0x7f050007;
     }
