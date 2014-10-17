@@ -11,6 +11,8 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -19,6 +21,7 @@ import javax.swing.border.EmptyBorder;
 import se.miun.dt142g.Controller;
 import se.miun.dt142g.ConfirmationBox;
 import se.miun.dt142g.data.Dish;
+import se.miun.dt142g.website.EventPostPanel;
 
 /**
  *
@@ -45,6 +48,7 @@ public class DishPanel extends JPanel {
         name = new JTextField();
         name.setText(dish.getName());
         name.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
+        name.addKeyListener(textFieldKeyListener);
         add(name, BorderLayout.CENTER);
         JButton detail = new JButton("Detaljer");
         detail.addActionListener(new ActionListener() {
@@ -88,12 +92,29 @@ public class DishPanel extends JPanel {
             if (n == 0) {
                 isRemovedPanel = true;
                 Container parent = DishPanel.this.getParent();
+                remote.setSavedTab((JComponent)DishPanel.this.getParent(), false);
                 parent.remove(DishPanel.this);
                 parent.revalidate();
                 parent.repaint();
+                
                 if(remote != null)
                     remote.setViewDishes();
             }
+        }
+    };
+     KeyListener textFieldKeyListener = new KeyListener() {
+
+        @Override
+        public void keyTyped(KeyEvent ke) {
+            remote.setSavedTab((JComponent)DishPanel.this.getParent(), false);
+        }
+
+        @Override
+        public void keyPressed(KeyEvent ke) {
+        }
+
+        @Override
+        public void keyReleased(KeyEvent ke) {
         }
     };
 }
