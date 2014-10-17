@@ -114,7 +114,32 @@ public class SharedTabs extends JPanel {
             parent.revalidate();
             parent.repaint();
         }
-
+        
+        /**
+         * adds a "*" in the tab of tabView if savedState is false otherwise the
+         * original name
+         * @param tabView    - The view for us to set the saved state of
+         * @param savedState - The state to set in the tab itself
+         */
+        public void setSavedTab(JComponent tabView, boolean savedState) {
+            int tabIndex = 0;
+            for(JComponent tabToChange : panels) {
+                if(tabToChange == tabView) {
+                    if(!savedState) {
+                        String c = tabbedPane.getTitleAt(tabIndex);
+                        if(c.charAt(0) != '*')
+                            tabbedPane.setTitleAt(tabIndex, "*" + tabbedPane.getTitleAt(tabIndex));
+                    }
+                    else {
+                        String c = tabbedPane.getTitleAt(tabIndex);
+                        if(c.charAt(0) == '*')
+                            tabbedPane.setTitleAt(tabIndex, c.substring(1));
+                    }
+                    return;
+                }
+                tabIndex++;
+            }
+        }
     };
 
     public SharedTabs() throws DataSource.WrongKeyException {
@@ -124,7 +149,7 @@ public class SharedTabs extends JPanel {
         setLayout(new BorderLayout());
         dishesPanel.setViewSwitch(remote);
         panels.add(dishesPanel);
-        JComponent panel2 = new WebsitePanel();
+        JComponent panel2 = new WebsitePanel(remote);
         panels.add(panel2);
         InventoryPanel panel3 = new InventoryPanel();
         panels.add(panel3);
@@ -146,7 +171,7 @@ public class SharedTabs extends JPanel {
             sp.setMinimumSize(new Dimension(700,700));
             //sp.add(panel);
             panel.setBorder(new EmptyBorder(10, 10, 10, 10));
-            tabbedPane.addTab(titles[i], sp);
+            tabbedPane.addTab(" " + titles[i], sp);
             i++;
         }
 

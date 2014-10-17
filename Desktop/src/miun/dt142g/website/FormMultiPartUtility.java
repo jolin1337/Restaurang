@@ -11,6 +11,7 @@ import java.io.BufferedReader;
  
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -31,10 +32,10 @@ import java.util.List;
 public class FormMultiPartUtility {
     private final String boundary;
     private static final String LINE_FEED = "\r\n";
-    private HttpURLConnection httpConn;
-    private String charset;
-    private OutputStream outputStream;
-    private PrintWriter writer;
+    private final HttpURLConnection httpConn;
+    private final String charset;
+    private final OutputStream outputStream;
+    private final PrintWriter writer;
  
     /**
      * This constructor initializes a new HTTP POST request with content type
@@ -88,6 +89,10 @@ public class FormMultiPartUtility {
      */
     public void addFilePart(String fieldName, File uploadFile)
             throws IOException {
+        if(!uploadFile.exists() || !uploadFile.isFile()) {
+            //throw new IOException("The file " + uploadFile.getName() + " does not exist");
+            return;
+        }
         String fileName = uploadFile.getName();
         writer.append("--" + boundary).append(LINE_FEED);
         writer.append(
@@ -102,14 +107,16 @@ public class FormMultiPartUtility {
         writer.append(LINE_FEED);
         writer.flush();
  
-        FileInputStream inputStream = new FileInputStream(uploadFile);
-        byte[] buffer = new byte[4096];
-        int bytesRead = -1;
-        while ((bytesRead = inputStream.read(buffer)) != -1) {
-            outputStream.write(buffer, 0, bytesRead);
+        try {
+            FileInputStream inputStream = new FileInputStream(uploadFile);
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+            outputStream.flush();
         }
-        outputStream.flush();
-        inputStream.close();
+        catch(FileNotFoundException ex) {}
          
         writer.append(LINE_FEED);
         writer.flush();    

@@ -6,6 +6,7 @@
 package miun.dt142g;
 
 import java.awt.event.ActionListener;
+import javax.swing.JComponent;
 import miun.dt142g.data.Booking;
 import miun.dt142g.data.Dish;
 
@@ -30,7 +31,5 @@ public interface Controller {
 
     public void setConnectionView();
     
-    /**
-     * ... more comming ...
-     */
+    public void setSavedTab(JComponent tabView, boolean savedState);
 }

@@ -10,11 +10,14 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,6 +27,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import miun.dt142g.Controller;
 import miun.dt142g.Settings;
 import miun.dt142g.data.EventPost;
 
@@ -39,7 +43,8 @@ public class EventPostPanel extends JPanel {
     private final JTextField editDate = new JTextField();
     private final JTextField editTitle = new JTextField();
     private final JTextArea editDesc = new JTextArea();
-
+    private final Controller remote;
+    
     private final ActionListener imageEvent = new ActionListener() {
 
         @Override
@@ -52,12 +57,14 @@ public class EventPostPanel extends JPanel {
                 File file = fileChooser.getSelectedFile();
                 eventPost.setImgSrc(file.getAbsolutePath());
                 imgBtn.setText("Vald Poster: " + file.getName());
+                remote.setSavedTab((JComponent)EventPostPanel.this.getParent(), false);
             }
         }
     };
 
-    public EventPostPanel(EventPost eventPost) {
+    public EventPostPanel(EventPost eventPost, Controller c) {
         this.eventPost = eventPost;
+        remote = c;
 
         setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
@@ -78,6 +85,7 @@ public class EventPostPanel extends JPanel {
         add(leftJustify);
         editDate.setText(eventPost.getPubDate());
         editDate.setMaximumSize(new Dimension(Integer.MAX_VALUE, editDate.getPreferredSize().height));
+        editDate.addKeyListener(textFieldKeyListener);
         add(editDate);
 
         JLabel lTitle = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>Rubrik av evenemang</div></html>");
@@ -87,6 +95,7 @@ public class EventPostPanel extends JPanel {
         add(leftJustify);
         editTitle.setText(eventPost.getTitle());
         editTitle.setMaximumSize(new Dimension(Integer.MAX_VALUE, editTitle.getPreferredSize().height));
+        editTitle.addKeyListener(textFieldKeyListener);
         add(editTitle, BorderLayout.WEST);
 
         JLabel lDesc = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>Beskrivning av evenemang</div></html>");
@@ -95,9 +104,26 @@ public class EventPostPanel extends JPanel {
         leftJustify.add(Box.createHorizontalGlue());
         add(leftJustify);
         editDesc.setText(eventPost.getDescription());
+        editDesc.addKeyListener(textFieldKeyListener);
         add(editDesc, BorderLayout.WEST);
         
     }
+    
+    KeyListener textFieldKeyListener = new KeyListener() {
+
+        @Override
+        public void keyTyped(KeyEvent ke) {
+            remote.setSavedTab((JComponent)EventPostPanel.this.getParent(), false);
+        }
+
+        @Override
+        public void keyPressed(KeyEvent ke) {
+        }
+
+        @Override
+        public void keyReleased(KeyEvent ke) {
+        }
+    };
 
     public void updateEvent() {
         eventPost.setDescription(editDesc.getText());
