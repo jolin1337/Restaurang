@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import se.miun.dt142g.ConfirmationBox;
 import se.miun.dt142g.data.Ingredient;
+import se.miun.dt142g.food.Inventory;
 
 /**
  * JPanel for a single Ingredient. Fields update when their focus is lost. 
@@ -37,6 +38,7 @@ public class IngredientPanel extends JPanel implements FocusListener{
     private final JTextField amount; 
     private final JLabel amountLabel; 
     private final Ingredient ingredient; 
+    private final Inventory inventory;
     
     /**
      * Constructor initializes the panel and adds focus listeners and 
@@ -44,9 +46,9 @@ public class IngredientPanel extends JPanel implements FocusListener{
      * 
      * @param ingredient The Ingredient to represent in the panel
      */
-    public IngredientPanel(final Ingredient ingredient){
+    public IngredientPanel(final Ingredient ingredient, final Inventory inventory){
         super(); 
-
+        this.inventory = inventory; 
         this.ingredient = ingredient; 
         
         this.ingredientName = new JTextField(ingredient.getName()); 
@@ -58,12 +60,12 @@ public class IngredientPanel extends JPanel implements FocusListener{
         this.setBackground(Color.white);
         this.ingredientName.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         this.close.setMaximumSize(new Dimension(100, 35));
-        
         amount.setColumns(3);
         amount.setMaximumSize(new Dimension(50,50));
         
         amount.addFocusListener(this);
         ingredientName.addFocusListener(this);
+        
         close.addActionListener(new ActionListener() {
 
             /**
@@ -76,6 +78,7 @@ public class IngredientPanel extends JPanel implements FocusListener{
                 if(n == 0){
                     Container parent = IngredientPanel.this.getParent(); 
                     parent.remove(IngredientPanel.this);
+                    inventory.update();
                     parent.revalidate();
                     parent.repaint();
                     ingredient.setFlaggedForRemoval(true);
@@ -115,10 +118,14 @@ public class IngredientPanel extends JPanel implements FocusListener{
      */
     @Override
     public void focusLost(FocusEvent e) {
+        updateFromFields(); 
+    }
+    
+    public void updateFromFields(){
         if (isInteger(this.amount.getText()))
             this.ingredient.setAmount(Integer.parseInt(this.amount.getText()));
         this.ingredient.setName(this.ingredientName.getText());
-        System.out.println("apor");
+        inventory.update();
     }
     
     /**
