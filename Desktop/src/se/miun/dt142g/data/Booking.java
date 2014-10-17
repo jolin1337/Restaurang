@@ -134,7 +134,7 @@ public class Booking {
             JSONObject jsonBooking = new JSONObject();
             if (getId()<0)
                 jsonBooking.put("id", -1);
-            if ( isValid() )
+            if ( !isValid() )
                     return "";
             jsonBooking.put("id", getId());
             jsonBooking.put("name", getName());
@@ -151,6 +151,6 @@ public class Booking {
         return "";
     }
     public boolean isValid() {
-        return getName().isEmpty() || getPhoneNr().isEmpty() || (getDuration() == 0) || (getPersons() == 0);
+        return !(getName().isEmpty() || getPhoneNr().isEmpty() || (getDuration() == 0) || (getPersons() == 0));
     }
 }
