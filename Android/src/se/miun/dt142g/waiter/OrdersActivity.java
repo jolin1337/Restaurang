@@ -39,9 +39,8 @@ public class OrdersActivity extends BaseActivity {
     private ArrayAdapter<Dish> orders = null;
     private final List<Dish> values = new ArrayList<Dish>();
     
-    private final TableOrders tableOrders;
-    private final Dishes dishes;
-    private int tableNr;
+    static TableOrder tableOrder;
+    static Dishes dishes;
 
     // Define the Handler that receives messages from the thread and update the progress
     private final Handler handler = new Handler() {
@@ -54,9 +53,6 @@ public class OrdersActivity extends BaseActivity {
                     // TODO: Print Toast message here
                 }
                 if(data.containsKey("dataUpdated") && data.getInt("dataUpdated") == DataSourceListener.UPDATE_CALL) {
-                    if(listView != null) {
-                        // TODO Do stuff..
-                    }
                 }
             }
 
@@ -67,8 +63,8 @@ public class OrdersActivity extends BaseActivity {
 
     public OrdersActivity() {
         
-        tableOrders = new TableOrders();
-        dishes = tableOrders.getDishes();
+        //tableOrders = new TableOrders();
+        //dishes = tableOrders.getDishes();
         
     }
     
@@ -85,8 +81,8 @@ public class OrdersActivity extends BaseActivity {
 
         
         Intent thisActivity = getIntent();
+//        setTitle(thisActivity.getExtras().getString("bord_str"));
         setTitle(thisActivity.getExtras().getString("bord_str"));
-        tableNr = Integer.parseInt(thisActivity.getExtras().getString("bord_str").replace("Bord ", ""));
 
         // Get ListView ob ject from xml
         listView = (ListView) findViewById(R.id.orderView);
@@ -103,8 +99,17 @@ public class OrdersActivity extends BaseActivity {
         
         
         DataService.setSyncSpeed(DataSourceListener.DEFAULT_SYNC_SPPED);
-        DataService.setDataSource(tableOrders);
-        DataService.setHandler(handler);
+        //DataService.setDataSource(tableOrders);
+        //DataService.setHandler(handler);
+
+        if(listView != null) {
+            orders.clear();
+            values.clear();
+            for(Integer dish : tableOrder.getOrderedDishes()) {
+                values.add(dishes.getDish(dish));
+            }
+            orders.notifyDataSetChanged();
+        }
     }
     
     public void removeBtnClicked(View btn) {
@@ -145,25 +150,22 @@ public class OrdersActivity extends BaseActivity {
 //           .show();       
         makeChoiseOfMenu(new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public synchronized void onClick(DialogInterface dialog, int which) {
                 Dish m = dishes.getDishByIndex(which);
                 Dish p = values.get(position);
                 values.set(position, m);
                 orders.notifyDataSetChanged();
                 tv.setTextColor(Color.BLACK);
                 orderItem.setBackgroundColor(Color.WHITE);
-                synchronized(tableOrders) {
-                    TableOrder table = tableOrders.getTable(tableNr-1);
-                    List<Integer> dishes = table.getOrderedDishes();
-                    for(int dishIndex = dishes.size(); dishIndex > 0; dishIndex--) {
-                        if(p.getId() == dishes.get(dishIndex-1)) {
-                            if(m.getId() < 0 || dishes.get(dishIndex-1) < 0) continue;
-                            dishes.add(-p.getId()-1);
-                            dishes.set(dishIndex-1, m.getId());
-                            table.setTimeOfOrder(new Date());
-                            DataService.updateServer();
-                            break;
-                        }
+                List<Integer> dishes = tableOrder.getOrderedDishes();
+                for(int dishIndex = dishes.size(); dishIndex > 0; dishIndex--) {
+                    if(p.getId() == dishes.get(dishIndex-1)) {
+                        if(m.getId() < 0 || dishes.get(dishIndex-1) < 0) continue;
+                        dishes.add(-p.getId()-1);
+                        dishes.set(dishIndex-1, m.getId());
+                        tableOrder.setTimeOfOrder(new Date());
+                        DataService.updateServer();
+                        break;
                     }
                 }
             }
@@ -172,15 +174,13 @@ public class OrdersActivity extends BaseActivity {
     public void newOrder(View newBtn) {
         makeChoiseOfMenu(new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public synchronized void onClick(DialogInterface dialog, int which) {
                 Dish m = dishes.getDishByIndex(which);
                 values.add(m);
                 orders.notifyDataSetChanged();
-                synchronized(tableOrders) {
-                    TableOrder table = tableOrders.getTable(tableNr-1);
-                    table.getOrderedDishes().add(m.getId());
-                    table.setTimeOfOrder(new Date());
-                }
+                
+                tableOrder.getOrderedDishes().add(m.getId());
+                tableOrder.setTimeOfOrder(new Date());
                 DataService.updateServer();
             }
         });
@@ -190,11 +190,11 @@ public class OrdersActivity extends BaseActivity {
     public void onBackPressed() {
         Intent data = new Intent();
         data.putExtra("status", "ordered");
-        setResult(1337, data);
+        setResult(WaiterActivity.RESPONSE, data);
         finish();
     }
 
-    private void makeChoiseOfMenu(DialogInterface.OnClickListener blob) {
+    private synchronized void makeChoiseOfMenu(DialogInterface.OnClickListener blob) {
             
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Väj en meny till vår gäst");
@@ -208,11 +208,19 @@ public class OrdersActivity extends BaseActivity {
             if (special.getTag().equals(R.drawable.special)) {
                 special.setImageResource(R.drawable.special_gray);
                 special.setTag(R.drawable.special_gray);
+                tableOrder.setSpecial(true);
             }
             else {
                 special.setTag(R.drawable.special);
                 special.setImageResource(R.drawable.special);
+                tableOrder.setSpecial(false);
             }
         }
+    }
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        tableOrder = null;
     }
 }

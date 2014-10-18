@@ -9,6 +9,7 @@ package se.miun.dt142g.data.entityhandler;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +17,7 @@ import android.os.IBinder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import se.miun.dt142g.data.entityhandler.DataSourceListener;
+import se.miun.dt142g.waiter.WaiterActivity;
 
 /**
  *
@@ -23,6 +25,10 @@ import se.miun.dt142g.data.entityhandler.DataSourceListener;
  */
 public class DataService extends Service {
     private static final DataSourceListener background = new DataSourceListener();
+
+    public static void setAutoLoad(boolean auto) {
+        background.setAutoLoadData(auto);
+    }
     private final IBinder mBinder = new LocalBinder();
     @Override
     public IBinder onBind(Intent intent) {
@@ -31,8 +37,11 @@ public class DataService extends Service {
     
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(intent == null)
-            throw new NullPointerException("Intent is null. We can't handle this right now in Service.");
+        if(intent == null) {
+            startListener();
+            return START_STICKY;
+            //throw new NullPointerException("Intent is null. We can't handle this right now in Service.");
+        }
         Bundle extras = intent.getExtras();
         if(extras != null) {
             if(extras.getBoolean("ignoreResponse"))
@@ -96,4 +105,19 @@ public class DataService extends Service {
             return DataService.this;
         }
     }
+    public static Runnable updateOnce = new Runnable() {
+
+        @Override
+        public void run() {
+            
+            try {
+                DataSource ds = background.getDataContainer();
+                ds.dbConnect();
+                ds.loadData();
+            } catch (DataSource.WrongKeyException ex) {
+                Logger.getLogger(WaiterActivity.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
+    };
 }
