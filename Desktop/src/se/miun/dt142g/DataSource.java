@@ -37,10 +37,6 @@ public abstract class DataSource {
      * A key for authorization
      */
     protected static String key = "";
-    /**
-     * The url to the java ee server
-     */
-    protected static final String serverUrl = "http://localhost:8080/Server/";
 
     /**
      * This method connects us with key to the server
@@ -71,7 +67,7 @@ public abstract class DataSource {
      */
     protected static String getRequest(String url, String params) {
         try {
-            URL obj = new URL(serverUrl + url);
+            URL obj = new URL(Settings.Strings.serverURL + url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
             //add reuqest header

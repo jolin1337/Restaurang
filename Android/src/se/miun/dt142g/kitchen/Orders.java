@@ -66,6 +66,7 @@ public class Orders extends BaseActivity {
         DataService.setSyncSpeed(DataSourceListener.DEFAULT_SYNC_SPPED);
         DataService.setDataSource(tableOrders);
         DataService.setHandler(handler);
+        DataService.setAutoLoad(true);
     }
 
 

@@ -23,6 +23,8 @@ public class Settings {
     }
 
     public static class Strings {
+        public static String logoSrc = "res/graphics/logo.png";
+        public static String[] tabTitles = {"Rätter", "Hemsida", "Inventarie", "Användare", "A La Carté", "Veckans Meny", "Bokningar", "Schema"};
         public static String serverURL = "http://localhost:8080/Server/";
         public static String submit = "Synkronisera med server";
         public static Object serverConnectionError = "There is an error in the authentication to the server or the server is down. Please check this out before do any changes!";

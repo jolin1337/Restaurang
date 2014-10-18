@@ -32,20 +32,20 @@ import se.miun.dt142g.Settings;
 import se.miun.dt142g.data.Booking;
 
 /**
- *
+ * Holds the user interface for the bookings
  * @author Marcus
  */
 public class BookingsPanel extends JPanel {
 
     // Variables declaration - do not modify                     
-    private final Bookings bookings;
+    private boolean newBookingP = false;
+    private boolean removeBooking = false;
     private final JPanel thisPanel = this;
+    private final Controller remote;
+    private final Bookings bookings;
     private JButton addBooking;
     private JButton remove;
     private JButton submit;
-    private final Controller remote;
-    private boolean newBookingP = false;
-    private boolean removeBooking = false;
     
     //instance table model
     DefaultTableModel model = new DefaultTableModel() {
@@ -58,9 +58,9 @@ public class BookingsPanel extends JPanel {
     };
     JTable table = new JTable(model);
     Object[] headers = new Object[]{"Namn", "Telefon", "Antal", "Datum", "Varaktighet (timmar)"};
-
-
-    // End of variables declaration  
+    // End of variables declaration
+    
+    
     public BookingsPanel(Controller c) throws DataSource.WrongKeyException {
         this.bookings = new Bookings();
         this.bookings.dbConnect();
@@ -155,7 +155,6 @@ public class BookingsPanel extends JPanel {
 
     /**
      * Resizes a JTable according to the cell-contents
-     *
      * @param table table to be resized
      */
     private void resizeColumnWidth(JTable table) {
@@ -173,10 +172,9 @@ public class BookingsPanel extends JPanel {
 
     /**
      * Prase a string to a specified date format
-     *
      * @param date to be parsed
      * @param format format to be used
-     * @return
+     * @return a formatted date
      * @throws ParseException
      */
     private Date parseDate(String date, String format) throws ParseException {
@@ -186,11 +184,10 @@ public class BookingsPanel extends JPanel {
     }
     
     /**
-     * 
+     * Validates a string to verify whether it's a valid date format or not.
      * @param date the date to be validated
      * @param format the format to validate with
      * @return whether the string is valid
-     * @throws ParseException 
      */
     private boolean isValidDate(String date, String format) {
         SimpleDateFormat df = new SimpleDateFormat(format);
@@ -205,7 +202,6 @@ public class BookingsPanel extends JPanel {
 
     /**
      * Creates a formatted JLabel instance with the specified text.
-     *
      * @param labelName
      * @return returns the JLabel
      */
@@ -220,12 +216,6 @@ public class BookingsPanel extends JPanel {
 
     @Override
     public void revalidate() {
-        /*try {
-         if (bookings != null)
-         bookings.update();
-         } catch (DataSource.WrongKeyException ex) {
-         Logger.getLogger(BookingsPanel.class.getName()).log(Level.SEVERE, null, ex);
-         }*/
         super.revalidate();
         if (newBookingP) {
             Booking bok = bookings.getBookingByIndex(bookings.getRows() - 1);
@@ -242,7 +232,7 @@ public class BookingsPanel extends JPanel {
         } else if (removeBooking) {
             removeBooking = false;
             try {
-                if (table.getSelectedRow() > 0) {;
+                if (table.getSelectedRow() > 0) {
                     bookings.removeBooking(
                             bookings.getBookingByIndex(table.getSelectedRow())
                             .getId());

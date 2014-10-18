@@ -137,6 +137,11 @@ public class SharedTabs extends JPanel {
             showStar(savedState,tabIndex);
         }
           
+        /**
+         * Sets an astrix in the tab name to indicate unsaved modifications were found
+         * @param savedState the state whether it's been saved or not
+         * @param tabIndex The corresponding tab
+         */
         private void showStar(boolean savedState,int tabIndex){
             if(!savedState) {
                 String c = tabbedPane.getTitleAt(tabIndex);
@@ -152,6 +157,7 @@ public class SharedTabs extends JPanel {
              
     };
 
+    
     public SharedTabs() throws DataSource.WrongKeyException {
         dishDetailView = new DishDetailPanel(null, remote);
         dishesPanel = new DishesPanel(remote);
@@ -173,7 +179,6 @@ public class SharedTabs extends JPanel {
         panels.add(panel7);
         SchedulesPanel panel8 = new SchedulesPanel();
         panels.add(panel8);
-        String[] titles = {"Rätter", "Hemsida", "Inventarie", "Användare", "A La Carté", "Veckans Meny", "Bokningar", "Schema"};
         int i = 0;
         for (JComponent panel : panels) {
             JScrollPane sp = new JScrollPane(panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -181,7 +186,7 @@ public class SharedTabs extends JPanel {
             sp.setMinimumSize(new Dimension(700,700));
             //sp.add(panel);
             panel.setBorder(new EmptyBorder(10, 10, 10, 10));
-            tabbedPane.addTab(titles[i] + " ", sp);
+            tabbedPane.addTab(Settings.Strings.tabTitles[i] + " ", sp);
             i++;
         }
 
@@ -216,7 +221,7 @@ public class SharedTabs extends JPanel {
         //Create and set up the window.
         JFrame frame = new JFrame("Restaurang");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ImageIcon img = new ImageIcon("res/graphics/logo.png");
+        ImageIcon img = new ImageIcon(Settings.Strings.logoSrc);
         frame.setIconImage(img.getImage());
 
         try {
@@ -249,6 +254,11 @@ public class SharedTabs extends JPanel {
         UIManager.put("FormattedTextField.background", Styles.fieldColor);
         UIManager.put("FormattedTextField.font", new Font("Calibri", Font.PLAIN, 22));
         
+        UIManager.put("Spinner.background", Styles.fieldColor);
+        
+        UIManager.put("TabbedPane.background", Styles.fieldColor);
+        
+        UIManager.put("TitledBorder.font",new Font("Calibri", Font.PLAIN, 22));
         UIManager.put("TextField.font", new Font("Calibri", Font.PLAIN, 32));
         UIManager.put("TextField.background", Styles.fieldColor);
         UIManager.put("TextField.selectionBackground", Color.RED);
