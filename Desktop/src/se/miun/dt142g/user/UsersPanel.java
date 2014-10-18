@@ -10,11 +10,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import se.miun.dt142g.Controller;
 import se.miun.dt142g.DataSource;
+import se.miun.dt142g.user.UserPanel.JFieldEditListener;
 
 /**
  *
@@ -23,7 +25,6 @@ import se.miun.dt142g.DataSource;
 public class UsersPanel extends JPanel {
     
     private final JButton addUserBtn = new JButton("Lägg till användare");
-    private final JButton serverSyncBtn = new JButton("Synkronisera med servern");
     private Users usrs = new Users();
     final Controller remote;
     
@@ -43,15 +44,13 @@ public class UsersPanel extends JPanel {
         
         for (User user : usrs) {
             UserPanel pn = new UserPanel(user, remote);
+            pn.setUserPanelListener(userPanelListener);
             add(pn);
         }
 
         addUserBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
         add(addUserBtn);  
-        add(serverSyncBtn);
         addUserBtn.addActionListener(userPanelActionListener);
-        
-        serverSyncBtn.addActionListener(userPanelActionListener);
            
     }
 
@@ -62,32 +61,32 @@ public class UsersPanel extends JPanel {
             Object src = ae.getSource();
             if(src == addUserBtn) {
                 UsersPanel.this.remove(addUserBtn);
-                UsersPanel.this.remove(serverSyncBtn);
                 User a =new User(-1,"","","","");
                 usrs.addUser(a);
                 UserPanel p = new UserPanel(a, remote);
+                p.setUserPanelListener(userPanelListener);
                 UsersPanel.this.add(p);
                 UsersPanel.this.add(addUserBtn);
-                UsersPanel.this.add(serverSyncBtn);
                 UsersPanel.this.revalidate();
                 remote.setSavedTab(UsersPanel.this, false);
             }
-            else if(src == serverSyncBtn) {
+        }
+    };
+    
+    private JFieldEditListener userPanelListener = new JFieldEditListener(){
+        @Override
+        public void onFieldEdit() {
                 remove(addUserBtn);
-                remove(serverSyncBtn);
                 usrs.update();
                 removeAll();
                 for (User user : usrs) {
                     UserPanel pn = new UserPanel(user, remote);
+                    pn.setUserPanelListener(userPanelListener);
                     add(pn);
                 }
                 add(addUserBtn);
-                add(serverSyncBtn);
                 revalidate();
                 remote.setSavedTab(UsersPanel.this, true);
-            }
         }
     };
-
-    
 }
