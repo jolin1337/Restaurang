@@ -48,8 +48,14 @@ public abstract class DataSource {
      */
     public void dbConnect() throws WrongKeyException {
         if(!key.equals("")) {
-            if(!getRequest("test", "key=" + key).equals("true"))
+            if(!getRequest("test", "key=" + key).equals("true")) {
+                String tmpKey = getRequest("login", "key=" + safeKey);
+                if(!tmpKey.isEmpty() && getRequest("test", "key=" + tmpKey).equals("true")) {
+                    key = tmpKey;
+                    return;
+                }
                 throw new WrongKeyException("Still not connected");
+            }
             return;
         }
         key = getRequest("login", "key=" + safeKey);
