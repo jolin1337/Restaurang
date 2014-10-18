@@ -10,7 +10,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,14 +19,8 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.CellEditorListener;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
@@ -35,7 +28,6 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import se.miun.dt142g.Controller;
 import se.miun.dt142g.DataSource;
-import se.miun.dt142g.Settings;
 import se.miun.dt142g.data.Booking;
 
 /**
@@ -53,7 +45,17 @@ public class BookingsPanel extends JPanel {
     private final Controller remote;
     private boolean newBookingP = false;
     private boolean removeBooking = false;
-    private final DefaultTableModel model = new DefaultTableModel();
+    
+    //instance table model
+    DefaultTableModel model = new DefaultTableModel() {
+
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            // Disable editing on the header
+            return !(row == 0);
+        }
+    };
+
     JTable table = new JTable(model);
 
     // End of variables declaration  
@@ -108,9 +110,17 @@ public class BookingsPanel extends JPanel {
                     bok.setName(table.getValueAt(table.getSelectedRow(), 0).toString());
                     bok.setPhoneNr(table.getValueAt(table.getSelectedRow(), 1).toString());
                     bok.setPersons(Integer.parseInt(table.getValueAt(table.getSelectedRow(), 2).toString()));
+                    
+                    SimpleDateFormat df = new SimpleDateFormat("dd/MM-yy 'kl:' HH:mm");
+                    Date tmpDate = bok.getDate();
+                    String s = df.format(tmpDate);
                     try {
-                        bok.setDate(parseDate(table.getValueAt(table.getSelectedRow(), 3).toString(), "dd/MM-yy 'kl:' HH:mm"));
-                    } catch (ParseException ex) {
+                        if (isValidDate(table.getValueAt(table.getSelectedRow(), 3).toString(), "dd/MM-yy 'kl:' HH:mm"))
+                            bok.setDate(parseDate(table.getValueAt(table.getSelectedRow(), 3).toString(), "dd/MM-yy 'kl:' HH:mm"));
+                        else
+                            model.setValueAt(s, table.getSelectedRow(), e.getColumn());
+                        } catch (ParseException ex) {
+                        model.setValueAt(s, table.getSelectedRow(), e.getColumn());
                         System.out.println("Datumet lyckades inte redigeras i bokningar.");
                         Logger.getLogger(BookingsPanel.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -169,8 +179,27 @@ public class BookingsPanel extends JPanel {
      * @throws ParseException
      */
     private Date parseDate(String date, String format) throws ParseException {
-        SimpleDateFormat formatter = new SimpleDateFormat(format);
-        return formatter.parse(date);
+        SimpleDateFormat df = new SimpleDateFormat(format);
+        df.setLenient(false);
+        return df.parse(date.trim());
+    }
+    
+    /**
+     * 
+     * @param date the date to be validated
+     * @param format the format to validate with
+     * @return whether the string is valid
+     * @throws ParseException 
+     */
+    private boolean isValidDate(String date, String format) {
+        SimpleDateFormat df = new SimpleDateFormat(format);
+        df.setLenient(false);
+        try {
+            df.parse(date.trim());
+        } catch (ParseException pe) {
+            return false;
+        }
+        return true;
     }
 
     /**
