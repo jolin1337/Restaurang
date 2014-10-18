@@ -8,6 +8,7 @@ package se.miun.dt142g.food;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener; 
@@ -94,15 +95,15 @@ public class MenuPanel extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.white);
         
-        JButton b = new JButton("Print PDF");
-        b.addActionListener(new ActionListener() {
+        JButton printButton = new JButton("Print PDF");
+        printButton.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                generatePDF();
+                printDishesPDF();
             }
         });
-        add(b);
+        add(printButton);
         
         JButton submitBtn = new JButton(Settings.Strings.submit);
         submitBtn.addActionListener(syncGroupEvent);
@@ -262,7 +263,7 @@ public class MenuPanel extends JPanel {
             return groupName;
         }
     }
-    private String generatePDF(){
+    private String printDishesPDF(){
         try {
             String url = "getpdfdishes";
             URL obj = new URL(Settings.Strings.serverURL + url);
@@ -280,44 +281,14 @@ public class MenuPanel extends JPanel {
             if (responseCode != 200) {
                 return "Too bad";
             }
-
-            StringBuilder response;
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            response = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-
-            //print result
-            String stringToPrint = response.toString();
-            if (stringToPrint.isEmpty())
-                return "Too bad";
             
-            
-            final JFileChooser fileChooser = new JFileChooser();
-            File fileToSave = new File("C:\\Users\\Simple\\Downloads\\dishes_menu.pdf");//fileChooser.getSelectedFile();
-            
-            String defaultPrinter = PrintServiceLookup.lookupDefaultPrintService().getName();
             PrintService service = PrintServiceLookup.lookupDefaultPrintService();
             PrintRequestAttributeSet  pras = new HashPrintRequestAttributeSet();
-            FileInputStream fin = new FileInputStream(fileToSave);
+            InputStreamReader fin = new InputStreamReader(con.getInputStream());
             DocPrintJob job = service.createPrintJob();
             Doc doc = new SimpleDoc(fin, DocFlavor.INPUT_STREAM.AUTOSENSE, null);
             job.print(doc, pras);
-//            fileChooser.setDialogTitle("Välj mapp");
-//            String extension = ".pdf";
-//            String fileName = "Meny";
-//            int userSelection = fileChooser.showSaveDialog(this);
-//            if (userSelection == JFileChooser.APPROVE_OPTION) {
-//                File fileToSave = fileChooser.getSelectedFile();
-//                OutputStream out = new FileOutputStream(fileToSave);
-//                System.out.println("Save as file: " + fileToSave.getAbsolutePath());
-//                out.write(stringToPrint.getBytes());
-//                out.close();
-//            }
-            
+
         } catch (Exception ex) {
             Logger.getLogger(DataSource.class.getName()).log(Level.SEVERE, null, ex);
         }
