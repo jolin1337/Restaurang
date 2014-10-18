@@ -10,7 +10,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,14 +19,8 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.CellEditorListener;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
@@ -53,8 +46,19 @@ public class BookingsPanel extends JPanel {
     private final Controller remote;
     private boolean newBookingP = false;
     private boolean removeBooking = false;
-    private final DefaultTableModel model = new DefaultTableModel();
+    
+    //instance table model
+    DefaultTableModel model = new DefaultTableModel() {
+
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            // Disable editing on the header
+            return !(row == 0);
+        }
+    };
     JTable table = new JTable(model);
+    Object[] headers = new Object[]{"Namn", "Telefon", "Antal", "Datum", "Varaktighet (timmar)"};
+
 
     // End of variables declaration  
     public BookingsPanel(Controller c) throws DataSource.WrongKeyException {
@@ -70,7 +74,7 @@ public class BookingsPanel extends JPanel {
      */
     private void initComponents() {
 
-        table.setRowHeight(33);
+        table.setRowHeight(40);
         remove = new JButton("Ta bort selekterad rad");
         remove.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         this.add(Box.createRigidArea(new Dimension(0, 15)));
@@ -90,9 +94,8 @@ public class BookingsPanel extends JPanel {
         for (int i = 0; i < 5; i++) {
             model.addColumn("Col" + i);
         }
-
         // Append a row 
-        model.addRow(new Object[]{"Namn", "Telefon", "Antal", "Datum", "Varaktighet (timmar)"});
+        model.addRow(headers);
         for (Booking bok : bookings) {
             model.addRow(new Object[]{bok.getName(), bok.getPhoneNr(), bok.getPersons(),
                 bok.getDateString(), bok.getDuration()});
@@ -108,9 +111,17 @@ public class BookingsPanel extends JPanel {
                     bok.setName(table.getValueAt(table.getSelectedRow(), 0).toString());
                     bok.setPhoneNr(table.getValueAt(table.getSelectedRow(), 1).toString());
                     bok.setPersons(Integer.parseInt(table.getValueAt(table.getSelectedRow(), 2).toString()));
+                    
+                    SimpleDateFormat df = new SimpleDateFormat(Settings.Styles.dateFormat);
+                    Date tmpDate = bok.getDate();
+                    String s = df.format(tmpDate);
                     try {
-                        bok.setDate(parseDate(table.getValueAt(table.getSelectedRow(), 3).toString(), "dd/MM-yy 'kl:' HH:mm"));
-                    } catch (ParseException ex) {
+                        if (isValidDate(table.getValueAt(table.getSelectedRow(), 3).toString(), Settings.Styles.dateFormat))
+                            bok.setDate(parseDate(table.getValueAt(table.getSelectedRow(), 3).toString(), Settings.Styles.dateFormat));
+                        else
+                            model.setValueAt(s, table.getSelectedRow(), e.getColumn());
+                        } catch (ParseException ex) {
+                        model.setValueAt(s, table.getSelectedRow(), e.getColumn());
                         System.out.println("Datumet lyckades inte redigeras i bokningar.");
                         Logger.getLogger(BookingsPanel.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -143,7 +154,7 @@ public class BookingsPanel extends JPanel {
     }
 
     /**
-     * Resizes a JTable according to the cellcontents
+     * Resizes a JTable according to the cell-contents
      *
      * @param table table to be resized
      */
@@ -169,8 +180,27 @@ public class BookingsPanel extends JPanel {
      * @throws ParseException
      */
     private Date parseDate(String date, String format) throws ParseException {
-        SimpleDateFormat formatter = new SimpleDateFormat(format);
-        return formatter.parse(date);
+        SimpleDateFormat df = new SimpleDateFormat(format);
+        df.setLenient(false);
+        return df.parse(date.trim());
+    }
+    
+    /**
+     * 
+     * @param date the date to be validated
+     * @param format the format to validate with
+     * @return whether the string is valid
+     * @throws ParseException 
+     */
+    private boolean isValidDate(String date, String format) {
+        SimpleDateFormat df = new SimpleDateFormat(format);
+        df.setLenient(false);
+        try {
+            df.parse(date.trim());
+        } catch (ParseException pe) {
+            return false;
+        }
+        return true;
     }
 
     /**

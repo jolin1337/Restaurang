@@ -15,6 +15,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -33,10 +34,11 @@ import se.miun.dt142g.Controller;
 public class UserPanel extends JPanel {
     
     private JButton remove;
-    private final JLabel name,tele, epost, password;
+    //private final JLabel name,tele, epost, password;
     private final JTextField editUser, pwd, mail, telenr;
     private final User usr;
     private final Controller remote;
+    private JFieldEditListener userPanelListener = null; 
     
     public UserPanel(final User user, Controller c){
         remote = c;
@@ -53,39 +55,37 @@ public class UserPanel extends JPanel {
         
         JPanel inputs = new JPanel();
         inputs.setLayout(new BoxLayout(inputs, BoxLayout.Y_AXIS));
-        inputs.setBackground(Color.WHITE);
-        
-        name = new JLabel("Namn:");
-        name.setMaximumSize(new Dimension(60,25));
-        password = new JLabel("Lösenord:");
+        inputs.setBackground(Color.WHITE);        
 
-        epost = new JLabel("Mail:");
-        tele = new JLabel("Tel:");
         
         editUser = new JTextField(user.getUsername());
         editUser.setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
+        editUser.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.white), BorderFactory.createTitledBorder("Namn:")));
         editUser.addFocusListener(userPanelFocusListener);
         editUser.addKeyListener(userPanelKeyListener);
         pwd = new JTextField(user.getPassword());        
         pwd.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        pwd.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.white), BorderFactory.createTitledBorder("Lösenord:")));
         pwd.addFocusListener(userPanelFocusListener);
         pwd.addKeyListener(userPanelKeyListener);
         mail = new JTextField(user.getMail());
         mail.setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
+        mail.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.white), BorderFactory.createTitledBorder("Mail:")));
         mail.addFocusListener(userPanelFocusListener);
         mail.addKeyListener(userPanelKeyListener);
         telenr = new JTextField(user.getPhoneNumber());
         telenr.setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
+        telenr.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.white), BorderFactory.createTitledBorder("Tel:")));
         telenr.addFocusListener(userPanelFocusListener);
         telenr.addKeyListener(userPanelKeyListener);
 
-        leftAlignLabel(name, inputs);
+//        leftAlignLabel(name, inputs);
         inputs.add(this.editUser);
-        leftAlignLabel(password, inputs);
+//        leftAlignLabel(password, inputs);
         inputs.add(pwd);
-        leftAlignLabel(epost, inputs);
+//        leftAlignLabel(epost, inputs);
         inputs.add(mail);
-        leftAlignLabel(tele, inputs);
+//        leftAlignLabel(tele, inputs);
         inputs.add(telenr);
         inputs.add(Box.createGlue());
         a.add(remove);
@@ -130,13 +130,10 @@ public class UserPanel extends JPanel {
 
         @Override
         public void focusLost(FocusEvent e) {
-            usr.setUsername(editUser.getText());
-            usr.setPassword(pwd.getText());
-            usr.setMail(mail.getText());
-            usr.setPhoneNumber(telenr.getText());
-
+            updateFields();
         }
     };
+    
     KeyListener userPanelKeyListener = new KeyListener() {
 
         @Override
@@ -146,6 +143,8 @@ public class UserPanel extends JPanel {
 
         @Override
         public void keyPressed(KeyEvent ke) {
+            if (ke.getKeyCode()==KeyEvent.VK_ENTER)
+                updateFields(); 
         }
 
         @Override
@@ -153,9 +152,36 @@ public class UserPanel extends JPanel {
         }
     };
 
+    public void updateFields(){
+        usr.setUsername(editUser.getText());
+        usr.setPassword(pwd.getText());
+        usr.setMail(mail.getText());
+        usr.setPhoneNumber(telenr.getText());
+        if (!(userPanelListener==null)) 
+            userPanelListener.onFieldEdit();
+    }
     
     public User getUser(){
         return this.usr;
     }
+
+    /**
+     * @return the userPanelListener
+     */
+    public JFieldEditListener getUserPanelListener() {
+        return userPanelListener;
+    }
+
+    /**
+     * @param userPanelListener the userPanelListener to set
+     */
+    public void setUserPanelListener(JFieldEditListener userPanelListener) {
+        this.userPanelListener = userPanelListener;
+    }
+    
+    public interface JFieldEditListener{
+        public void onFieldEdit();
+    }
+    
     
 }

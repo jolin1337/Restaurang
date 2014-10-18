@@ -12,12 +12,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import se.miun.dt142g.ConfirmationBox;
 import se.miun.dt142g.data.Ingredient;
 import se.miun.dt142g.food.Inventory;
@@ -36,7 +39,7 @@ public class IngredientPanel extends JPanel implements FocusListener{
     private final JButton close; 
     private final JTextField ingredientName; 
     private final JTextField amount; 
-    private final JLabel amountLabel; 
+    //private final JLabel amountLabel; 
     private final Ingredient ingredient; 
     private final Inventory inventory;
     
@@ -54,14 +57,16 @@ public class IngredientPanel extends JPanel implements FocusListener{
         this.ingredientName = new JTextField(ingredient.getName()); 
         this.amount = new JTextField(Integer.toString(ingredient.getAmount()));
         this.close = new JButton("X");
-        this.amountLabel = new JLabel("Port."); 
+        //this.amountLabel = new JLabel("Port."); 
         
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         this.setBackground(Color.white);
-        this.ingredientName.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-        this.close.setMaximumSize(new Dimension(100, 35));
+        this.ingredientName.setMaximumSize(new Dimension(Integer.MAX_VALUE, 70));
+        ingredientName.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.white), BorderFactory.createTitledBorder("Namn")));
+        this.close.setMaximumSize(new Dimension(50, 70));
         amount.setColumns(3);
-        amount.setMaximumSize(new Dimension(50,50));
+        amount.setMaximumSize(new Dimension(40,70));
+        amount.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.white), BorderFactory.createTitledBorder("Port.")));
         
         amount.addFocusListener(this);
         ingredientName.addFocusListener(this);
@@ -90,7 +95,7 @@ public class IngredientPanel extends JPanel implements FocusListener{
         this.add(close);
         this.add(ingredientName);
         this.add(amount);
-        this.add(amountLabel);
+        //this.add(amountLabel);
         this.add(Box.createRigidArea(new Dimension(1, 20)));
         
     }

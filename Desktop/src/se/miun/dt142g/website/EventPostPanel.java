@@ -6,8 +6,8 @@
 package se.miun.dt142g.website;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -24,7 +24,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
-import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import se.miun.dt142g.Controller;
@@ -78,33 +77,21 @@ public class EventPostPanel extends JPanel {
         }
         add(imgBtn);
 
-        JLabel date = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>Datum för evenemang</div></html>");
-        Box leftJustify = Box.createHorizontalBox();
-        leftJustify.add(date);
-        leftJustify.add(Box.createHorizontalGlue());
-        add(leftJustify);
         editDate.setText(eventPost.getPubDate());
         editDate.setMaximumSize(new Dimension(Integer.MAX_VALUE, editDate.getPreferredSize().height));
         editDate.addKeyListener(textFieldKeyListener);
+        editDate.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Settings.Styles.darkBg), BorderFactory.createTitledBorder("Datum för evenemang:")));
         add(editDate);
 
-        JLabel lTitle = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>Rubrik av evenemang</div></html>");
-        leftJustify = Box.createHorizontalBox();
-        leftJustify.add(lTitle);
-        leftJustify.add(Box.createHorizontalGlue());
-        add(leftJustify);
         editTitle.setText(eventPost.getTitle());
         editTitle.setMaximumSize(new Dimension(Integer.MAX_VALUE, editTitle.getPreferredSize().height));
         editTitle.addKeyListener(textFieldKeyListener);
+        editTitle.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Settings.Styles.darkBg), BorderFactory.createTitledBorder("Rubrik för evenemang:")));
         add(editTitle, BorderLayout.WEST);
 
-        JLabel lDesc = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>Beskrivning av evenemang</div></html>");
-        leftJustify = Box.createHorizontalBox();
-        leftJustify.add(lDesc);
-        leftJustify.add(Box.createHorizontalGlue());
-        add(leftJustify);
         editDesc.setText(eventPost.getDescription());
         editDesc.addKeyListener(textFieldKeyListener);
+        editDesc.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Settings.Styles.darkBg), BorderFactory.createTitledBorder("Beskrivning av enenemang:"))); 
         add(editDesc, BorderLayout.WEST);
         
     }
