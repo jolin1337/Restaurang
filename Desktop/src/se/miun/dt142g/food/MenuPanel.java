@@ -11,14 +11,21 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener; 
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.print.Doc;
+import javax.print.DocFlavor;
+import javax.print.DocPrintJob;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+import javax.print.SimpleDoc;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -79,8 +86,19 @@ public class MenuPanel extends JPanel {
         dishGroups.dbConnect();
         dishGroups.loadData();
         
+        
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.white);
+        
+        JButton printButton = new JButton("Skriv ut menyblad");
+        printButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                printDishesPDF();
+            }
+        });
+        add(printButton);
         
         JButton submitBtn = new JButton(Settings.Strings.submit);
         submitBtn.addActionListener(syncGroupEvent);
@@ -239,5 +257,36 @@ public class MenuPanel extends JPanel {
         public final String getGroupName() {
             return groupName;
         }
+    }
+    private String printDishesPDF(){
+        try {
+            String url = "getpdfdishes";
+            URL obj = new URL(Settings.Strings.serverURL + url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+            //add reuqest header
+            con.setRequestMethod("GET");
+            con.setRequestProperty("User-Agent", "User-Agent");
+            con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+
+            // Send post request
+            con.setDoOutput(true);
+
+            int responseCode = con.getResponseCode();
+            if (responseCode != 200) {
+                return "Too bad";
+            }
+            
+            PrintService service = PrintServiceLookup.lookupDefaultPrintService();
+            PrintRequestAttributeSet  pras = new HashPrintRequestAttributeSet();
+            InputStreamReader fin = new InputStreamReader(con.getInputStream());
+            DocPrintJob job = service.createPrintJob();
+            Doc doc = new SimpleDoc(fin, DocFlavor.INPUT_STREAM.AUTOSENSE, null);
+            job.print(doc, pras);
+
+        } catch (Exception ex) {
+            Logger.getLogger(DataSource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "";
     }
 }
