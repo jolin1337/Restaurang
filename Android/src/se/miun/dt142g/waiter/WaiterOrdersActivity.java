@@ -34,7 +34,7 @@ import se.miun.dt142g.data.handler.TableOrders;
  *
  * @author Johannes
  */
-public class OrdersActivity extends BaseActivity {
+public class WaiterOrdersActivity extends BaseActivity {
     private ListView listView = null;
     private ArrayAdapter<Dish> orders = null;
     private final List<Dish> values = new ArrayList<Dish>();
@@ -61,7 +61,7 @@ public class OrdersActivity extends BaseActivity {
 
     };
 
-    public OrdersActivity() {
+    public WaiterOrdersActivity() {
         
         //tableOrders = new TableOrders();
         //dishes = tableOrders.getDishes();

@@ -15,7 +15,7 @@ import se.miun.dt142g.data.EntityRep.TableOrder;
 import se.miun.dt142g.data.entityhandler.DataService;
 import se.miun.dt142g.data.entityhandler.DataSourceListener;
 
-public class Orders extends BaseActivity {
+public class KitchenOrdersActivity extends BaseActivity {
 
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;

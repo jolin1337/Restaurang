@@ -17,6 +17,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,8 +37,14 @@ public class WaiterActivity extends BaseActivity {
     public static final int RESPONSE = 0;
     
     private final TableOrders tableOrders = new TableOrders();
+    private final List<Button> tableButtons = new ArrayList<Button>();
     
-    Handler handler = new Handler();
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            
+        }
+    };
     
 
     public WaiterActivity() {
@@ -52,18 +60,15 @@ public class WaiterActivity extends BaseActivity {
         
         DataService.setSyncSpeed(DataSourceListener.DEFAULT_SYNC_SPPED);
         DataService.setAutoLoad(false);
+        
         DataService.setDataSource(tableOrders);
         DataService.setHandler(handler);
-        Thread threadSync = new Thread(DataService.updateOnce);
-        threadSync.start();
-        try {
-            threadSync.join(5000);
-            if(threadSync.isAlive())
-                threadSync.interrupt();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(WaiterActivity.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        OrdersActivity.dishes = tableOrders.getDishes();
+        
+        updateTableOrderObject(DataService.getDataSource());
+        
+        WaiterOrdersActivity.dishes = tableOrders.getDishes();
+        
+        updateBtnColors(false);
     }
     public void table_click(View v) throws InvalidCredentialsException {
         if(v.getClass() != Button.class)
@@ -71,8 +76,8 @@ public class WaiterActivity extends BaseActivity {
         Button btn = (Button)v;
         
         int tableNr = Integer.parseInt(btn.getText().toString().replace("Bord ", ""));
-        OrdersActivity.tableOrder = tableOrders.getTable(tableNr);
-        Intent ordersActivity = new Intent(getApplicationContext(), OrdersActivity.class);
+        WaiterOrdersActivity.tableOrder = tableOrders.getTable(tableNr-1);
+        Intent ordersActivity = new Intent(getApplicationContext(), WaiterOrdersActivity.class);
         ordersActivity.putExtra("bord_str", btn.getText());
         startActivityForResult(ordersActivity, RESPONSE);
     }
@@ -93,5 +98,39 @@ public class WaiterActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         DataService.setAutoLoad(true);
+    }
+
+    private void updateBtnColors(boolean b) {
+        DataSource dataSource = DataService.getDataSource();
+        if(b)
+            updateTableOrderObject(dataSource);
+        LinearLayout btnsParent = (LinearLayout)findViewById(R.id.order_btns);
+        for(int i = btnsParent.getChildCount(); i > 0; i--) {
+            Button btn = (Button)btnsParent.getChildAt(i-1);
+            int tableNr = Integer.parseInt(btn.getText().toString().replace("Bord ", ""));
+            if(tableOrders.getTable(tableNr-1).getOrderedDishes().size() > 0)
+                btn.setBackgroundResource(R.drawable.green_button);
+            else
+                btn.setBackgroundResource(R.drawable.default_button);
+            tableButtons.add(btn);
+        }
+    }
+
+    private void updateTableOrderObject(DataSource dataSource) {
+        Thread threadSync = new Thread(DataService.updateOnce);
+        
+        DataSource tmpSrc = DataService.getDataSource();
+        try {
+            DataService.setDataSource(dataSource);
+            threadSync.start();
+            threadSync.join(5000);
+            if(threadSync.isAlive())
+                threadSync.interrupt();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(WaiterActivity.class.getName()).log(Level.SEVERE, null, ex);
+        } catch(IllegalThreadStateException ex) {}
+        finally {
+            DataService.setDataSource(tmpSrc);
+        }
     }
 }

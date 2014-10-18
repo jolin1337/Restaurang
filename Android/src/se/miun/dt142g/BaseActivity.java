@@ -55,9 +55,9 @@ public class BaseActivity extends Activity {
             act.startActivity(ordersActivity);
             return true;
         }
-        if (id == R.id.kitchen && !(act instanceof se.miun.dt142g.kitchen.Orders)) {
+        if (id == R.id.kitchen && !(act instanceof se.miun.dt142g.kitchen.KitchenOrdersActivity)) {
             System.out.println("Kitchen loading view...");
-            Intent ordersActivity = new Intent(act.getApplicationContext(), se.miun.dt142g.kitchen.Orders.class);
+            Intent ordersActivity = new Intent(act.getApplicationContext(), se.miun.dt142g.kitchen.KitchenOrdersActivity.class);
             act.startActivity(ordersActivity);
             return true;
         }
