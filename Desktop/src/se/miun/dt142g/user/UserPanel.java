@@ -37,6 +37,7 @@ public class UserPanel extends JPanel {
     private final JTextField editUser, pwd, mail, telenr;
     private final User usr;
     private final Controller remote;
+    private JFieldEditListener userPanelListener = null; 
     
     public UserPanel(final User user, Controller c){
         remote = c;
@@ -130,13 +131,10 @@ public class UserPanel extends JPanel {
 
         @Override
         public void focusLost(FocusEvent e) {
-            usr.setUsername(editUser.getText());
-            usr.setPassword(pwd.getText());
-            usr.setMail(mail.getText());
-            usr.setPhoneNumber(telenr.getText());
-
+            updateFields();
         }
     };
+    
     KeyListener userPanelKeyListener = new KeyListener() {
 
         @Override
@@ -146,6 +144,8 @@ public class UserPanel extends JPanel {
 
         @Override
         public void keyPressed(KeyEvent ke) {
+            if (ke.getKeyCode()==KeyEvent.VK_ENTER)
+                updateFields(); 
         }
 
         @Override
@@ -153,9 +153,36 @@ public class UserPanel extends JPanel {
         }
     };
 
+    public void updateFields(){
+        usr.setUsername(editUser.getText());
+        usr.setPassword(pwd.getText());
+        usr.setMail(mail.getText());
+        usr.setPhoneNumber(telenr.getText());
+        if (!(userPanelListener==null)) 
+            userPanelListener.onFieldEdit();
+    }
     
     public User getUser(){
         return this.usr;
     }
+
+    /**
+     * @return the userPanelListener
+     */
+    public JFieldEditListener getUserPanelListener() {
+        return userPanelListener;
+    }
+
+    /**
+     * @param userPanelListener the userPanelListener to set
+     */
+    public void setUserPanelListener(JFieldEditListener userPanelListener) {
+        this.userPanelListener = userPanelListener;
+    }
+    
+    public interface JFieldEditListener{
+        public void onFieldEdit();
+    }
+    
     
 }
