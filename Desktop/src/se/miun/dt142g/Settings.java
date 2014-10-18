@@ -19,10 +19,11 @@ public class Settings {
         public static Color btnForeground = Color.white;
         public static Color fieldColor = new Color(255,200,200);
         public static Color darkBg = new Color(240, 240, 240);
-        
+        public static String dateFormat = "dd/MM-yy 'kl:' HH:mm";
     }
 
     public static class Strings {
+        public static String serverURL = "http://localhost:8080/Server/";
         public static String submit = "Synkronisera med server";
         public static Object serverConnectionError = "There is an error in the authentication to the server or the server is down. Please check this out before do any changes!";
         public static Object noDishesCreatedError = "Inga rätter tillgängliga ännu. Du kommer att skickas till tabben rätter för att lägga till några sådanna";

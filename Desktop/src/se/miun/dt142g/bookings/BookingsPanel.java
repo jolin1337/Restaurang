@@ -28,6 +28,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import se.miun.dt142g.Controller;
 import se.miun.dt142g.DataSource;
+import se.miun.dt142g.Settings;
 import se.miun.dt142g.data.Booking;
 
 /**
@@ -55,8 +56,9 @@ public class BookingsPanel extends JPanel {
             return !(row == 0);
         }
     };
-
     JTable table = new JTable(model);
+    Object[] headers = new Object[]{"Namn", "Telefon", "Antal", "Datum", "Varaktighet (timmar)"};
+
 
     // End of variables declaration  
     public BookingsPanel(Controller c) throws DataSource.WrongKeyException {
@@ -92,9 +94,8 @@ public class BookingsPanel extends JPanel {
         for (int i = 0; i < 5; i++) {
             model.addColumn("Col" + i);
         }
-
         // Append a row 
-        model.addRow(new Object[]{"Namn", "Telefon", "Antal", "Datum", "Varaktighet (timmar)"});
+        model.addRow(headers);
         for (Booking bok : bookings) {
             model.addRow(new Object[]{bok.getName(), bok.getPhoneNr(), bok.getPersons(),
                 bok.getDateString(), bok.getDuration()});
@@ -111,12 +112,12 @@ public class BookingsPanel extends JPanel {
                     bok.setPhoneNr(table.getValueAt(table.getSelectedRow(), 1).toString());
                     bok.setPersons(Integer.parseInt(table.getValueAt(table.getSelectedRow(), 2).toString()));
                     
-                    SimpleDateFormat df = new SimpleDateFormat("dd/MM-yy 'kl:' HH:mm");
+                    SimpleDateFormat df = new SimpleDateFormat(Settings.Styles.dateFormat);
                     Date tmpDate = bok.getDate();
                     String s = df.format(tmpDate);
                     try {
-                        if (isValidDate(table.getValueAt(table.getSelectedRow(), 3).toString(), "dd/MM-yy 'kl:' HH:mm"))
-                            bok.setDate(parseDate(table.getValueAt(table.getSelectedRow(), 3).toString(), "dd/MM-yy 'kl:' HH:mm"));
+                        if (isValidDate(table.getValueAt(table.getSelectedRow(), 3).toString(), Settings.Styles.dateFormat))
+                            bok.setDate(parseDate(table.getValueAt(table.getSelectedRow(), 3).toString(), Settings.Styles.dateFormat));
                         else
                             model.setValueAt(s, table.getSelectedRow(), e.getColumn());
                         } catch (ParseException ex) {
@@ -153,7 +154,7 @@ public class BookingsPanel extends JPanel {
     }
 
     /**
-     * Resizes a JTable according to the cellcontents
+     * Resizes a JTable according to the cell-contents
      *
      * @param table table to be resized
      */
