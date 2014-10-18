@@ -6,17 +6,13 @@ import java.util.List;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.View;
 import android.widget.ExpandableListView;
-import android.widget.ExpandableListView.OnChildClickListener;
-import android.widget.ExpandableListView.OnGroupClickListener;
-import android.widget.ExpandableListView.OnGroupCollapseListener;
-import android.widget.ExpandableListView.OnGroupExpandListener;
-import android.widget.Toast;
+import java.text.SimpleDateFormat;
 import se.miun.dt142g.BaseActivity;
 import se.miun.dt142g.R;
 import se.miun.dt142g.data.handler.TableOrders;
 import se.miun.dt142g.data.EntityRep.TableOrder;
+import se.miun.dt142g.data.entityhandler.DataService;
 import se.miun.dt142g.data.entityhandler.DataSourceListener;
 
 public class Orders extends BaseActivity {
@@ -25,7 +21,7 @@ public class Orders extends BaseActivity {
     ExpandableListView expListView;
     final List<String> listDataHeader = new ArrayList<String>();
     HashMap<String, List<String>> listDataChild;
-    TableOrders tableOrders = new TableOrders();
+    final TableOrders tableOrders = new TableOrders();
 
     // Define the Handler that receives messages from the thread and update the progress
     private final Handler handler = new Handler() {
@@ -47,7 +43,6 @@ public class Orders extends BaseActivity {
         
 
     };
-    DataSourceListener background = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,9 +63,9 @@ public class Orders extends BaseActivity {
         expListView.setAdapter(listAdapter);
         expListView.expandGroup(0);
 
-        background = new DataSourceListener(tableOrders);
-        background.setHandler(handler);
-        background.start();
+        DataService.setSyncSpeed(DataSourceListener.DEFAULT_SYNC_SPPED);
+        DataService.setDataSource(tableOrders);
+        DataService.setHandler(handler);
     }
 
 
@@ -86,26 +81,27 @@ public class Orders extends BaseActivity {
         listDataHeader.clear();
         listDataChild.clear();
         int index = 0;
-        for (TableOrder tblOrder : tableOrders) {
-            listDataHeader.add("Bord " + tblOrder.getId());
+        synchronized(tableOrders) {
+            int size = 0;
+            for (TableOrder tblOrder : tableOrders) {
 
-            // Adding child data
-            List<String> bord1 = new ArrayList<String>();
-            for (Integer dishIndex : tblOrder.getOrderedDishes()) {
-                bord1.add("Rätt nr: " + dishIndex);
+                // Adding child data
+                List<Integer> tblDishes = tblOrder.getOrderedDishes();
+                if(tblDishes.size() > 0) {
+                    listDataHeader.add("Bord " + (tblOrder.getTable()+1) + "\n" + 
+                            new SimpleDateFormat("HH:mm").format(tblOrder.getTimeOfOrder()));
+                    List<String> bord1 = new ArrayList<String>();
+                    for (Integer dishIndex : tblDishes) {
+                        bord1.add(tableOrders.getDishes().getDish(dishIndex).getName());
+                    }
+                    listDataChild.put(listDataHeader.get(index), bord1);
+                    index++;
+                }
             }
-            listDataChild.put(listDataHeader.get(index), bord1);
-            index++;
         }
-        
         if(listDataHeader.size() > 0)
             expListView.expandGroup(0);
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (background != null) {
-            background.indicateStop();
-        }
+        else
+            prepareListData();
     }
 }

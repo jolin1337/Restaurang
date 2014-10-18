@@ -23,11 +23,13 @@ public class TableOrder {
     private int table;
     private Date timeOfOrder;
     private List<Integer> orderedDishes;
+    private boolean special;
 
-    public TableOrder() {
+    public TableOrder(int tbl) {
         id = -1;
         timeOfOrder = new Date();
         orderedDishes = new ArrayList<Integer>();
+        table = tbl;
     }
     
     public int getId() {
@@ -36,6 +38,14 @@ public class TableOrder {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isSpecial() {
+        return special;
+    }
+
+    public void setSpecial(boolean special) {
+        this.special = special;
     }
 
     public Date getTimeOfOrder() {
@@ -60,6 +70,8 @@ public class TableOrder {
         try {
             JSONArray orders = new JSONArray(getOrderedDishes());
             value.put("id", getId())
+                    .put("special", (special==true?1:0))
+                    .put("table", table)
                     .put("timeOrder", getTimeOfOrder())
                     .put("orderDishes", orders);
         } catch (JSONException ex) {

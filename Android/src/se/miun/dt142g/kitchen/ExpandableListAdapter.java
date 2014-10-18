@@ -13,6 +13,9 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import se.miun.dt142g.R;
+import se.miun.dt142g.data.entityhandler.DataService;
+import se.miun.dt142g.data.entityhandler.DataSource;
+import se.miun.dt142g.data.handler.TableOrders;
 /**
  * Created by Tomas on 2014-09-20.
  */
@@ -120,8 +123,19 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             @Override
             public void onClick(View view) {
                 //Do something with database
-                if(_listDataHeader != null)
+                if(_listDataHeader != null) {
                     _listDataHeader.remove(groupPosition);
+                    final DataSource ds = DataService.getDataSource();
+                    synchronized(ds) {
+                        if(ds instanceof TableOrders) {
+                            try {
+                            ((TableOrders)ds).getTables().remove(groupPosition);
+                            DataService.updateServer();
+                            } catch(UnsupportedOperationException ex) {}
+                            catch(IndexOutOfBoundsException ex) {}
+                        }
+                    }
+                }
                 notifyDataSetChanged();
             }
         });

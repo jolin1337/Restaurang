@@ -35,5 +35,6 @@
         <activity android:name=".reservations.ReservationsActivity"
             android:label="@string/reservations">
         </activity>
+        <service android:name="se.miun.dt142g.data.entityhandler.DataService"/>
     </application>
 </manifest>

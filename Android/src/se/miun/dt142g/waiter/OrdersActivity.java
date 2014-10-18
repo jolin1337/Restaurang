@@ -19,10 +19,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import se.miun.dt142g.BaseActivity;
 import se.miun.dt142g.R;
 import se.miun.dt142g.data.EntityRep.Dish;
+import se.miun.dt142g.data.EntityRep.TableOrder;
+import se.miun.dt142g.data.entityhandler.DataService;
 import se.miun.dt142g.data.entityhandler.DataSourceListener;
 import se.miun.dt142g.data.handler.Dishes;
 import se.miun.dt142g.data.handler.TableOrders;
@@ -61,7 +64,6 @@ public class OrdersActivity extends BaseActivity {
         
 
     };
-    DataSourceListener background = null;
 
     public OrdersActivity() {
         
@@ -77,10 +79,6 @@ public class OrdersActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        dishesDataSource = new DataSourceListener(availableMenus);
-        dishesDataSource.setHandler(handler);
-        dishesDataSource.setIntervallSpeed(DataSourceListener.SLOW_SYNC_SPPED);
-        dishesDataSource.start();
         setContentView(R.layout.order_menu);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -103,9 +101,10 @@ public class OrdersActivity extends BaseActivity {
         // Assign adapter to ListView
         listView.setAdapter(orders);
         
-        background = new DataSourceListener(tableOrders, DataSourceListener.SLOW_SYNC_SPPED);
-        background.setHandler(handler);
-        background.start();
+        
+        DataService.setSyncSpeed(DataSourceListener.DEFAULT_SYNC_SPPED);
+        DataService.setDataSource(tableOrders);
+        DataService.setHandler(handler);
     }
     
     public void removeBtnClicked(View btn) {
@@ -141,17 +140,32 @@ public class OrdersActivity extends BaseActivity {
         orderItem.setBackgroundColor(Color.DKGRAY);
         
         // Show Alert 
-        Toast.makeText(getApplicationContext(),
-           "Index :"+position+"  Val: " +itemValue , Toast.LENGTH_LONG)
-           .show();       
+//        Toast.makeText(getApplicationContext(),
+//           "Index :"+position+"  Val: " +itemValue , Toast.LENGTH_LONG)
+//           .show();       
         makeChoiseOfMenu(new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Dish m = dishes.getDishByIndex(which);
+                Dish p = values.get(position);
                 values.set(position, m);
                 orders.notifyDataSetChanged();
                 tv.setTextColor(Color.BLACK);
                 orderItem.setBackgroundColor(Color.WHITE);
+                synchronized(tableOrders) {
+                    TableOrder table = tableOrders.getTable(tableNr-1);
+                    List<Integer> dishes = table.getOrderedDishes();
+                    for(int dishIndex = dishes.size(); dishIndex > 0; dishIndex--) {
+                        if(p.getId() == dishes.get(dishIndex-1)) {
+                            if(m.getId() < 0 || dishes.get(dishIndex-1) < 0) continue;
+                            dishes.add(-p.getId()-1);
+                            dishes.set(dishIndex-1, m.getId());
+                            table.setTimeOfOrder(new Date());
+                            DataService.updateServer();
+                            break;
+                        }
+                    }
+                }
             }
         });
     }
@@ -162,8 +176,12 @@ public class OrdersActivity extends BaseActivity {
                 Dish m = dishes.getDishByIndex(which);
                 values.add(m);
                 orders.notifyDataSetChanged();
-                tableOrders.getTableOrderByIndex(tableNr-1).getOrderedDishes().add(m.getId());
-                background.writeData();
+                synchronized(tableOrders) {
+                    TableOrder table = tableOrders.getTable(tableNr-1);
+                    table.getOrderedDishes().add(m.getId());
+                    table.setTimeOfOrder(new Date());
+                }
+                DataService.updateServer();
             }
         });
     }

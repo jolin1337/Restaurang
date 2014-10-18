@@ -10,6 +10,8 @@ package se.miun.dt142g.data.entityhandler;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,11 +34,13 @@ public class DataSourceListener extends Thread {
      * The container of the data to sync to database
      */
     protected DataSource dataContainer = null;
+    private final Boolean dataContainerDummy = true;
     /**
      * The thread objects handler for syncing between Androidview and datasources
      * This object specifies the caller
      */
     protected Handler handler;
+    private final Boolean handlerDummy = true;
     /**
      * No connection or we are unable to talk to the correct server
      */
@@ -44,19 +48,19 @@ public class DataSourceListener extends Thread {
     /**
      * Secounds between each sync
      */
-    private int intervallSpeed = DEFAULT_SYNC_SPPED;
+    private final AtomicInteger intervallSpeed = new AtomicInteger(DEFAULT_SYNC_SPPED);
     /**
      * Indicates if the threadloop should stop or continue looping
      */
-    private boolean shouldRun = false;
+    private AtomicBoolean shouldRun = new AtomicBoolean(false);
     /**
      * Indicates if we shoudl write the active state of dataContainer to database
      */
-    private boolean shouldWrite = false;
+    private AtomicBoolean shouldWrite = new AtomicBoolean(false);
     /**
      * Indicates if we should ignore the handle or not
      */
-    private boolean shouldIgnoreDataResponse = false;
+    private AtomicBoolean shouldIgnoreDataResponse = new AtomicBoolean(false);
     
     /**
      * @param ds - The datasource to use
@@ -68,11 +72,11 @@ public class DataSourceListener extends Thread {
     public DataSourceListener(DataSource ds, int syncSpeed) throws NullPointerException {
         this(ds);
         if(syncSpeed < DEFAULT_SYNC_SPPED)
-            intervallSpeed = FAST_SYNC_SPPED;
+            intervallSpeed.lazySet(FAST_SYNC_SPPED);
         else if(syncSpeed < SLOW_SYNC_SPPED)
-            intervallSpeed = DEFAULT_SYNC_SPPED;
+            intervallSpeed.lazySet(DEFAULT_SYNC_SPPED);
         else
-            intervallSpeed = SLOW_SYNC_SPPED;
+            intervallSpeed.lazySet(SLOW_SYNC_SPPED);
         
     }
     
@@ -96,30 +100,37 @@ public class DataSourceListener extends Thread {
     public void run() {
         if(connectionErrorToSend == null) {
             try {
-                dataContainer.dbConnect();
-                dataContainer.loadData();
+                synchronized(dataContainerDummy) {
+                    dataContainer.dbConnect();
+                    dataContainer.loadData();
+                }
                 connectionErrorToSend = false;
-                shouldRun = true;
+                shouldRun.compareAndSet(false, true);
             } catch (DataSource.WrongKeyException ex) {
                 connectionErrorToSend = true;
             }
         }
         while(isRunning()) {
             try {
-                if(shouldWrite) {
-                    intervallSpeed = FAST_SYNC_SPPED;
-                    dataContainer.update();
+                if(shouldWrite.get()) {
+                    intervallSpeed.set(FAST_SYNC_SPPED);
+                    synchronized(dataContainerDummy) {
+                        dataContainer.update();
+                    }
+                    shouldWrite.set(false);
                 }
                 else {
-                    intervallSpeed = DEFAULT_SYNC_SPPED;
-                    dataContainer.loadData();
+                    intervallSpeed.set(DEFAULT_SYNC_SPPED);
+                    synchronized(dataContainerDummy) {
+                        dataContainer.loadData();
+                    }
                 }
                 if(connectionErrorToSend)
                     sendCode("connectionError", CONNECTION_ERROR);
                 else
                     sendCode("dataUpdated", UPDATE_CALL);
                 try {
-                    Thread.sleep(intervallSpeed);
+                    Thread.sleep(intervallSpeed.get());
                 } catch (InterruptedException ex) {
                     Logger.getLogger(DataSourceListener.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -129,26 +140,36 @@ public class DataSourceListener extends Thread {
         }
     }
     private void sendMessage(String msg) {
-        if(handler == null && !shouldIgnoreDataResponse) 
-            throw new NullPointerException("No handler set to "
-                + "send information to, please use setHandler for this purpous.");
-        else if(shouldIgnoreDataResponse) return;
-        Message msgObj = handler.obtainMessage();
+        Message msgObj;
+        synchronized(handlerDummy) {
+            if(handler == null && !shouldIgnoreDataResponse.get()) 
+                throw new NullPointerException("No handler set to "
+                    + "send information to, please use setHandler for this purpous.");
+            else if(shouldIgnoreDataResponse.get()) return;
+            msgObj = handler.obtainMessage();
+        }
         Bundle b = new Bundle();
         b.putString("message", msg);
         msgObj.setData(b);
-        handler.sendMessage(msgObj);
+        synchronized(handlerDummy) {
+            handler.sendMessage(msgObj);
+        }
     }
     private void sendCode(String key, int code) {
-        if(handler == null && !shouldIgnoreDataResponse) 
-            throw new NullPointerException("No handler set to "
-                + "send information to, please use setHandler for this purpous.");
-        else if(shouldIgnoreDataResponse) return;
-        Message msgObj = handler.obtainMessage();
+        Message msgObj;
+        synchronized(handlerDummy) {
+            if(handler == null && !shouldIgnoreDataResponse.get()) 
+                throw new NullPointerException("No handler set to "
+                    + "send information to, please use setHandler for this purpous.");
+            else if(shouldIgnoreDataResponse.get()) return;
+            msgObj = handler.obtainMessage();
+        }
         Bundle b = new Bundle();
         b.putInt(key, code);
         msgObj.setData(b);
-        handler.sendMessage(msgObj);
+        synchronized(handlerDummy) {
+            handler.sendMessage(msgObj);
+        }
     }
     
     /**
@@ -156,40 +177,48 @@ public class DataSourceListener extends Thread {
      * @param dc - The datasource to manage
      */
     public void setDataContainer(DataSource dc) {
-        dataContainer = dc;
+        synchronized(dataContainerDummy) {
+            dataContainer = dc;
+        }
     }
     /**
      * Gets the datasource object
      * @return the datasource of this listener
      */
     public DataSource getDataContainer() {
-        return dataContainer;
+        synchronized(dataContainerDummy) {
+            return dataContainer;
+        }
     }
 
     public Handler getHandler() {
-        return handler;
+        synchronized(handlerDummy) {
+            return handler;
+        }
     }
 
     public void setHandler(Handler handler) {
-        this.handler = handler;
+        synchronized(handlerDummy) {
+            this.handler = handler;
+        }
     }
 
     public int getIntervallSpeed() {
-        return intervallSpeed;
+        return intervallSpeed.get();
     }
 
     public void setIntervallSpeed(int intervallSpeed) {
-        this.intervallSpeed = intervallSpeed;
+        this.intervallSpeed.lazySet(intervallSpeed);
     }
 
     public boolean isRunning() {
-        return shouldRun;
+        return shouldRun.get();
     }
     public void indicateStop() {
-        shouldRun = false;
+        shouldRun.set(false);
     }
     public void writeData() {
-        shouldWrite = true;
+        shouldWrite.set(true);
     }
     /**
      * Indicates if the listener should sync to databse (false) or not (true)
@@ -197,14 +226,14 @@ public class DataSourceListener extends Thread {
      * otherwise false
      */
     public boolean hasWriten() {
-        return !shouldWrite;
+        return !shouldWrite.get();
     }
 
     public boolean shouldIgnoreDataResponse() {
-        return shouldIgnoreDataResponse;
+        return shouldIgnoreDataResponse.get();
     }
 
     public void setShouldIgnoreDataResponse(boolean shouldIgnoreDataResponse) {
-        this.shouldIgnoreDataResponse = shouldIgnoreDataResponse;
+        this.shouldIgnoreDataResponse.lazySet(shouldIgnoreDataResponse);
     }
 }

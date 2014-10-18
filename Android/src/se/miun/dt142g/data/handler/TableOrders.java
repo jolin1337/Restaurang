@@ -42,8 +42,9 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
             JSONArray data = json.getJSONArray("data");
             for(int i=data.length(); i > 0; i--) {
                 JSONObject row = data.getJSONObject(i-1);
-                TableOrder order = new TableOrder();
+                TableOrder order = new TableOrder(row.getInt("table"));
                 order.setId(row.getInt("id"));
+                order.setSpecial((row.getInt("special") != 0));
                 order.setTimeOfOrder(new Date(row.getInt("timeOfOrder")));
                 JSONArray ds = row.getJSONArray("orders");
                 List<Integer> dishesIndicies = new ArrayList<Integer>();
@@ -93,6 +94,11 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
                 JSONObject data2 = new JSONObject();
                 JSONObject item = new JSONObject();
                 item.put("id", rm.getId());
+                item.put("table", rm.getTable());
+                if(rm.isSpecial())
+                    item.put("special", 1);
+                else
+                    item.put("special", 0);
                 if(!removeFlag) {
                     item.put("timeOfOrder", rm.getTimeOfOrder().getTime());
                     JSONArray orders = new JSONArray(rm.getOrderedDishes());
@@ -100,7 +106,7 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
                 }
                 else item.put("remove", true);
                 data2.put("data", item);
-                data.put(data);
+                data.put(data2);
             }
             json.put("data", data);
             return json.toString();
@@ -133,7 +139,7 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
         if(tbos.size() != 6) {
             tableOrders.clear();
             for(int i=0;i<6;i++) {
-                tableOrders.add(new TableOrder());
+                tableOrders.add(new TableOrder(i));
             }
             update();
             return;
@@ -148,5 +154,15 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
     
     public TableOrder getTableOrderByIndex(int index) {
         return tableOrders.get(index);
+    }
+    public TableOrder getTable(int tableNr) {
+        for(TableOrder tblOrder : tableOrders)
+            if(tblOrder.getTable() == tableNr)
+                return tblOrder;
+        return null;
+    }
+
+    public List<TableOrder> getTables() {
+        return tableOrders;
     }
 }

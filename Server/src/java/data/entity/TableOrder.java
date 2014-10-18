@@ -22,6 +22,8 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -46,14 +48,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "TableOrder.findAll", query = "SELECT o FROM TableOrder o ORDER BY o.timeOfOrder"),
-    @NamedQuery(name = "TableOrder.findByTableID", query = "SELECT o FROM TableOrder o WHERE o.id = :tableID"),
+    @NamedQuery(name = "TableOrder.findByTableID", query = "SELECT o FROM TableOrder o WHERE o.id = :id"),
     @NamedQuery(name = "TableOrder.findAllOrders", query = "SELECT o FROM TableOrder o")})
 public class TableOrder extends JsonEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
-    @Size(min = 1, max = 255)
     @Column(name = "ID")
     /**
      * The primary key of this entity
@@ -62,10 +64,12 @@ public class TableOrder extends JsonEntity implements Serializable {
     @Column(name = "TIMEOFORDER")
     @Temporal(TemporalType.DATE) 
     private Date timeOfOrder;
+    @Column(name = "TABLE_NR")
+    private Integer tableNr;
     @Column(name = "SPECIAL")
     private Boolean special;
     @JoinTable(name = "TABLE_HAS_ORDER", joinColumns = {
-        @JoinColumn(name = "TABLE_ID", referencedColumnName = "tableID")}, inverseJoinColumns = {
+        @JoinColumn(name = "TABLE_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
         @JoinColumn(name = "DISH_ID", referencedColumnName = "ID")})
     @ManyToMany
     private List<Dish> orderedDishes;
@@ -84,6 +88,14 @@ public class TableOrder extends JsonEntity implements Serializable {
      */
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Integer getTableNr() {
+        return tableNr;
+    }
+
+    public void setTableNr(Integer tableNr) {
+        this.tableNr = tableNr;
     }
 
     public Boolean getSpecial() {
@@ -193,6 +205,7 @@ public class TableOrder extends JsonEntity implements Serializable {
         JsonObjectBuilder value = Json.createObjectBuilder()
                 .add("id", getId())
                 .add("orders", orders.build())
+                .add("table", getTableNr())
                 .add("timeOfOrder", getTimeOfOrder().getTime());
         if(special)
             value.add("special", 1);
@@ -207,6 +220,7 @@ public class TableOrder extends JsonEntity implements Serializable {
                 special = true;
             else special = false;
             timeOfOrder = new Date(obj.getJsonNumber("timeOfOrder").longValue());
+            tableNr = obj.getInt("table");
             // Parse the json object for insertion in this entity
             JsonArray orders = obj.getJsonArray("orders");
             for (JsonValue itDish : orders) {
@@ -227,7 +241,7 @@ public class TableOrder extends JsonEntity implements Serializable {
             }
         } catch (Exception e) {
             // Could not add the information to this entity
-            System.out.println("Wrong json object in setEntityByJson");
+            System.out.println("Wrong json object in setEntityByJson: " + obj.toString());
             return false;
         }
         return true;
