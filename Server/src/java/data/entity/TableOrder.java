@@ -33,6 +33,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.TypedQuery;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -229,7 +230,9 @@ public class TableOrder extends JsonEntity implements Serializable {
                     if (pk_inv >= 0) {
                         Dish dish = em.find(Dish.class, pk_inv);
                         if (dish != null) {
+                            decreaseDishInventory(dish.getId(), em);
                             addToOrders(dish);
+
                         }
                     } else {
                         Dish dish = em.find(Dish.class, -(pk_inv + 1));
@@ -247,4 +250,22 @@ public class TableOrder extends JsonEntity implements Serializable {
         return true;
     }
     
+    private boolean decreaseDishInventory(int dishId, EntityManager em){
+        TypedQuery<Inventory> query= em.createNamedQuery(
+                "Inventory.findInventoryForDish", Inventory.class);
+        query.setParameter("id", dishId);
+        List<Inventory> inventory = query.getResultList();
+//        for(Inventory i: inventory){
+//            if (i.getAmount()==0)
+//                return false; 
+//        }
+        for (Inventory i : inventory){
+            i.setAmount(i.getAmount()-1);
+        }
+        return true;
+    }
+    
+    private void subtractIngredient(int ingredientId){
+        
+    }
 }

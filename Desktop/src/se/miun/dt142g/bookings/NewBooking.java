@@ -5,7 +5,6 @@
 
 package se.miun.dt142g.bookings;
 
-import static com.michaelbaranov.microba.calendar.CalendarPane.STYLE_MODERN;
 import java.awt.Dimension;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -16,20 +15,22 @@ import javax.swing.JTextField;
 import se.miun.dt142g.data.Booking;
 import com.michaelbaranov.microba.calendar.DatePicker;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Map;
+import javax.swing.BorderFactory;
+import javax.swing.JFormattedTextField;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.SpinnerDateModel;
+import javax.swing.border.Border;
 import se.miun.dt142g.Controller;
-import se.miun.dt142g.Settings;
+
 /**
- *
+ * The class to prompt user for a new booking
  * @author Simple
  */
 public class NewBooking extends JPanel  {
@@ -50,77 +51,60 @@ public class NewBooking extends JPanel  {
     private Date bookingTime = new Date();
     private Controller remote = null;
 
-    /**
-    * Creates a formatted JLabel instance with the specified text. 
-    * @param labelName
-    * @return returns the JLabel
-    */
-    private JLabel addLabel(String labelName) {
-        JLabel label = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>" + labelName + "</div></html>");
-        Box fixHeight = Box.createHorizontalBox();
-        fixHeight.add( label );
-        fixHeight.add( Box.createHorizontalGlue() );
-        add(fixHeight); 
-        return label;
+    public NewBooking(){
+        setBackground(Color.white);
     }
     
-    /**
-    * Creates a formatted JTextField instance with the specified text. 
-    * @param textName 
-    * @return returns the JTextField
-    */
-    private JTextField addTextField(String textName) {
-        JTextField textField = new JTextField(textName);
-        textField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
-        add(textField);  
-        return textField;
-    }
     public final void newBooking(Booking b, Controller c){
         this.remote = c;
         this.booking = b;
         removeAll();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         
-        addLabel("Namn: ");
+//        addLabel("Namn: ");
         nameField = addTextField("");
+        nameField.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.white), BorderFactory.createTitledBorder("Namn:")));
         
-        addLabel("Telefon: ");
+//        addLabel("Telefon: ");
         phoneNrField = addTextField("");
+        phoneNrField.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.white), BorderFactory.createTitledBorder("Telefon:")));
         
-        addLabel("Antal personer: ");
+//        addLabel("Antal personer: ");
         personsField = addTextField("");
+        personsField.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.white), BorderFactory.createTitledBorder("Antal personer:")));
         
         /* Time spinner */
-        addLabel("Tid: ");
+//        addLabel("Tid: ");
         SpinnerDateModel model = new SpinnerDateModel();
         model.setCalendarField(Calendar.MINUTE);
         spinner = new JSpinner();
+
         spinner.setModel(model);
         spinner.setEditor(new JSpinner.DateEditor(spinner, "HH:mm"));
+        spinner.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.white), BorderFactory.createTitledBorder("Antal personer:")));
         add(spinner);
         /* Time spinner */
         
         
         
-        addLabel("Datum: ");
+//        addLabel("Datum: ");
         add(Box.createRigidArea(new Dimension(0, 10)));
+
         
-        
+        Border bbb = BorderFactory.createTitledBorder("Antal personer:");
         final DatePicker datePicker = new DatePicker(new Date());
         datePicker.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-        
+        datePicker.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.white), BorderFactory.createTitledBorder("Antal personer:")));
+
         this.add(datePicker);
-        addLabel("Varaktighet i timmar: ");
+//        addLabel("Varaktighet i timmar: ");
         durationField = addTextField("");
+        durationField.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.white), BorderFactory.createTitledBorder("Varaktighet i timmar:")));
                 
         add(Box.createRigidArea(new Dimension(0, 10)));
         addBookingBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         add(addBookingBtn);
         
-//        missingBookingInput = addLabel("Vänligen fyll i alla fält för att godkänna bokningen.");
-//        invalidBookingInput = addLabel("Vänligen ange endast heltal.");
-//        invalidPhoneInput = addLabel("Vänligen ange ett telefonnummer som är mellan 7 och 9 siffror");
-//        invalidDateInput = addLabel("Vänligen ange ett datum som inte är i det förflutna.");
         missingBookingInput = "Vänligen fyll i alla fält för att godkänna bokningen.";
         invalidNumberInput = "Vänligen ange endast heltal i personer fältet och varaktighet fältet.";
         invalidDateInput = "Vänligen ange ett datum som inte är i det förflutna.";
@@ -136,8 +120,6 @@ public class NewBooking extends JPanel  {
                 errorMessagesTextArea.setText("");
                 errorMessagesTextArea.setVisible(false);
 
-//                Object date = spinner.getValue();
-//                bookingTime = (Date)date;
                 bookingTime = (Date)spinner.getValue();
                 boolean invalidInput = false;
                 
@@ -168,11 +150,6 @@ public class NewBooking extends JPanel  {
                 booking.setName(nameField.getText());
                 booking.setPersons(Integer.parseInt(personsField.getText()));
                 booking.setPhoneNr(phoneNrField.getText());
-//                mergeDateWithTime(bookingTime, datePicker.getDate());
-
-//                bookingTime.setYear(datePicker.getDate().getYear());
-//                bookingTime.setMonth(datePicker.getDate().getMonth());
-//                bookingTime.setDate(datePicker.getDate().getDate());
 
                 booking.setDate(bookingTime);
                 booking.setDuration(Integer.parseInt(durationField.getText()));
@@ -214,5 +191,31 @@ public class NewBooking extends JPanel  {
             return false;
         }
         return true;
+    }
+    
+    /**
+    * Creates a formatted JLabel instance with the specified text. 
+    * @param labelName
+    * @return returns the JLabel
+    */
+    private JLabel addLabel(String labelName) {
+        JLabel label = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>" + labelName + "</div></html>");
+        Box fixHeight = Box.createHorizontalBox();
+        fixHeight.add( label );
+        fixHeight.add( Box.createHorizontalGlue() );
+        add(fixHeight); 
+        return label;
+    }
+    
+    /**
+    * Creates a formatted JTextField instance with the specified text. 
+    * @param textName 
+    * @return returns the JTextField
+    */
+    private JTextField addTextField(String textName) {
+        JTextField textField = new JTextField(textName);
+        textField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
+        add(textField);  
+        return textField;
     }
 }
