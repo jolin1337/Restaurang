@@ -21,7 +21,6 @@ import javax.swing.border.EmptyBorder;
 import se.miun.dt142g.Controller;
 import se.miun.dt142g.ConfirmationBox;
 import se.miun.dt142g.data.Dish;
-import se.miun.dt142g.website.EventPostPanel;
 
 /**
  *
@@ -39,7 +38,7 @@ public class DishPanel extends JPanel {
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(10, 10, 10, 10));
         setBackground(Color.white);
-        setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+        setMaximumSize(new Dimension(Integer.MAX_VALUE, 65));
         this.dish = dish;
         JPanel item = new JPanel(new BorderLayout());
         item.setBackground(Color.white);
@@ -47,7 +46,7 @@ public class DishPanel extends JPanel {
         add(remove, BorderLayout.WEST);
         name = new JTextField();
         name.setText(dish.getName());
-        name.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
+        name.setMaximumSize(new Dimension(Integer.MAX_VALUE, 65));
         name.addKeyListener(textFieldKeyListener);
         add(name, BorderLayout.CENTER);
         JButton detail = new JButton("Detaljer");

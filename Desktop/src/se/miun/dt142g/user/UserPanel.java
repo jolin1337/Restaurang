@@ -15,6 +15,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -33,7 +34,7 @@ import se.miun.dt142g.Controller;
 public class UserPanel extends JPanel {
     
     private JButton remove;
-    private final JLabel name,tele, epost, password;
+    //private final JLabel name,tele, epost, password;
     private final JTextField editUser, pwd, mail, telenr;
     private final User usr;
     private final Controller remote;
@@ -54,39 +55,37 @@ public class UserPanel extends JPanel {
         
         JPanel inputs = new JPanel();
         inputs.setLayout(new BoxLayout(inputs, BoxLayout.Y_AXIS));
-        inputs.setBackground(Color.WHITE);
-        
-        name = new JLabel("Namn:");
-        name.setMaximumSize(new Dimension(60,25));
-        password = new JLabel("Lösenord:");
+        inputs.setBackground(Color.WHITE);        
 
-        epost = new JLabel("Mail:");
-        tele = new JLabel("Tel:");
         
         editUser = new JTextField(user.getUsername());
         editUser.setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
+        editUser.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.white), BorderFactory.createTitledBorder("Namn:")));
         editUser.addFocusListener(userPanelFocusListener);
         editUser.addKeyListener(userPanelKeyListener);
         pwd = new JTextField(user.getPassword());        
         pwd.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        pwd.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.white), BorderFactory.createTitledBorder("Lösenord:")));
         pwd.addFocusListener(userPanelFocusListener);
         pwd.addKeyListener(userPanelKeyListener);
         mail = new JTextField(user.getMail());
         mail.setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
+        mail.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.white), BorderFactory.createTitledBorder("Mail:")));
         mail.addFocusListener(userPanelFocusListener);
         mail.addKeyListener(userPanelKeyListener);
         telenr = new JTextField(user.getPhoneNumber());
         telenr.setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
+        telenr.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.white), BorderFactory.createTitledBorder("Tel:")));
         telenr.addFocusListener(userPanelFocusListener);
         telenr.addKeyListener(userPanelKeyListener);
 
-        leftAlignLabel(name, inputs);
+//        leftAlignLabel(name, inputs);
         inputs.add(this.editUser);
-        leftAlignLabel(password, inputs);
+//        leftAlignLabel(password, inputs);
         inputs.add(pwd);
-        leftAlignLabel(epost, inputs);
+//        leftAlignLabel(epost, inputs);
         inputs.add(mail);
-        leftAlignLabel(tele, inputs);
+//        leftAlignLabel(tele, inputs);
         inputs.add(telenr);
         inputs.add(Box.createGlue());
         a.add(remove);

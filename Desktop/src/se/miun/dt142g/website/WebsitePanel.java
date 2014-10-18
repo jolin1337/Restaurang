@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -61,23 +62,15 @@ public class WebsitePanel extends JPanel {
 
         setBackground(Color.WHITE);
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        
-        JLabel open = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>Öppetider</div></html>");
-        Box  leftJustify = Box.createHorizontalBox();
-        leftJustify.add( open );
-        leftJustify.add( Box.createHorizontalGlue() );
-        add(leftJustify);     
+
         openEdit.setText(about.getDataOpen());
         openEdit.addKeyListener(textFieldKeyListener);
+        openEdit.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.white), BorderFactory.createTitledBorder("Öppettider:")));
         add(openEdit);
    
-        JLabel contact = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>Kontaktinformation</div></html>");
-        leftJustify = Box.createHorizontalBox();
-        leftJustify.add( contact );
-        leftJustify.add( Box.createHorizontalGlue() );
-        add(leftJustify);
         contactEdit.setText(about.getDataContacts());
         contactEdit.addKeyListener(textFieldKeyListener);
+        contactEdit.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.white), BorderFactory.createTitledBorder("Kontaktinformation:")));
         add(contactEdit);
         
         newEventPostBtnTop.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));

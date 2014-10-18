@@ -72,7 +72,7 @@ public class BookingsPanel extends JPanel {
      */
     private void initComponents() {
 
-        table.setRowHeight(33);
+        table.setRowHeight(40);
         remove = new JButton("Ta bort selekterad rad");
         remove.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         this.add(Box.createRigidArea(new Dimension(0, 15)));
