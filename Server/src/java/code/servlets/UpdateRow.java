@@ -92,7 +92,10 @@ public class UpdateRow extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Set the json mimetype
-        response.setContentType("application/json;charset=UTF-8");
+        
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+
         // Try to access output stream 
         try (PrintWriter out = response.getWriter()) {
 
@@ -108,11 +111,13 @@ public class UpdateRow extends HttpServlet {
 
                 // Iterate the rows to modify
                 for (JsonValue objVal : data) {
-                    if(objVal.getValueType() != JsonValue.ValueType.OBJECT) 
+                    if (objVal.getValueType() != JsonValue.ValueType.OBJECT) {
                         continue;
+                    }
                     JsonObject obj = (JsonObject) objVal;
-                    if(obj.get("data") != null && obj.get("data") instanceof JsonObject)
+                    if (obj.get("data") != null && obj.get("data") instanceof JsonObject) {
                         obj = obj.getJsonObject("data");
+                    }
                     // get the table to alter
 
                     switch (request.getParameter("table")) {

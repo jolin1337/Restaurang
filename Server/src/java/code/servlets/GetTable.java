@@ -56,7 +56,8 @@ public class GetTable extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
         try (PrintWriter out = response.getWriter()) {
             int authCode = Settings.isAutorised(request.getParameter("key"));
             if (authCode == Settings.AuthCode.accept) {
@@ -64,73 +65,74 @@ public class GetTable extends HttpServlet {
                 switch (request.getParameter("table")) {
                     case "dish":
                         TypedQuery<Dish> dishQuery = em.createNamedQuery("Dish.findAll", Dish.class);
-                        for(Dish d : dishQuery.getResultList()){
+                        for (Dish d : dishQuery.getResultList()) {
                             jsonString += d.toJsonString() + ",";
                         }
-                        break; 
+                        break;
                     case "booking":
                         TypedQuery<Booking> bookingQuery = em.createNamedQuery("Booking.findAll", Booking.class);
-                        for(Booking d : bookingQuery.getResultList()){
+                        for (Booking d : bookingQuery.getResultList()) {
                             jsonString += d.toJsonString() + ",";
                         }
-                        break; 
-                    case "dishgroup": 
-                        
+                        break;
+                    case "dishgroup":
+
                         TypedQuery<Dishgroup> dishGroupQuery = em.createNamedQuery("Dishgroup.findAll", Dishgroup.class);
-                        for(Dishgroup d : dishGroupQuery.getResultList()){
+                        for (Dishgroup d : dishGroupQuery.getResultList()) {
                             jsonString += d.toJsonString() + ",";
                         }
-                        break; 
+                        break;
                     case "event":
-                        
+
                         TypedQuery<Event> eventQuery = em.createNamedQuery("Event.findAll", Event.class);
-                        for(Event d : eventQuery.getResultList()){
+                        for (Event d : eventQuery.getResultList()) {
                             jsonString += d.toJsonString() + ",";
                         }
-                        break; 
+                        break;
                     case "info":
-                        
+
                         TypedQuery<Info> infoQuery = em.createNamedQuery("Info.findAll", Info.class);
-                        for(Info d : infoQuery.getResultList()){
+                        for (Info d : infoQuery.getResultList()) {
                             jsonString += d.toJsonString() + ",";
                         }
-                        break; 
+                        break;
                     case "inventory":
-                        
+
                         TypedQuery<Inventory> inventoryQuery = em.createNamedQuery("Inventory.findAll", Inventory.class);
-                        for(Inventory d : inventoryQuery.getResultList()){
+                        for (Inventory d : inventoryQuery.getResultList()) {
                             jsonString += d.toJsonString() + ",";
                         }
-                        break; 
-                    case "scheme": 
-                        
-                        break; 
-                    case "tableorder": 
+                        break;
+                    case "scheme":
+
+                        break;
+                    case "tableorder":
                         TypedQuery<TableOrder> tableOrderQuery = em.createNamedQuery("TableOrder.findAll", TableOrder.class);
-                        for(TableOrder d : tableOrderQuery.getResultList()){
+                        for (TableOrder d : tableOrderQuery.getResultList()) {
                             jsonString += d.toJsonString() + ",";
                         }
-                        break; 
+                        break;
                     case "user":
-                        
-                       TypedQuery<RestaurantUser> userQuery = em.createNamedQuery("RestaurantUser.findAll", RestaurantUser.class);
-                       for(RestaurantUser d : userQuery.getResultList()){
-                           jsonString += d.toJsonString() + ",";
-                       }
-                       
-                       break;
-                    default: 
-                        
+
+                        TypedQuery<RestaurantUser> userQuery = em.createNamedQuery("RestaurantUser.findAll", RestaurantUser.class);
+                        for (RestaurantUser d : userQuery.getResultList()) {
+                            jsonString += d.toJsonString() + ",";
+                        }
+
+                        break;
+                    default:
+
                 }
-                if(jsonString.length() > "{\"data\": [".length())
-                    jsonString = jsonString.substring(0, jsonString.length()-1);
+                if (jsonString.length() > "{\"data\": [".length()) {
+                    jsonString = jsonString.substring(0, jsonString.length() - 1);
+                }
                 jsonString += "]}";
                 out.print(URLEncoder.encode(jsonString, "UTF-8"));
-            }
-            else if(authCode == Settings.AuthCode.expired)
+            } else if (authCode == Settings.AuthCode.expired) {
                 out.print("expired_key");
-            else if(authCode == Settings.AuthCode.deny) 
+            } else if (authCode == Settings.AuthCode.deny) {
                 out.print("false");
+            }
         }
     }
 
