@@ -7,6 +7,7 @@
  */
 package se.miun.dt142g.data.entityhandler;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,6 +15,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import se.miun.dt142g.waiter.WaiterActivity;
 
 
 /**
@@ -52,15 +54,20 @@ public class DataSourceListener extends Thread {
     /**
      * Indicates if the threadloop should stop or continue looping
      */
-    private AtomicBoolean shouldRun = new AtomicBoolean(false);
+    private final AtomicBoolean shouldRun = new AtomicBoolean(false);
     /**
      * Indicates if we shoudl write the active state of dataContainer to database
      */
-    private AtomicBoolean shouldWrite = new AtomicBoolean(false);
+    private final AtomicBoolean shouldWrite = new AtomicBoolean(false);
     /**
      * Indicates if we should ignore the handle or not
      */
-    private AtomicBoolean shouldIgnoreDataResponse = new AtomicBoolean(false);
+    private final AtomicBoolean shouldIgnoreDataResponse = new AtomicBoolean(false);
+    /**
+     * Indicates if we should download server data or not
+     */
+    private final AtomicBoolean autoLoadData = new AtomicBoolean(true);
+    
     
     /**
      * @param ds - The datasource to use
@@ -108,6 +115,8 @@ public class DataSourceListener extends Thread {
                 shouldRun.compareAndSet(false, true);
             } catch (DataSource.WrongKeyException ex) {
                 connectionErrorToSend = true;
+            } catch (NullPointerException ex) {
+                connectionErrorToSend = true;
             }
         }
         while(isRunning()) {
@@ -119,7 +128,7 @@ public class DataSourceListener extends Thread {
                     }
                     shouldWrite.set(false);
                 }
-                else {
+                else if(autoLoadData.get()) {
                     intervallSpeed.set(DEFAULT_SYNC_SPPED);
                     synchronized(dataContainerDummy) {
                         dataContainer.loadData();
@@ -235,5 +244,9 @@ public class DataSourceListener extends Thread {
 
     public void setShouldIgnoreDataResponse(boolean shouldIgnoreDataResponse) {
         this.shouldIgnoreDataResponse.lazySet(shouldIgnoreDataResponse);
+    }
+
+    void setAutoLoadData(boolean b) {
+        autoLoadData.set(b);
     }
 }
