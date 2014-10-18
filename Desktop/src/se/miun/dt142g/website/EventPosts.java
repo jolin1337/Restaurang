@@ -20,6 +20,7 @@ import se.miun.dt142g.data.EventPost;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import se.miun.dt142g.Settings;
 
 /**
  *
@@ -122,7 +123,7 @@ public class EventPosts extends DataSource implements Iterable<EventPost> {
     private boolean upploadImg(int id, String url) {
         try {
             File uploadFile = new File(url);
-            FormMultiPartUtility multipart = new FormMultiPartUtility(serverUrl + "upload", "utf-8");
+            FormMultiPartUtility multipart = new FormMultiPartUtility(Settings.Strings.serverURL + "upload", "utf-8");
             multipart.addFilePart("fileUpload", uploadFile);
  
             multipart.finish();

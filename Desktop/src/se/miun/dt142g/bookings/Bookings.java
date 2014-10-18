@@ -17,10 +17,9 @@ import se.miun.dt142g.data.Booking;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import se.miun.dt142g.data.Dish;
 
 /**
- *
+ * Holds a list of all existing bookings
  * @author Marcus
  */
 public class Bookings extends DataSource implements Iterable<Booking> {
@@ -30,6 +29,10 @@ public class Bookings extends DataSource implements Iterable<Booking> {
     public Bookings() {
     }
 
+    /**
+     * Retrieves the amount of entries in bookings
+     * @return type is integer
+     */
     public int getRows() {
         return bookings.size();
     }
@@ -45,23 +48,37 @@ public class Bookings extends DataSource implements Iterable<Booking> {
                 return b;
         return null; 
     }
+    /**
+     * Returns the requested booking if it exists by index
+     * @param index of the requested booking
+     * @return the booking instance
+     */
     public Booking getBookingByIndex(int index){
         return bookings.get(index);
     }
     
-   public void updateBooking(Booking b){
-       
-   }
-   
+    /**
+     * Add a booking into bookings
+     * @param booking to be added
+     */
    public void addBooking(Booking booking){
         bookings.add(booking);
     }
    
+   /**
+    * Remove a booking by id locally and remotely from the database
+    * @param id of the booking to be removed
+    */
     public void removeBooking(int id){
         bookings.remove(this.getBooking(id));
         removeBookingDb(id);
     }
     
+    /**
+     * Updates an existing booking reffered by id
+     * @param id of the booking up be updated
+     * @param booking the new booking data to be added
+     */
     public void editBooking(int id, Booking booking){
         bookings.set(bookings.indexOf(id), booking);
     }
@@ -147,12 +164,20 @@ public class Bookings extends DataSource implements Iterable<Booking> {
         return true;
     }
     
-    public boolean addBookingDb(Booking b){
+    /**
+     * Add a booking instance to the database
+     * @param b is the booking to be added
+     */
+    public void addBookingDb(Booking b){
         String str = "key="+key+"&table=" + table + "&data={\"data\":["+b.toJsonString()+"]}";
         System.out.println("Update status: " +getRequest("updaterow", str));
-        return true;
     }
     
+    /**
+     * Converts this object to a json string
+     * @param newId if true create a new booking
+     * @return The json string representing this object
+     */
     public String toJsonString(boolean newId) {
         String str = "{\"data\":[";
         JSONArray data = new JSONArray(); 
@@ -170,6 +195,11 @@ public class Bookings extends DataSource implements Iterable<Booking> {
         return str + "]}";
     }
     
+    /**
+     * Retrieves data from the database
+     * @return a list of all data (booking objects)
+     * @throws se.miun.dt142g.DataSource.WrongKeyException 
+     */
     private List<Booking> getDataList() throws WrongKeyException {
         List<Booking> res = new ArrayList<>();
         JSONObject response = null;
