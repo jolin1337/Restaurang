@@ -42,7 +42,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Inventory.findAll", query = "SELECT i FROM Inventory i"),
-    @NamedQuery(name = "Inventory.findInventoryForDish", query = "SELECT i FROM Inventory i,Dish d WHERE i.dishList = d.id AND d.id = :id"),
+    @NamedQuery(name = "Inventory.findInventoryForDish", query = "SELECT i FROM Inventory i,Dish d  WHERE i.dishList = d AND d.id = :id"),
     @NamedQuery(name = "Inventory.findById", query = "SELECT i FROM Inventory i WHERE i.id = :id"),
     @NamedQuery(name = "Inventory.findByAmount", query = "SELECT i FROM Inventory i WHERE i.amount = :amount")})
 public class Inventory extends JsonEntity implements Serializable {
