@@ -21,6 +21,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import javax.swing.BorderFactory;
 import javax.swing.JFormattedTextField;
 import javax.swing.JSpinner;
@@ -174,6 +175,7 @@ public class NewBooking extends JPanel  {
     * 
     */
     private void mergeDateWithTime(Date d1, Date d2){
+        //d1.setTime(d2.getTime() - d2.getTime()%(1000*60*60*24) + d1.getTime() % (1000*60*60*24));
         d1.setYear(d2.getYear());
         d1.setMonth(d2.getMonth());
         d1.setDate(d2.getDate());

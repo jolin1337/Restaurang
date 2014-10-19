@@ -50,12 +50,30 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Dishgroup.weekMenu", query = "SELECT d FROM Dishgroup d WHERE "
             + "d.name = 'Måndag' OR d.name = 'Tisdag' OR d.name = 'Onsdag' OR "
             + "d.name = 'Torsdag' OR d.name = 'Fredag' OR d.name = 'Lördag' OR "
-            + "d.name = 'Söndag' ORDER BY d.name ASC"),
+            + "d.name = 'Söndag'"),
     @NamedQuery(name = "Dishgroup.findAll", query = "SELECT d FROM Dishgroup d"),
     @NamedQuery(name = "Dishgroup.findByName", query = "SELECT d FROM Dishgroup d WHERE d.name = :name")})
 public class Dishgroup extends JsonEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    public static void sortDishgroups(List<Dishgroup> dishes) {
+        String[] dishNames = new String[]{"Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag", "Söndag"};
+        int index = 0;
+        for(String name : dishNames) {
+            int ni = index;
+            int index2 = 0;
+            for(Dishgroup gdish : dishes) {
+                if(gdish.getName().equals(name)) {
+                    Dishgroup tmp = dishes.set(ni, gdish);
+                    dishes.set(index2, tmp);
+                    break;
+                }
+                index2++;
+            }
+            index++;
+        }
+    }
     @Id
     @Basic(optional = false)
     @NotNull

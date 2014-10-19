@@ -30,8 +30,8 @@ import javax.servlet.http.HttpServletResponse;
 public class AuthTest extends HttpServlet {
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
+     * Processes requests for HTTP <code>POST</code>
+     * method.
      *
      * @param request servlet request
      * @param response servlet response

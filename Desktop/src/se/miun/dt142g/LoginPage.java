@@ -21,12 +21,22 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 /**
+ * This class represents the veiw shown if there was an error to connect to the
+ * server
  *
- * @author Johannes
+ * @author Johannes Lindén
+ * @since 2014-10-11
+ * @version 1.3
  */
 class LoginPage extends JPanel {
+    /**
+     * The alternative one choise, change the safekey textfield
+     */
     JTextField alt1Txt = new JTextField(DataSource.getSafeKey());
 
+    /**
+     * Constructs the entire view in default constructor
+     */
     public LoginPage() {
         setBackground(Color.white);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -38,8 +48,7 @@ class LoginPage extends JPanel {
         add(alt1);
         alt1Txt.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         add(alt1Txt);
-        //add(Box.createHorizontalStrut(1));
-        //add(Box.createGlue());
+        
         add(Box.createRigidArea(new Dimension(1, 10)));
         JButton alt2 = new JButton("2. Reconnect and se if it works.");
         add(alt2);
@@ -51,7 +60,7 @@ class LoginPage extends JPanel {
                 try {
                     DataSource.setSafeKey(alt1Txt.getText());
                     parent.remove(LoginPage.this);
-                    parent.add(new SharedTabs());
+                    parent.add(new MainDT142GStarter());
                 } catch (DataSource.WrongKeyException ex) {
                     parent.add(LoginPage.this);
                 } finally {

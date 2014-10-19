@@ -1,15 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package se.miun.dt142g.data;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import se.miun.dt142g.food.Inventory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,6 +29,7 @@ public class Dish implements Comparable<Dish> {
     public int getId() {
         return id;
     }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -103,8 +98,9 @@ public class Dish implements Comparable<Dish> {
     }
 
     public boolean equals(Dish x) {
-        if(x == null)
+        if (x == null) {
             return false;
+        }
         return this.id == x.getId();
     }
 

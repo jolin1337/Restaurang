@@ -107,7 +107,7 @@ public class DishesPanel extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                Dish dish = new Dish(dishes.getUniqueId(), "", 0.0f, null);
+                Dish dish = new Dish(-1, "", 0.0f, null);
                 DishPanel dp = new DishPanel(dish, remote);
                 remove(addDishBtn);
                 remove(submitBtn);
