@@ -7,7 +7,6 @@
  */
 package se.miun.dt142g.website;
 
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -67,12 +66,12 @@ public class WebsitePanel extends JPanel {
 
         openEdit.setText(about.getDataOpen());
         openEdit.addKeyListener(textFieldKeyListener);
-        openEdit.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.white), BorderFactory.createTitledBorder("Öppettider:")));
+        openEdit.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Settings.Styles.applicationBgColor), BorderFactory.createTitledBorder("Öppettider:")));
         add(openEdit);
    
         contactEdit.setText(about.getDataContacts());
         contactEdit.addKeyListener(textFieldKeyListener);
-        contactEdit.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.white), BorderFactory.createTitledBorder("Kontaktinformation:")));
+        contactEdit.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Settings.Styles.applicationBgColor), BorderFactory.createTitledBorder("Kontaktinformation:")));
         add(contactEdit);
         
         newEventPostBtnTop.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
