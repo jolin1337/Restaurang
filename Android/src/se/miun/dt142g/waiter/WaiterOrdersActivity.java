@@ -8,13 +8,16 @@ package se.miun.dt142g.waiter;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -150,22 +153,26 @@ public class WaiterOrdersActivity extends BaseActivity {
             @Override
             public synchronized void onClick(DialogInterface dialog, int which) {
                 Dish m = dishes.getDishByIndex(which);
-                Dish p = values.get(position);
-                values.set(position, m);
-                orders.notifyDataSetChanged();
-                tv.setTextColor(Color.BLACK);
-                orderItem.setBackgroundColor(Color.WHITE);
-                List<Integer> dishes = tableOrder.getOrderedDishes();
-                for(int dishIndex = dishes.size(); dishIndex > 0; dishIndex--) {
-                    if(p.getId() == dishes.get(dishIndex-1)) {
-                        if(m.getId() < 0 || dishes.get(dishIndex-1) < 0) continue;
-                        dishes.add(-p.getId()-1);
-                        dishes.set(dishIndex-1, m.getId());
-                        tableOrder.setTimeOfOrder(new Date());
-                        DataService.updateServer();
-                        break;
+                if(m.isInStock()){
+                    Dish p = values.get(position);
+                    values.set(position, m);
+                    orders.notifyDataSetChanged();
+                    tv.setTextColor(Color.BLACK);
+                    orderItem.setBackgroundColor(Color.WHITE);
+                    List<Integer> dishes = tableOrder.getOrderedDishes();
+                    for(int dishIndex = dishes.size(); dishIndex > 0; dishIndex--) {
+                        if(p.getId() == dishes.get(dishIndex-1)) {
+                            if(m.getId() < 0 || dishes.get(dishIndex-1) < 0) continue;
+                            dishes.add(-p.getId()-1);
+                            dishes.set(dishIndex-1, m.getId());
+                            tableOrder.setTimeOfOrder(new Date());
+                            DataService.updateServer();
+                            break;
+                        }
                     }
                 }
+                tv.setTextColor(Color.BLACK);
+                orderItem.setBackgroundColor(Color.WHITE);
             }
         });
     }
@@ -174,12 +181,14 @@ public class WaiterOrdersActivity extends BaseActivity {
             @Override
             public synchronized void onClick(DialogInterface dialog, int which) {
                 Dish m = dishes.getDishByIndex(which);
-                values.add(m);
-                orders.notifyDataSetChanged();
-                
-                tableOrder.getOrderedDishes().add(m.getId());
-                tableOrder.setTimeOfOrder(new Date());
-                DataService.updateServer();
+                if (m.isInStock()){
+                    values.add(m);
+                    orders.notifyDataSetChanged();
+
+                    tableOrder.getOrderedDishes().add(m.getId());
+                    tableOrder.setTimeOfOrder(new Date());
+                    DataService.updateServer();
+                }
             }
         });
     }

@@ -217,9 +217,7 @@ public class TableOrder extends JsonEntity implements Serializable {
     @Override
     public boolean setEntityByJson(JsonObject obj, EntityManager em) {
         try {
-            if(obj.getInt("special") == 1)
-                special = true;
-            else special = false;
+            special = obj.getInt("special") == 1;
             timeOfOrder = new Date(obj.getJsonNumber("timeOfOrder").longValue());
             tableNr = obj.getInt("table");
             // Parse the json object for insertion in this entity
