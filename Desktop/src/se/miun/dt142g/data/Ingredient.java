@@ -1,21 +1,33 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package se.miun.dt142g.data;
 
 /**
  * Data representation of an ingredient. 
  * @author Ulf
- * @see Comparable
  */
-public class Ingredient implements Comparable<Ingredient>{
+public class Ingredient implements Comparable<Ingredient> {
+    /**
+     * The identifier of this ingredient
+     */
     private int id; 
+    /**
+     * The name of this ingredient
+     */
     private String name; 
+    /**
+     * Amount left of this ingredient in stock
+     */
     private int amount; 
+    /**
+     * If this ingredient should be removed or not
+     */
     private boolean flaggedForRemoval = false; 
 
+    /**
+     * Constructs an ingredient with the parameter as initial values
+     * @param id
+     * @param name
+     * @param amount 
+     */
     public Ingredient(int id, String name, int amount) {
         this.id = id;
         this.name = name;

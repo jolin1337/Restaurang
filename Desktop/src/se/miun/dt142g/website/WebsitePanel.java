@@ -1,7 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This code is created for one purpose only. And should not be used for any 
+ * other purposes unless the author of this file has apporved. 
+ * 
+ * This code is a piece of a project in the course DT142G on Mid. Sweden university
+ * Created by students for this projekt only
  */
 package se.miun.dt142g.website;
 
@@ -32,8 +34,11 @@ import se.miun.dt142g.data.AboutUs;
 import se.miun.dt142g.data.EventPost;
 
 /**
+ * This class describes the website information to edit
  *
- * @author Johannes
+ * @author Johannes Lindén
+ * @since 2014-10-11
+ * @version 1.3
  */
 public class WebsitePanel extends JPanel {
     List<EventPostPanel> eventPostPanels = new ArrayList<>();
@@ -57,7 +62,7 @@ public class WebsitePanel extends JPanel {
         about.loadData();
         remote = c;
 
-        setBackground(Color.WHITE);
+        setBackground(Settings.Styles.applicationBgColor);
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         openEdit.setText(about.getDataOpen());

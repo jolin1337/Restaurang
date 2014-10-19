@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -33,7 +32,11 @@ import se.miun.dt142g.data.Booking;
  */
 public class BookingsPanel extends JPanel {
 
-    // Variables declaration - do not modify    
+    // Variables declaration - do not modify  
+    /**
+     * The table labels
+     */
+    Object[] headers = new Object[]{"Namn", "Telefon", "Antal", "Datum", "Varaktighet (timmar)"};
     /**
      * Indicates if we have shanged the view to NewBooking
      */
@@ -64,10 +67,7 @@ public class BookingsPanel extends JPanel {
      */
     private JButton remove;
     
-    /**
-     * Instantiate table model
-     * This is for making the first row disabled for editing
-     */
+    //instance table model
     DefaultTableModel model = new DefaultTableModel() {
 
         @Override
@@ -80,10 +80,7 @@ public class BookingsPanel extends JPanel {
      * THis is the table conntaining all bookings/reservations
      */
     JTable table = new JTable(model);
-    /**
-     * The table labels
-     */
-    Object[] headers = new Object[]{"Namn", "Telefon", "Antal", "Datum", "Varaktighet (timmar)"};
+
     // End of variables declaration
     
     /**
@@ -95,11 +92,12 @@ public class BookingsPanel extends JPanel {
      * connect to the server/database
      */
     public BookingsPanel(Controller c) throws DataSource.WrongKeyException {
+        this.remote = c;                // Sets the remote
         this.bookings = new Bookings(); // create new dataobject
         this.bookings.dbConnect();      // Try to connect to database
         this.bookings.loadData();       // Load the data from database to this booking
+        setBackground(Settings.Styles.applicationBgColor);
         initComponents();               // Create all contents of this view
-        this.remote = c;                // Sets the remote
     }
 
     /**
@@ -110,18 +108,10 @@ public class BookingsPanel extends JPanel {
         table.setRowHeight(40);
         remove = new JButton("Ta bort selekterad rad");
         remove.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-        this.add(Box.createRigidArea(new Dimension(0, 15)));
-        this.add(remove);
-        this.remove.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Delete row
+        add(Box.createRigidArea(new Dimension(0, 15)));
+        add(remove);
 
-                removeBooking = true;
-                thisPanel.revalidate();
-            }
-        });
-        this.add(Box.createRigidArea(new Dimension(0, 30)));
+        add(Box.createRigidArea(new Dimension(0, 30)));
 
         // Create a couple of columns 
         for (int i = 0; i < 5; i++) {
@@ -136,6 +126,32 @@ public class BookingsPanel extends JPanel {
         resizeColumnWidth(table);
         add(table);
         
+
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        add(Box.createRigidArea(new Dimension(1, 10)));
+        addBooking = new JButton("Lägg till bokning");
+
+        addBooking.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        add(addBooking);
+        addListeners();
+    }
+
+    /**
+     * Adds listeners for components strictly in BookingsPanel only.
+     */
+    private void addListeners(){
+        
+        // Remove booking listener
+        remove.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Delete row
+
+                removeBooking = true;
+                thisPanel.revalidate();
+            }
+        });
+     
         /**
          * This adds an tablemodel listener to the table
          */
@@ -150,35 +166,55 @@ public class BookingsPanel extends JPanel {
             public void tableChanged(TableModelEvent e) {
                 // If the type of change is an update (not an removal or creation)
                 if (e.getType() == TableModelEvent.UPDATE) {
-                    // Get the selected row that was edited
+                    String nameCellValue = table.getValueAt(table.getSelectedRow(), 0).toString();
+                    String phoneNrCellValue = table.getValueAt(table.getSelectedRow(), 1).toString();
+                    String personsCellValue = table.getValueAt(table.getSelectedRow(), 2).toString();
+                    String dateCellValue = table.getValueAt(table.getSelectedRow(), 3).toString();
+                    String durationCellValue = table.getValueAt(table.getSelectedRow(), 4).toString();
+
+                    // Get booking instance
                     Booking bok = bookings.getBookingByIndex(table.getSelectedRow() - 1);
-                    System.out.println("Editing row: " + table.getSelectedRow() + " Reservation name: " + bok.getName());
-                    
+
                     // Update the fields of the matched booking datasource
-                    bok.setName(table.getValueAt(table.getSelectedRow(), 0).toString());
-                    bok.setPhoneNr(table.getValueAt(table.getSelectedRow(), 1).toString());
-                    bok.setPersons(Integer.parseInt(table.getValueAt(table.getSelectedRow(), 2).toString()));
-                    
+                    bok.setName(nameCellValue);
+                    bok.setPhoneNr(phoneNrCellValue);
+
+                    // Persons field
+                    if (isInteger(personsCellValue)) {
+                        bok.setPersons(Integer.parseInt(personsCellValue));
+                    } else {
+                        model.setValueAt(bok.getPersons(), table.getSelectedRow(), e.getColumn());
+                    }
+
                     // Update the date of the matched booking datasource
-                    SimpleDateFormat df = new SimpleDateFormat(Settings.Styles.dateFormat);
-                    Date tmpDate = bok.getDate();
-                    String s = df.format(tmpDate);
+                    String oldDate = new SimpleDateFormat(Settings.Styles.dateFormat).format(bok.getDate());
                     try {
-                        if (isValidDate(table.getValueAt(table.getSelectedRow(), 3).toString(), Settings.Styles.dateFormat))
-                            bok.setDate(parseDate(table.getValueAt(table.getSelectedRow(), 3).toString(), Settings.Styles.dateFormat));
-                        else
-                            model.setValueAt(s, table.getSelectedRow(), e.getColumn());
-                        } catch (ParseException ex) {
-                        model.setValueAt(s, table.getSelectedRow(), e.getColumn());
-                        System.out.println("The date is invalid and not updated in bookings object.");
+                        if (isValidDate(dateCellValue, Settings.Styles.dateFormat)) {
+                            bok.setDate(parseDate(dateCellValue, Settings.Styles.dateFormat));
+                        } else {
+                            model.setValueAt(oldDate, table.getSelectedRow(), e.getColumn());
+                        }
+                    } catch (ParseException ex) {
+                        model.setValueAt(oldDate, table.getSelectedRow(), e.getColumn());
+                        System.err.println("Datumet lyckades inte redigeras i bokningar.");
                         Logger.getLogger(BookingsPanel.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    bok.setDuration(Integer.parseInt(table.getValueAt(table.getSelectedRow(), 4).toString()));
+
+                    // Duration field
+                    if (isInteger(durationCellValue)) {
+                        bok.setDuration(Integer.parseInt(durationCellValue));
+                    } else {
+                        model.setValueAt(bok.getDuration(), table.getSelectedRow(), e.getColumn());
+                    }
+
+                    // Update database with new values
                     try {
                         // sync to server here
                         bookings.update();
                     } catch (DataSource.WrongKeyException ex) {
-                        System.out.println("Sorry no update lets try to show that to the user...");
+                        System.err.println("Det gick tyvärr inte att uppdatera.");
+                        Logger.getLogger(BookingsPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        System.err.println("Förlåt, ingen uppdatering. vi ska försöka visa det för användaren...");
                         
                         JOptionPane.showMessageDialog(BookingsPanel.this,
                             Settings.Strings.serverConnectionError,
@@ -190,24 +226,18 @@ public class BookingsPanel extends JPanel {
             }
         });
 
-        // Sets this views layout
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.add(Box.createRigidArea(new Dimension(1, 10)));
-        this.setBackground(Settings.Styles.applicationBgColor);
-        addBooking = new JButton("Lägg till bokning");
-        this.addBooking.addActionListener(new ActionListener() {
+        // Add booking listener
+        addBooking.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Booking b = new Booking(bookings.getUniqueId(), "", new Date(), 0, 0, "");
-                bookings.addBooking(b); // add the new booking and sync to the server
+                bookings.addBooking(b);
                 remote.setViewNewBooking(b);
                 newBookingP = true;
             }
         });
-        addBooking.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-        this.add(addBooking);
     }
-
+    
     /**
      * Resizes a JTable according to the cell-contents
      * @param table table to be resized
@@ -254,21 +284,21 @@ public class BookingsPanel extends JPanel {
         }
         return true;
     }
-
+    
     /**
-     * Creates a formatted JLabel instance with the specified text.
-     * @param labelName
-     * @return returns the JLabel
-     */
-    private JLabel addLabel(String labelName) {
-        JLabel label = new JLabel("<html><div style='margin: 10px 0 3px 3px;'>" + labelName + "</div></html>");
-        Box fixHeight = Box.createHorizontalBox();
-        fixHeight.add(label);
-        fixHeight.add(Box.createHorizontalGlue());
-        add(fixHeight);
-        return label;
+    * Verifies whether a string is an integer or alphabetic
+    * @param s String to verify
+    * @return returns true if the string is an integer
+    */
+    private boolean isInteger(String s) {
+        try {
+            Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
     }
-
+    
     @Override
     public void revalidate() {
         super.revalidate();
@@ -289,7 +319,7 @@ public class BookingsPanel extends JPanel {
             try {
                 if (table.getSelectedRow() > 0) {
                     bookings.removeBooking(
-                            bookings.getBookingByIndex(table.getSelectedRow())
+                            bookings.getBookingByIndex(table.getSelectedRow()-1)
                             .getId());
                     model.removeRow(table.getSelectedRow());
                 }

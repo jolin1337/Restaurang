@@ -77,7 +77,7 @@ public class Users extends DataSource implements Iterable<User>{
             try{
                 JSONObject jsonUser = new JSONObject();
                 JSONObject dataElement = new JSONObject();
-                if(u.isRemovable() == true)
+                if(u.isRemoved() == true)
                 {
                    jsonUser.put("remove", true);
                 }
