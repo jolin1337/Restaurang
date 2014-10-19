@@ -139,4 +139,8 @@ public class Users extends DataSource implements Iterable<User>{
     }
     
     
+    @Override
+    public String toString() {
+        return "Users size = " + users.size();
+    }
 }

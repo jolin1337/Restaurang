@@ -172,4 +172,8 @@ public class Dishes extends DataSource implements Iterable<Dish> {
         }
         return charDishes;
     }
+    @Override
+    public String toString() {
+        return "Dishes size = " + dishes.size();
+    }
 }

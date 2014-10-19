@@ -129,8 +129,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     synchronized(ds) {
                         if(ds instanceof TableOrders) {
                             try {
-                            ((TableOrders)ds).getTables().remove(groupPosition);
+                                DataService.setAutoLoad(false);
+                            ((TableOrders)ds).getTable(groupPosition).getOrderedDishes().clear();
                             DataService.updateServer();
+                                DataService.setAutoLoad(false);
                             } catch(UnsupportedOperationException ex) {}
                             catch(IndexOutOfBoundsException ex) {}
                         }

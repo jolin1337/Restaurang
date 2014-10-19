@@ -9,15 +9,13 @@ package se.miun.dt142g.data.entityhandler;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import se.miun.dt142g.data.entityhandler.DataSourceListener;
-import se.miun.dt142g.waiter.WaiterActivity;
+import se.miun.dt142g.waiter.WaiterTableActivity;
 
 /**
  *
@@ -28,6 +26,10 @@ public class DataService extends Service {
 
     public static void setAutoLoad(boolean auto) {
         background.setAutoLoadData(auto);
+    }
+
+    public static void handleError(int get) {
+        
     }
     private final IBinder mBinder = new LocalBinder();
     @Override
@@ -115,7 +117,7 @@ public class DataService extends Service {
                 ds.dbConnect();
                 ds.loadData();
             } catch (DataSource.WrongKeyException ex) {
-                Logger.getLogger(WaiterActivity.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(WaiterTableActivity.class.getName()).log(Level.SEVERE, null, ex);
             }
             
         }

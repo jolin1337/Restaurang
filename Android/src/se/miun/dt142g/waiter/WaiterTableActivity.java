@@ -33,21 +33,30 @@ import se.miun.dt142g.data.handler.TableOrders;
  * 
  * @author Johannes
  */
-public class WaiterActivity extends BaseActivity {
+public class WaiterTableActivity extends BaseActivity {
+    public static final int SYNCDURATION_DELAY = 10000;
     public static final int RESPONSE = 0;
     
-    private final TableOrders tableOrders = new TableOrders();
+    private static final TableOrders tableOrders = new TableOrders();
     private final List<Button> tableButtons = new ArrayList<Button>();
     
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            
+            Bundle data = msg.getData();
+            if(data != null) {
+                if(data.containsKey("connectionError")) {
+                    DataService.handleError(data.getInt("connectionError"));
+                }
+                if(data.containsKey("dataUpdated") && data.getInt("dataUpdated") == DataSourceListener.UPDATE_CALL) {
+                    updateBtnColors(true);
+                }
+            }
         }
     };
     
 
-    public WaiterActivity() {
+    public WaiterTableActivity() {
         
     }
     
@@ -63,12 +72,12 @@ public class WaiterActivity extends BaseActivity {
         
         DataService.setDataSource(tableOrders);
         DataService.setHandler(handler);
-        
-        updateTableOrderObject(DataService.getDataSource());
+        if(tableOrders.getTables().size() != 6)
+            updateTableOrderObject(DataService.getDataSource());
         
         WaiterOrdersActivity.dishes = tableOrders.getDishes();
         
-        updateBtnColors(false);
+        updateBtnColors(true);
     }
     public void table_click(View v) throws InvalidCredentialsException {
         if(v.getClass() != Button.class)
@@ -102,14 +111,24 @@ public class WaiterActivity extends BaseActivity {
 
     private void updateBtnColors(boolean b) {
         DataSource dataSource = DataService.getDataSource();
-        if(b)
+        if(!(dataSource instanceof TableOrders))
+            return;
+        if(b) {
+            dataSource = new TableOrders();
             updateTableOrderObject(dataSource);
+        }
         LinearLayout btnsParent = (LinearLayout)findViewById(R.id.order_btns);
         for(int i = btnsParent.getChildCount(); i > 0; i--) {
             Button btn = (Button)btnsParent.getChildAt(i-1);
             int tableNr = Integer.parseInt(btn.getText().toString().replace("Bord ", ""));
-            if(tableOrders.getTable(tableNr-1).getOrderedDishes().size() > 0)
-                btn.setBackgroundResource(R.drawable.green_button);
+            if(tableOrders.getTable(tableNr-1).getOrderedDishes().size() > 0) {
+                // om tableOrder == dataSource => lagar mat => orange
+                if(tableOrders.getTable(tableNr-1).getId() == ((TableOrders)dataSource).getTable(tableNr-1).getId())
+                   btn.setBackgroundResource(R.drawable.orange_button);
+                // annars => kund äter => grön
+                else
+                    btn.setBackgroundResource(R.drawable.green_button);
+            }
             else
                 btn.setBackgroundResource(R.drawable.default_button);
             tableButtons.add(btn);
@@ -119,15 +138,15 @@ public class WaiterActivity extends BaseActivity {
     private void updateTableOrderObject(DataSource dataSource) {
         Thread threadSync = new Thread(DataService.updateOnce);
         
-        DataSource tmpSrc = DataService.getDataSource();
+        final DataSource tmpSrc = DataService.getDataSource();
         try {
             DataService.setDataSource(dataSource);
             threadSync.start();
-            threadSync.join(5000);
+            threadSync.join(SYNCDURATION_DELAY);
             if(threadSync.isAlive())
                 threadSync.interrupt();
         } catch (InterruptedException ex) {
-            Logger.getLogger(WaiterActivity.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(WaiterTableActivity.class.getName()).log(Level.SEVERE, null, ex);
         } catch(IllegalThreadStateException ex) {}
         finally {
             DataService.setDataSource(tmpSrc);

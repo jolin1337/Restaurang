@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -40,30 +41,45 @@ public class LoginActivity extends Activity {
         DataService.setSyncSpeed(DataSourceListener.SLOW_SYNC_SPPED);
         DataService.setDataSource(users);
         DataService.setHandler(handler);
-        
+
         startService(dataIntent);
     }
-    Handler handler = new Handler();
+    Handler handler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            Bundle data = msg.getData();
+            if (data != null && data.containsKey("connectionError")) {
+                DataService.handleError(data.getInt("connectionError"));
+            }
+        }
+    };
 
     public void loginButtonClicked(View v) {
-        if(userName == null || userPwd == null) return;
+        if (userName == null || userPwd == null) {
+            return;
+        }
 
         // find in database over here:
-        synchronized(users) {
+        synchronized (users) {
             if (users.findUserWithCredentials(userName.getText().toString(), userPwd.getText().toString())) {
 
                 //Temporary activity change so we don't get stuck on the loginscreen
-                Intent ordersActivity = new Intent(this, se.miun.dt142g.waiter.WaiterActivity.class);
+                Intent ordersActivity;
+                if(userName.getText().toString().equals("Anders"))
+                    ordersActivity = new Intent(this, se.miun.dt142g.kitchen.KitchenOrdersActivity.class);
+                else
+                    ordersActivity = new Intent(this, se.miun.dt142g.waiter.WaiterTableActivity.class);
                 startActivity(ordersActivity);
             } else {
-                Toast.makeText(this, 
-                        "Ledsen men du matade in fel användarnamn eller lösenord.", 
+                Toast.makeText(this,
+                        "Ledsen men du matade in fel användarnamn eller lösenord.",
                         Toast.LENGTH_LONG)
                         .show();
             }
         }
     }
-    
+
     @Override
     public void onDestroy() {
         super.onDestroy();

@@ -31,7 +31,7 @@ public class KitchenOrdersActivity extends BaseActivity {
             Bundle data = msg.getData();
             if(data != null) {
                 if(data.containsKey("connectionError")) {
-                    // TODO: Print Toast message here
+                    DataService.handleError(data.getInt("connectionError"));
                 }
                 if(data.containsKey("dataUpdated") && data.getInt("dataUpdated") == DataSourceListener.UPDATE_CALL) {
                     updateViewList();

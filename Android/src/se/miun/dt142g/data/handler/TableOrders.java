@@ -71,7 +71,7 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
         for(TableOrder t1 : tableOs) {
             boolean found = false;
             for(TableOrder t2 : tableOrders) {
-                if(t1.getId() == t2.getId()) {
+                if(t1.getId() == t2.getId() && t2.getOrderedDishes().containsAll(t1.getOrderedDishes())) {
                     found = true;
                 }
             }
@@ -164,5 +164,10 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
 
     public List<TableOrder> getTables() {
         return tableOrders;
+    }
+    
+    @Override
+    public String toString() {
+        return "TableOrders size = " + tableOrders.size();
     }
 }

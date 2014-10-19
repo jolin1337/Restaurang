@@ -49,9 +49,9 @@ public class BaseActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.waiter && !(act instanceof se.miun.dt142g.waiter.WaiterActivity)) {
+        if (id == R.id.waiter && !(act instanceof se.miun.dt142g.waiter.WaiterTableActivity)) {
             System.out.println("Waiter loading view...");
-            Intent ordersActivity = new Intent(act.getApplicationContext(), se.miun.dt142g.waiter.WaiterActivity.class);
+            Intent ordersActivity = new Intent(act.getApplicationContext(), se.miun.dt142g.waiter.WaiterTableActivity.class);
             act.startActivity(ordersActivity);
             return true;
         }

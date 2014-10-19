@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import se.miun.dt142g.waiter.WaiterActivity;
+import se.miun.dt142g.waiter.WaiterTableActivity;
 
 
 /**
@@ -186,6 +186,7 @@ public class DataSourceListener extends Thread {
      * @param dc - The datasource to manage
      */
     public void setDataContainer(DataSource dc) {
+        System.out.println("Changed datasource to: " + dc.toString());
         synchronized(dataContainerDummy) {
             dataContainer = dc;
         }

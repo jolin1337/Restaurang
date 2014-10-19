@@ -50,7 +50,7 @@ public class WaiterOrdersActivity extends BaseActivity {
             Bundle data = msg.getData();
             if(data != null) {
                 if(data.containsKey("connectionError")) {
-                    // TODO: Print Toast message here
+                    DataService.handleError(data.getInt("connectionError"));
                 }
                 if(data.containsKey("dataUpdated") && data.getInt("dataUpdated") == DataSourceListener.UPDATE_CALL) {
                 }
@@ -87,8 +87,6 @@ public class WaiterOrdersActivity extends BaseActivity {
         // Get ListView ob ject from xml
         listView = (ListView) findViewById(R.id.orderView);
 
-        // Defined Array values to show in ListView
-        
         
         
         orders = new OrdersListView(this,
@@ -190,7 +188,7 @@ public class WaiterOrdersActivity extends BaseActivity {
     public void onBackPressed() {
         Intent data = new Intent();
         data.putExtra("status", "ordered");
-        setResult(WaiterActivity.RESPONSE, data);
+        setResult(WaiterTableActivity.RESPONSE, data);
         finish();
     }
 

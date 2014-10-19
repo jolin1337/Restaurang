@@ -115,4 +115,8 @@ public class Reservations extends DataSource implements Iterable<Reservation> {
         parseReservation(getRequest("gettable", "key=" + key + "&table=" + table));
     }
 
+    @Override
+    public String toString() {
+        return "Reservations size = " + reservations.size();
+    }
 }
