@@ -1,25 +1,24 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This code is created for one purpose only. And should not be used for any 
+ * other purposes unless the author of this file has apporved. 
+ * 
+ * This code is a piece of a project in the course DT142G on Mid. Sweden university
+ * Created by students for this projekt only
  */
 package se.miun.dt142g.website;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -30,9 +29,13 @@ import se.miun.dt142g.Controller;
 import se.miun.dt142g.Settings;
 import se.miun.dt142g.data.EventPost;
 
+
 /**
+ * This class the event details and displays them on a jpanel in a form application
  *
- * @author Johannes
+ * @author Johannes Lindén
+ * @since 2014-10-11
+ * @version 1.3
  */
 public class EventPostPanel extends JPanel {
 
@@ -43,7 +46,7 @@ public class EventPostPanel extends JPanel {
     private final JTextField editTitle = new JTextField();
     private final JTextArea editDesc = new JTextArea();
     private final Controller remote;
-    
+
     private final ActionListener imageEvent = new ActionListener() {
 
         @Override
@@ -56,7 +59,7 @@ public class EventPostPanel extends JPanel {
                 File file = fileChooser.getSelectedFile();
                 eventPost.setImgSrc(file.getAbsolutePath());
                 imgBtn.setText("Vald Poster: " + file.getName());
-                remote.setSavedTab((JComponent)EventPostPanel.this.getParent(), false);
+                remote.setSavedTab((JComponent) EventPostPanel.this.getParent(), false);
             }
         }
     };
@@ -91,16 +94,16 @@ public class EventPostPanel extends JPanel {
 
         editDesc.setText(eventPost.getDescription());
         editDesc.addKeyListener(textFieldKeyListener);
-        editDesc.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Settings.Styles.darkBg), BorderFactory.createTitledBorder("Beskrivning av enenemang:"))); 
+        editDesc.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Settings.Styles.darkBg), BorderFactory.createTitledBorder("Beskrivning av enenemang:")));
         add(editDesc, BorderLayout.WEST);
-        
+
     }
-    
+
     KeyListener textFieldKeyListener = new KeyListener() {
 
         @Override
         public void keyTyped(KeyEvent ke) {
-            remote.setSavedTab((JComponent)EventPostPanel.this.getParent(), false);
+            remote.setSavedTab((JComponent) EventPostPanel.this.getParent(), false);
         }
 
         @Override
@@ -117,11 +120,13 @@ public class EventPostPanel extends JPanel {
         eventPost.setPubDate(editDate.getText());
         eventPost.setTitle(editTitle.getText());
     }
+
     public void setUpdatedEvent(EventPost e) {
         eventPost = e;
         updateEvent();
     }
-    public EventPost getEvent(){
+
+    public EventPost getEvent() {
         return eventPost;
     }
 }

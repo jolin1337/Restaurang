@@ -88,7 +88,7 @@ public class MenuPanel extends JPanel {
         
         
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBackground(Color.white);
+        setBackground(Settings.Styles.applicationBgColor);
         
         JButton printButton = new JButton("Skriv ut menyblad");
         printButton.addActionListener(new ActionListener() {
@@ -112,7 +112,7 @@ public class MenuPanel extends JPanel {
             
             JPanel groupContainer = new JPanel();
             groupContainer.setLayout(new BoxLayout(groupContainer, BoxLayout.Y_AXIS));
-            groupContainer.setBackground(Color.white);
+            groupContainer.setBackground(Settings.Styles.applicationBgColor);
             for(Integer dishId : dishGroup.getDishes()) {
                 Dish dish = dishGroups.getDishes().getDish(dishId);
                 SingleDishPanel dp = new SingleDishPanel(dish, dishGroup.getGroup(), remote);
@@ -190,7 +190,7 @@ public class MenuPanel extends JPanel {
              */
             setLayout(new BorderLayout());
             setBorder(new EmptyBorder(10, 10, 10, 10));
-            setBackground(Color.white);
+            setBackground(Settings.Styles.applicationBgColor);
             setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
             /**
              * Create removebutton

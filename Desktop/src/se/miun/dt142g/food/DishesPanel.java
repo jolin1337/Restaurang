@@ -38,7 +38,7 @@ public class DishesPanel extends JPanel {
         dishes.loadData();
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBackground(Color.white);
+        setBackground(Settings.Styles.applicationBgColor);
         JButton addDishBtnTop = new JButton("Lägg till rätt");
         addDishBtnTop.addActionListener(addNewDishEvent);
         add(addDishBtnTop);

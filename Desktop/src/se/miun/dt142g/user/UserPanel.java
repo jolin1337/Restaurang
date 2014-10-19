@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package se.miun.dt142g.user;
 
 import se.miun.dt142g.data.User;
@@ -26,6 +21,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import se.miun.dt142g.ConfirmationBox;
 import se.miun.dt142g.Controller;
+import se.miun.dt142g.Settings;
 
 /**
  *
@@ -34,7 +30,6 @@ import se.miun.dt142g.Controller;
 public class UserPanel extends JPanel {
     
     private JButton remove;
-    //private final JLabel name,tele, epost, password;
     private final JTextField editUser, pwd, mail, telenr;
     private final User usr;
     private final Controller remote;
@@ -43,7 +38,7 @@ public class UserPanel extends JPanel {
     public UserPanel(final User user, Controller c){
         remote = c;
         this.usr = user;
-        setBackground(Color.WHITE);
+        setBackground(Settings.Styles.applicationBgColor);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         JPanel a = new JPanel();
         remove = new JButton("X");
@@ -51,11 +46,11 @@ public class UserPanel extends JPanel {
         
         
         a.setLayout(new BoxLayout(a, BoxLayout.LINE_AXIS));
-        a.setBackground(Color.WHITE);
+        a.setBackground(Settings.Styles.applicationBgColor);
         
         JPanel inputs = new JPanel();
         inputs.setLayout(new BoxLayout(inputs, BoxLayout.Y_AXIS));
-        inputs.setBackground(Color.WHITE);        
+        inputs.setBackground(Settings.Styles.applicationBgColor);        
 
         
         editUser = new JTextField(user.getUsername());
@@ -79,13 +74,9 @@ public class UserPanel extends JPanel {
         telenr.addFocusListener(userPanelFocusListener);
         telenr.addKeyListener(userPanelKeyListener);
 
-//        leftAlignLabel(name, inputs);
         inputs.add(this.editUser);
-//        leftAlignLabel(password, inputs);
         inputs.add(pwd);
-//        leftAlignLabel(epost, inputs);
         inputs.add(mail);
-//        leftAlignLabel(tele, inputs);
         inputs.add(telenr);
         inputs.add(Box.createGlue());
         a.add(remove);

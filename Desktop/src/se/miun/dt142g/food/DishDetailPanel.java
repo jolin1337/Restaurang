@@ -27,6 +27,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import se.miun.dt142g.Controller;
 import se.miun.dt142g.DataSource;
+import se.miun.dt142g.Settings;
 import se.miun.dt142g.data.Dish;
 import se.miun.dt142g.data.Ingredient;
 
@@ -56,7 +57,7 @@ public class DishDetailPanel extends JPanel {
     public DishDetailPanel(Dish dish, final Controller c) throws DataSource.WrongKeyException {
         remote = c;
 
-        setBackground(Color.white);
+        setBackground(Settings.Styles.applicationBgColor);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         if (dish == null) {

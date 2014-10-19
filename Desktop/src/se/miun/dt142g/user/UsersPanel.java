@@ -1,21 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package se.miun.dt142g.user;
 
 import se.miun.dt142g.data.User;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import se.miun.dt142g.Controller;
 import se.miun.dt142g.DataSource;
+import se.miun.dt142g.Settings;
 import se.miun.dt142g.user.UserPanel.JFieldEditListener;
 
 /**
@@ -23,25 +17,23 @@ import se.miun.dt142g.user.UserPanel.JFieldEditListener;
  * @author Ali Omran
  */
 public class UsersPanel extends JPanel {
-    
+
     private final JButton addUserBtn = new JButton("Lägg till användare");
     private Users usrs = new Users();
     final Controller remote;
-    
-    public UsersPanel(Controller c) throws DataSource.WrongKeyException{
+
+    public UsersPanel(Controller c) throws DataSource.WrongKeyException {
         usrs.dbConnect();
         usrs.loadData();
         usrs.listToJsonArray();
         remote = c;
-        
+
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        setBackground(Color.WHITE);
-        
+        setBackground(Settings.Styles.applicationBgColor);
+
         addUserBtn.setMinimumSize(new Dimension(50, 25));
         addUserBtn.setPreferredSize(new Dimension(50, 25));
-      
-        
-        
+
         for (User user : usrs) {
             UserPanel pn = new UserPanel(user, remote);
             pn.setUserPanelListener(userPanelListener);
@@ -49,9 +41,9 @@ public class UsersPanel extends JPanel {
         }
 
         addUserBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
-        add(addUserBtn);  
+        add(addUserBtn);
         addUserBtn.addActionListener(userPanelActionListener);
-           
+
     }
 
     ActionListener userPanelActionListener = new ActionListener() {
@@ -59,9 +51,9 @@ public class UsersPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent ae) {
             Object src = ae.getSource();
-            if(src == addUserBtn) {
+            if (src == addUserBtn) {
                 UsersPanel.this.remove(addUserBtn);
-                User a =new User(-1,"","","","");
+                User a = new User(-1, "", "", "", "");
                 usrs.addUser(a);
                 UserPanel p = new UserPanel(a, remote);
                 p.setUserPanelListener(userPanelListener);
@@ -72,21 +64,21 @@ public class UsersPanel extends JPanel {
             }
         }
     };
-    
-    private JFieldEditListener userPanelListener = new JFieldEditListener(){
+
+    private JFieldEditListener userPanelListener = new JFieldEditListener() {
         @Override
         public void onFieldEdit() {
-                remove(addUserBtn);
-                usrs.update();
-                removeAll();
-                for (User user : usrs) {
-                    UserPanel pn = new UserPanel(user, remote);
-                    pn.setUserPanelListener(userPanelListener);
-                    add(pn);
-                }
-                add(addUserBtn);
-                revalidate();
-                remote.setSavedTab(UsersPanel.this, true);
+            remove(addUserBtn);
+            usrs.update();
+            removeAll();
+            for (User user : usrs) {
+                UserPanel pn = new UserPanel(user, remote);
+                pn.setUserPanelListener(userPanelListener);
+                add(pn);
+            }
+            add(addUserBtn);
+            revalidate();
+            remote.setSavedTab(UsersPanel.this, true);
         }
     };
 }
