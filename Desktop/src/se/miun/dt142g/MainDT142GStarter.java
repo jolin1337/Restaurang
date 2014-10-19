@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package se.miun.dt142g;
 
 import java.awt.BorderLayout;
@@ -39,34 +34,46 @@ import se.miun.dt142g.Settings.Styles;
 import se.miun.dt142g.schedule.SchedulesPanel;
 
 /**
+ * This class is the main class for this project on desktop side. It is used for
+ * displaying various of panels for editing everything on the system
  *
  * @author Tomas
  */
-public class SharedTabs extends JPanel {
+public class MainDT142GStarter extends JPanel {
 
-    DishDetailPanel dishDetailView;
-    JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-    List<JComponent> panels = new ArrayList<>();
-    NewBooking newBooking = new NewBooking();
-    DishesPanel dishesPanel;
-    JScrollPane newBookingsScrollPane;
+    /**
+     * The special view for displaying details.
+     */
+    private final DishDetailPanel dishDetailView;
+    /**
+     * The special view for adding a new reservation
+     */
+    private final NewBooking newBooking;
+    /**
+     * The tab menu panel that enables us to convenient switch between edit
+     * views
+     */
+    private final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+    /**
+     * A container for variaous of editing panels (assuming JPanel or ScrollPane
+     * but others are ok as well)
+     */
+    private final List<JComponent> panels = new ArrayList<>();
+    /**
+     * A view for dishespanel made a variable for it for easy access. Also
+     * exists in panels list
+     */
+    private final DishesPanel dishesPanel;
+    /**
+     * This is the container scrollpane for new bookings (reservations)
+     */
+    private final JScrollPane newBookingsScrollPane;
 
+    /**
+     * This class own implementation of Controller/remote for all the views 
+     * currently existing
+     */
     Controller remote = new Controller() {
-
-        @Override
-        public void setViewDishes() {
-            dishesPanel.updateTextFieldContents();
-            tabbedPane.setSelectedIndex(0);
-        }
-        public void setViewDishes(boolean saved){
-            setViewDishes();
-            setSavedTab(dishesPanel, saved);
-        }
-
-        @Override
-        public void setViewWebsite() {
-            tabbedPane.setSelectedIndex(1);
-        }
 
         @Override
         public void setViewDishDetail(Dish d, ActionListener removeEvent) {
@@ -81,10 +88,40 @@ public class SharedTabs extends JPanel {
             tabbedPane.revalidate();
             tabbedPane.setSelectedComponent(dishDetailView);
         }
+        
+        @Override
+        public void setViewDishes(boolean saved) {
+            setViewDishes();
+            setSavedTab(dishesPanel, saved);
+        }
+        
+        @Override
+        public void setViewDishes() {
+            // updates the textfields of dishes view if something has happend 
+            // since last visit
+            dishesPanel.updateTextFieldContents();
+            // Set selected tab to be the dishespanel tab
+            tabbedPane.setSelectedComponent(dishesPanel);
+        }
+
+        @Override
+        public void setViewWebsite() {
+            tabbedPane.setSelectedIndex(1);
+        }
+
 
         @Override
         public void setViewInventory() {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public void setViewNewBooking(Booking b) {
+            newBooking.newBooking(b, remote);
+            tabbedPane.addTab("Bokning i detalj", newBookingsScrollPane);
+
+            newBookingsScrollPane.revalidate();
+            tabbedPane.setSelectedComponent(newBookingsScrollPane);
         }
 
         @Override
@@ -93,73 +130,75 @@ public class SharedTabs extends JPanel {
         }
 
         @Override
-        public void setViewNewBooking(Booking b) {
-            newBooking.newBooking(b, remote);
-            //tabbedPane.addTab("Bokning i detaij", newBooking);
-                    newBookingsScrollPane = new JScrollPane(newBooking, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-                    newBookingsScrollPane.setMinimumSize(new Dimension(500,700));
-                    tabbedPane.addTab("Bokning i detalj", newBookingsScrollPane);
-                    newBooking.setBorder(new EmptyBorder(10, 10, 10, 10));
-
-            newBookingsScrollPane.revalidate();
-            tabbedPane.setSelectedComponent(newBookingsScrollPane);
-        }
-        
-        @Override
         public void setViewBookings() {
             tabbedPane.setSelectedIndex(6);
         }
-        
+
         @Override
         public void setConnectionView() {
-            Container parent = SharedTabs.this.getParent();
+            Container parent = MainDT142GStarter.this.getParent();
             parent.add(new LoginPage());
-            parent.remove(SharedTabs.this);
+            parent.remove(MainDT142GStarter.this);
             parent.revalidate();
             parent.repaint();
         }
-        
+
         /**
          * adds a "*" in the tab of tabView if savedState is false otherwise the
          * original name
-         * @param tabView    - The view for us to set the saved state of
+         *
+         * @param tabView - The view for us to set the saved state of
          * @param savedState - The state to set in the tab itself
          */
         public void setSavedTab(JComponent tabView, boolean savedState) {
             int tabIndex = 0;
-            for(JComponent tabToChange : panels) {
-                if(tabToChange == tabView) {
-                        showStar(savedState,tabIndex);
+            for (JComponent tabToChange : panels) {
+                if (tabToChange == tabView) {
+                    showStar(savedState, tabIndex);
                     return;
                 }
                 tabIndex++;
             }
-            showStar(savedState,tabIndex);
+            showStar(savedState, tabIndex);
         }
-          
+
         /**
-         * Sets an astrix in the tab name to indicate unsaved modifications were found
+         * Sets an astrix in the tab name to indicate unsaved modifications were
+         * found
+         *
          * @param savedState the state whether it's been saved or not
          * @param tabIndex The corresponding tab
          */
-        private void showStar(boolean savedState,int tabIndex){
-            if(!savedState) {
+        private void showStar(boolean savedState, int tabIndex) {
+            if (!savedState) {
                 String c = tabbedPane.getTitleAt(tabIndex);
-                if(c.charAt(c.length()-1) != '*')
-                tabbedPane.setTitleAt(tabIndex, tabbedPane.getTitleAt(tabIndex) + "*" );
-            }
-            else {
+                if (c.charAt(c.length() - 1) != '*') {
+                    tabbedPane.setTitleAt(tabIndex, tabbedPane.getTitleAt(tabIndex) + "*");
+                }
+            } else {
                 String c = tabbedPane.getTitleAt(tabIndex);
-                if(c.charAt(c.length()-1) == '*')
-                    tabbedPane.setTitleAt(tabIndex, c.substring(0,c.length()-1));
+                if (c.charAt(c.length() - 1) == '*') {
+                    tabbedPane.setTitleAt(tabIndex, c.substring(0, c.length() - 1));
+                }
             }
         }
-             
+
     };
 
-    
-    public SharedTabs() throws DataSource.WrongKeyException {
+    /** 
+     * Constructs all the views in tabs
+     * 
+     * @throws se.miun.dt142g.DataSource.WrongKeyException if it was unable to 
+     * load/sync data from server
+     */
+    public MainDT142GStarter() throws DataSource.WrongKeyException {
         dishDetailView = new DishDetailPanel(null, remote);
+        newBooking = new NewBooking();
+        newBooking.setBorder(new EmptyBorder(10, 10, 10, 10));
+        
+        newBookingsScrollPane = new JScrollPane(newBooking, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        newBookingsScrollPane.setMinimumSize(new Dimension(500, 700));
+
         dishesPanel = new DishesPanel(remote);
 
         setLayout(new BorderLayout());
@@ -183,7 +222,7 @@ public class SharedTabs extends JPanel {
         for (JComponent panel : panels) {
             JScrollPane sp = new JScrollPane(panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
             sp.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
-            sp.setMinimumSize(new Dimension(700,700));
+            sp.setMinimumSize(new Dimension(700, 700));
             //sp.add(panel);
             panel.setBorder(new EmptyBorder(10, 10, 10, 10));
             tabbedPane.addTab(Settings.Strings.tabTitles[i] + " ", sp);
@@ -225,7 +264,7 @@ public class SharedTabs extends JPanel {
         frame.setIconImage(img.getImage());
 
         try {
-            SharedTabs st = new SharedTabs();
+            MainDT142GStarter st = new MainDT142GStarter();
             //Add content to the window.
             frame.add(st, BorderLayout.CENTER);
         } catch (DataSource.WrongKeyException ex) {
@@ -240,7 +279,6 @@ public class SharedTabs extends JPanel {
 
     public static void main(String[] args) {
 
-                
         UIManager.put("Button.font", new Font("Calibri", Font.PLAIN, 22));
         UIManager.put("Button.background", Styles.btnBackground);
         UIManager.put("Button.foreground", Styles.btnForeground);
@@ -250,15 +288,15 @@ public class SharedTabs extends JPanel {
         UIManager.put("TextArea.font", new Font("Calibri", Font.PLAIN, 22));
         UIManager.put("TextArea.background", Styles.fieldColor);
         UIManager.put("TextArea.border", BorderFactory.createLoweredBevelBorder());
-        
+
         UIManager.put("FormattedTextField.background", Styles.fieldColor);
         UIManager.put("FormattedTextField.font", new Font("Calibri", Font.PLAIN, 22));
-        
+
         UIManager.put("Spinner.background", Styles.fieldColor);
-        
+
         UIManager.put("TabbedPane.background", Styles.fieldColor);
-        
-        UIManager.put("TitledBorder.font",new Font("Calibri", Font.PLAIN, 22));
+
+        UIManager.put("TitledBorder.font", new Font("Calibri", Font.PLAIN, 22));
         UIManager.put("TextField.font", new Font("Calibri", Font.PLAIN, 32));
         UIManager.put("TextField.background", Styles.fieldColor);
         UIManager.put("TextField.selectionBackground", Color.RED);

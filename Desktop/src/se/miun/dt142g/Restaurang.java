@@ -1,13 +1,15 @@
 /*
- * This is a main file for the system. 
  */
 package se.miun.dt142g;
 
 import java.awt.ScrollPane;
 import javax.swing.JFrame;
 /**
- *
- * @author jolin1337
+ * This is an test file for desktop application
+ * 
+ * @author Johannes Lindén
+ * @since 2014-10-11
+ * @version 1.3
  */
 public class Restaurang {
 

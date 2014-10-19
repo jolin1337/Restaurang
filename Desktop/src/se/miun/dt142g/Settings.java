@@ -10,10 +10,17 @@ package se.miun.dt142g;
 import java.awt.Color;
 
 /**
+ * This class has only static members. This is a configuration file for the entire
+ * Desktop application.
  *
- * @author Johannes
+ * @author Johannes Lindén
+ * @since 2014-10-11
+ * @version 1.3
  */
 public class Settings {
+    /**
+     * Some common used objects for styling
+     */
     public static class Styles {
         public static Color btnBackground = new Color(180,0,0);
         public static Color btnForeground = Color.white;
@@ -22,6 +29,9 @@ public class Settings {
         public static String dateFormat = "dd/MM-yy 'kl:' HH:mm";
     }
 
+    /**
+     * Some common used strings
+     */
     public static class Strings {
         public static String logoSrc = "res/graphics/logo.png";
         public static String[] tabTitles = {"Rätter", "Hemsida", "Inventarie", "Användare", "A La Carté", "Veckans Meny", "Bokningar", "Schema"};
