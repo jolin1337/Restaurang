@@ -70,7 +70,7 @@ public class MainDT142GStarter extends JPanel {
     private final JScrollPane newBookingsScrollPane;
 
     /**
-     * This class own implementation of Controller/remote for all the views 
+     * This class own implementation of Controller/remote for all the views
      * currently existing
      */
     Controller remote = new Controller() {
@@ -88,13 +88,13 @@ public class MainDT142GStarter extends JPanel {
             tabbedPane.revalidate();
             tabbedPane.setSelectedComponent(dishDetailView);
         }
-        
+
         @Override
         public void setViewDishes(boolean saved) {
             setViewDishes();
             setSavedTab(dishesPanel, saved);
         }
-        
+
         @Override
         public void setViewDishes() {
             // updates the textfields of dishes view if something has happend 
@@ -108,7 +108,6 @@ public class MainDT142GStarter extends JPanel {
         public void setViewWebsite() {
             tabbedPane.setSelectedIndex(1);
         }
-
 
         @Override
         public void setViewInventory() {
@@ -185,25 +184,26 @@ public class MainDT142GStarter extends JPanel {
 
     };
 
-    /** 
+    /**
      * Constructs all the views in tabs
-     * 
-     * @throws se.miun.dt142g.DataSource.WrongKeyException if it was unable to 
+     *
+     * @throws se.miun.dt142g.DataSource.WrongKeyException if it was unable to
      * load/sync data from server
      */
     public MainDT142GStarter() throws DataSource.WrongKeyException {
+        setLayout(new BorderLayout());
+
         dishDetailView = new DishDetailPanel(null, remote);
         newBooking = new NewBooking();
         newBooking.setBorder(new EmptyBorder(10, 10, 10, 10));
-        
+
         newBookingsScrollPane = new JScrollPane(newBooking, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         newBookingsScrollPane.setMinimumSize(new Dimension(500, 700));
 
         dishesPanel = new DishesPanel(remote);
-
-        setLayout(new BorderLayout());
         dishesPanel.setViewSwitch(remote);
         panels.add(dishesPanel);
+
         JComponent panel2 = new WebsitePanel(remote);
         panels.add(panel2);
         InventoryPanel panel3 = new InventoryPanel();
@@ -229,13 +229,17 @@ public class MainDT142GStarter extends JPanel {
             i++;
         }
 
+        // This event listener is used for deleting the temporary tabs (special ones)
         tabbedPane.addChangeListener(new ChangeListener() {
 
             @Override
             public void stateChanged(ChangeEvent ce) {
+                // Revalidate all tabs
                 for (JComponent j : panels) {
                     j.revalidate();
                 }
+
+                // Remove the special tabs if they are visible
                 if (tabbedPane.isAncestorOf(newBookingsScrollPane) && tabbedPane.getSelectedComponent() != newBookingsScrollPane) {
                     tabbedPane.remove(newBookingsScrollPane);
                 }

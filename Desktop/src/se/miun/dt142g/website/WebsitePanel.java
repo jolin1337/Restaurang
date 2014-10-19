@@ -113,6 +113,7 @@ public class WebsitePanel extends JPanel {
                             Settings.Strings.serverConnectionError,
                             "Server error",
                             JOptionPane.ERROR_MESSAGE);
+                        remote.setConnectionView();
                     }
                     int index = 0;
                     for(EventPost p : eventPosts)

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package se.miun.dt142g.bookings;
 
 import java.awt.Color;
@@ -19,6 +14,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
@@ -37,17 +33,41 @@ import se.miun.dt142g.data.Booking;
  */
 public class BookingsPanel extends JPanel {
 
-    // Variables declaration - do not modify                     
+    // Variables declaration - do not modify    
+    /**
+     * Indicates if we have shanged the view to NewBooking
+     */
     private boolean newBookingP = false;
+    /**
+     * Indicates if we have pushed the remove button
+     */
     private boolean removeBooking = false;
+    /**
+     * The container for all components in this view
+     */
     private final JPanel thisPanel = this;
-    private final Controller remote;
-    private final Bookings bookings;
-    private JButton addBooking;
-    private JButton remove;
-    private JButton submit;
     
-    //instance table model
+    /**
+     * The remote to make it posible to change tabviews
+     */
+    private final Controller remote;
+    /**
+     * The data source of this object to fill
+     */
+    private final Bookings bookings;
+    /**
+     * Add button for new booking
+     */
+    private JButton addBooking;
+    /**
+     * Remove button to remove an booking object
+     */
+    private JButton remove;
+    
+    /**
+     * Instantiate table model
+     * This is for making the first row disabled for editing
+     */
     DefaultTableModel model = new DefaultTableModel() {
 
         @Override
@@ -56,17 +76,30 @@ public class BookingsPanel extends JPanel {
             return !(row == 0);
         }
     };
+    /**
+     * THis is the table conntaining all bookings/reservations
+     */
     JTable table = new JTable(model);
+    /**
+     * The table labels
+     */
     Object[] headers = new Object[]{"Namn", "Telefon", "Antal", "Datum", "Varaktighet (timmar)"};
     // End of variables declaration
     
-    
+    /**
+     * Constructs a bookingpanel. The controller is the remote object to make it
+     * able to change views
+     * 
+     * @param c - The remote
+     * @throws se.miun.dt142g.DataSource.WrongKeyException If we were unable to 
+     * connect to the server/database
+     */
     public BookingsPanel(Controller c) throws DataSource.WrongKeyException {
-        this.bookings = new Bookings();
-        this.bookings.dbConnect();
-        this.bookings.loadData();
-        initComponents();
-        this.remote = c;
+        this.bookings = new Bookings(); // create new dataobject
+        this.bookings.dbConnect();      // Try to connect to database
+        this.bookings.loadData();       // Load the data from database to this booking
+        initComponents();               // Create all contents of this view
+        this.remote = c;                // Sets the remote
     }
 
     /**
@@ -103,15 +136,30 @@ public class BookingsPanel extends JPanel {
         resizeColumnWidth(table);
         add(table);
         
+        /**
+         * This adds an tablemodel listener to the table
+         */
         table.getModel().addTableModelListener(new TableModelListener() {
+            
+            /**
+             * This function syncronizes information to the server when a user 
+             * edits any of the cells available for editing
+             * @param e - The tablemodell
+             */
+            @Override
             public void tableChanged(TableModelEvent e) {
+                // If the type of change is an update (not an removal or creation)
                 if (e.getType() == TableModelEvent.UPDATE) {
+                    // Get the selected row that was edited
                     Booking bok = bookings.getBookingByIndex(table.getSelectedRow() - 1);
-                    System.out.println("rad: " + table.getSelectedRow() + " Boknings namn: " + bok.getName());
+                    System.out.println("Editing row: " + table.getSelectedRow() + " Reservation name: " + bok.getName());
+                    
+                    // Update the fields of the matched booking datasource
                     bok.setName(table.getValueAt(table.getSelectedRow(), 0).toString());
                     bok.setPhoneNr(table.getValueAt(table.getSelectedRow(), 1).toString());
                     bok.setPersons(Integer.parseInt(table.getValueAt(table.getSelectedRow(), 2).toString()));
                     
+                    // Update the date of the matched booking datasource
                     SimpleDateFormat df = new SimpleDateFormat(Settings.Styles.dateFormat);
                     Date tmpDate = bok.getDate();
                     String s = df.format(tmpDate);
@@ -122,29 +170,36 @@ public class BookingsPanel extends JPanel {
                             model.setValueAt(s, table.getSelectedRow(), e.getColumn());
                         } catch (ParseException ex) {
                         model.setValueAt(s, table.getSelectedRow(), e.getColumn());
-                        System.out.println("Datumet lyckades inte redigeras i bokningar.");
+                        System.out.println("The date is invalid and not updated in bookings object.");
                         Logger.getLogger(BookingsPanel.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     bok.setDuration(Integer.parseInt(table.getValueAt(table.getSelectedRow(), 4).toString()));
                     try {
+                        // sync to server here
                         bookings.update();
                     } catch (DataSource.WrongKeyException ex) {
-                        System.out.println("Det gick tyvärr inte att uppdatera.");
-                        Logger.getLogger(BookingsPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        System.out.println("Sorry no update lets try to show that to the user...");
+                        
+                        JOptionPane.showMessageDialog(BookingsPanel.this,
+                            Settings.Strings.serverConnectionError,
+                            "Server error",
+                            JOptionPane.ERROR_MESSAGE);
+                        remote.setConnectionView();
                     }
                 }
             }
         });
 
+        // Sets this views layout
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.add(Box.createRigidArea(new Dimension(1, 10)));
-        this.setBackground(Color.white);
+        this.setBackground(Settings.Styles.applicationBgColor);
         addBooking = new JButton("Lägg till bokning");
         this.addBooking.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Booking b = new Booking(bookings.getUniqueId(), "", new Date(), 0, 0, "");
-                bookings.addBooking(b);
+                bookings.addBooking(b); // add the new booking and sync to the server
                 remote.setViewNewBooking(b);
                 newBookingP = true;
             }
