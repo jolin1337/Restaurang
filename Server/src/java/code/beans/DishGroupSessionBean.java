@@ -39,7 +39,9 @@ public class DishGroupSessionBean {
     
     public List<Dishgroup> getWeekMenu() {
         TypedQuery<Dishgroup> query = em.createNamedQuery("Dishgroup.weekMenu", Dishgroup.class);
-        return query.getResultList();
+        List<Dishgroup> dishgroups = query.getResultList();
+        Dishgroup.sortDishgroups(dishgroups);
+        return dishgroups;
     }
     
     

@@ -59,7 +59,7 @@ public class PDFGenreateDishesMenu {
                     contentStream.beginText();
                     contentStream.setFont(font, 22);
                     contentStream.setNonStrokingColor(Color.BLACK);
-                    contentStream.moveTextPositionByAmount(100, 670-i*10);
+                    contentStream.moveTextPositionByAmount(100, 670-i*15);
                     contentStream.drawString(dgroup.getName());
                     contentStream.endText();
                     i+=2;
@@ -67,11 +67,12 @@ public class PDFGenreateDishesMenu {
                         contentStream.beginText();
                         contentStream.setFont(font, 14);
                         contentStream.setNonStrokingColor(Color.DARK_GRAY);
-                        contentStream.moveTextPositionByAmount(100, 670-i*10);
+                        contentStream.moveTextPositionByAmount(100, 670-i*15);
                         contentStream.drawString(d.getName());
                         contentStream.endText();
                         i++;
                     }
+                    i++;
                 }
                 contentStream.close();
                 try {

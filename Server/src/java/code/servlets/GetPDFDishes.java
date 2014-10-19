@@ -8,15 +8,8 @@
 package code.servlets;
 
 import data.entity.Dishgroup;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -52,8 +45,10 @@ public class GetPDFDishes extends HttpServlet {
         response.setContentType("application/pdf;charset=UTF-8");
         response.setHeader("Content-Disposition", "attachment; filename=\"dishes_menu.pdf\"");
         System.out.println( new File("").getAbsolutePath() + "/resources/fest.jpg");
-        TypedQuery<Dishgroup> dishQuery = em.createNamedQuery("Dishgroup.findAll", Dishgroup.class);
-        PDFGenreateDishesMenu.generatePDFTo(response.getOutputStream(),  new File("").getAbsolutePath(), dishQuery.getResultList());
+        TypedQuery<Dishgroup> dishQuery = em.createNamedQuery("Dishgroup.weekMenu", Dishgroup.class);
+        List<Dishgroup> dishes = dishQuery.getResultList();
+        Dishgroup.sortDishgroups(dishes);
+        PDFGenreateDishesMenu.generatePDFTo(response.getOutputStream(),  new File("").getAbsolutePath(), dishes);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
