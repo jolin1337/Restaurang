@@ -1,7 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This code is created for one purpose only. And should not be used for any 
+ * other purposes unless the author of this file has apporved. 
+ * 
+ * This code is a piece of a project in the course DT142G on Mid. Sweden university
+ * Created by students for this projekt only
  */
 package se.miun.dt142g.food;
 
@@ -20,7 +22,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -28,11 +29,13 @@ import se.miun.dt142g.Controller;
 import se.miun.dt142g.DataSource;
 import se.miun.dt142g.data.Dish;
 import se.miun.dt142g.data.Ingredient;
-import se.miun.dt142g.website.EventPostPanel;
 
 /**
+ * This view class displays the detail of an dish
  *
- * @author Johannes
+ * @author Johannes Lindén
+ * @since 2014-10-10
+ * @version 1.2
  */
 public class DishDetailPanel extends JPanel {
 
@@ -110,7 +113,7 @@ public class DishDetailPanel extends JPanel {
                 JButton remove = new JButton("X");
                 remove.setMaximumSize(new Dimension(35, 35));
                 remove.addActionListener(removeIngredientListener);
-                JComboBox jListInventory = new JComboBox();
+                JComboBox<Ingredient> jListInventory = new JComboBox<>();
                 
                 for (Ingredient ing : inv) {
                     jListInventory.addItem(ing);
@@ -141,7 +144,7 @@ public class DishDetailPanel extends JPanel {
                 remove.setMaximumSize(new Dimension(35, 35));
                 remove.addActionListener(removeIngredientListener);
 
-                JComboBox jListInventory = new JComboBox();
+                JComboBox<Ingredient> jListInventory = new JComboBox<>();
                 for (Ingredient ing : inv) {
                     jListInventory.addItem(ing);
                 }

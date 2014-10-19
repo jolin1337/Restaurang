@@ -31,6 +31,7 @@ public abstract class DataSource {
     private static String safeKey = "dt142g-awesome";
     /**
      * An abstract method for loading data to its datasource
+     * @throws se.miun.dt142g.DataSource.WrongKeyException
      */
     public abstract void loadData() throws WrongKeyException;
     /**
@@ -40,7 +41,8 @@ public abstract class DataSource {
 
     /**
      * This method connects us with key to the server
-     * @throws miun.dt142g.DataSource.WrongKeyException 
+     * @throws se.miun.dt142g.DataSource.WrongKeyException If the connection was 
+     * refused
      */
     public void dbConnect() throws WrongKeyException {
         if(!key.equals("")) {
@@ -112,44 +114,60 @@ public abstract class DataSource {
         } catch (Exception ex) {
             Logger.getLogger(DataSource.class.getName()).log(Level.SEVERE, null, ex);
         }
-        /*try {
-         URL url = new URL(serverUrl + param);
-         InputStream keyStream = url.openStream();
-            
-         String responseText = "";
-         int byteRead;
-         while ((byteRead = keyStream.read()) > -1) {
-         responseText += (char)byteRead;
-         }
-         return responseText;
-         } catch (Exception e) {
-         Logger.getLogger(DataSource.class.getName()).log(Level.SEVERE, null, e);
-         }*/
         return "";
     }
 
+    /**
+     * <warning>JSONException has to be cauth when this function is called</warning>
+     * Sens an getRequest and directly converts it to an JSONObject
+     * @param table
+     * @return
+     * @throws JSONException 
+     */
     protected JSONObject getJsonRequest(String table) throws JSONException {
         return new JSONObject(getRequest("gettable", "table=" + table + "&key=" + key));
     }
 
-    protected void upploadData(String... data) {
-        // TODO: Update data
-    }
 
+    /**
+     * This function is requered for all that extends this class
+     * It will update/sync to the server the current information of the object
+     * @throws se.miun.dt142g.DataSource.WrongKeyException if no connection available
+     */
     public abstract void update() throws WrongKeyException;
 
+    /**
+     * This function does not do anything more than returns -1. Case of time
+     * limitation we do not remove it
+     * @return returns a new unique id or -1 in some cases witch makes this 
+     * function unstable
+     */
+    @Deprecated
     public abstract int getUniqueId();
 
+    /**
+     * This exception class describes if there was no key match on the server
+     * or we can't connect at all. Then we need to change the key and try again
+     * until it works
+     */
     public static class WrongKeyException extends Exception {
-
         public WrongKeyException(String not_correct_key) {
             super(not_correct_key);
         }
     }
     
+    /**
+     * Alter the safekey to login with
+     * @param k - The key that is very secret. This key are the one that enables
+     * you to login
+     */
     static void setSafeKey(String k) {
         safeKey = k;
     }
+    /**
+     * Getter for safekey
+     * @return The safekey string
+     */
     static String getSafeKey() {
         return safeKey;
     }

@@ -180,7 +180,7 @@ public class MenuPanel extends JPanel {
 
         String groupName = null;
         Dish dish;
-        JComboBox myComboBox;
+        JComboBox<Dish> myComboBox;
         public SingleDishPanel(Dish dish, String gn, final Controller c) {
             this.dish = dish;
             this.groupName = gn;
@@ -200,7 +200,7 @@ public class MenuPanel extends JPanel {
             /**
              * Create combobox - Inefficient to iterate through list every time
              */
-            myComboBox = new JComboBox();
+            myComboBox = new JComboBox<>();
             populateComboBox(dish);
 
             myComboBox.addPopupMenuListener(new PopupMenuListener() {
