@@ -1,12 +1,13 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.I
+ * This code is created for one purpose only. And should not be used for any 
+ * other purposes unless the author of this file has apporved. 
+ * 
+ * This code is a piece of a project in the course DT142G on Mid. Sweden university
+ * Created by students for this projekt only
  */
 package se.miun.dt142g.food;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -20,11 +21,15 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import se.miun.dt142g.Controller;
 import se.miun.dt142g.ConfirmationBox;
+import se.miun.dt142g.Settings;
 import se.miun.dt142g.data.Dish;
 
 /**
+ * This class displays a jpanel containing a list item with a detail button
  *
- * @author Johannes
+ * @author Johannes Lindén
+ * @since 2014-10-11
+ * @version 1.3
  */
 public class DishPanel extends JPanel {
 
@@ -37,11 +42,11 @@ public class DishPanel extends JPanel {
         remote = c;
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(10, 10, 10, 10));
-        setBackground(Color.white);
+        setBackground(Settings.Styles.applicationBgColor);
         setMaximumSize(new Dimension(Integer.MAX_VALUE, 65));
         this.dish = dish;
         JPanel item = new JPanel(new BorderLayout());
-        item.setBackground(Color.white);
+        item.setBackground(Settings.Styles.applicationBgColor);
         JButton remove = new JButton("X");
         add(remove, BorderLayout.WEST);
         name = new JTextField();
