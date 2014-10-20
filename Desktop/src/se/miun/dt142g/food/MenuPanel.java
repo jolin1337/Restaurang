@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package se.miun.dt142g.food;
 
 import java.awt.BorderLayout;
@@ -10,6 +5,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener; 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -20,11 +16,14 @@ import java.util.logging.Logger;
 import javax.print.Doc;
 import javax.print.DocFlavor;
 import javax.print.DocPrintJob;
+import javax.print.PrintException;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
 import javax.print.SimpleDoc;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.event.PrintJobEvent;
+import javax.print.event.PrintJobListener;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -277,15 +276,55 @@ public class MenuPanel extends JPanel {
             }
             
             PrintService service = PrintServiceLookup.lookupDefaultPrintService();
-            PrintRequestAttributeSet  pras = new HashPrintRequestAttributeSet();
-            InputStreamReader fin = new InputStreamReader(con.getInputStream());
-            DocPrintJob job = service.createPrintJob();
-            Doc doc = new SimpleDoc(fin, DocFlavor.INPUT_STREAM.AUTOSENSE, null);
-            job.print(doc, pras);
+            if(service != null) {
+                PrintRequestAttributeSet  pras = new HashPrintRequestAttributeSet();
+                InputStreamReader fin = new InputStreamReader(con.getInputStream());
+                DocPrintJob job = service.createPrintJob();
+                job.addPrintJobListener(new PrintJobListener() {
 
-        } catch (Exception ex) {
+                    @Override
+                    public void printDataTransferCompleted(PrintJobEvent pje) {
+                    }
+
+                    @Override
+                    public void printJobCompleted(PrintJobEvent pje) {
+                    }
+
+                    @Override
+                    public void printJobFailed(PrintJobEvent pje) {
+                        printError();
+                    }
+
+                    @Override
+                    public void printJobCanceled(PrintJobEvent pje) {
+                    }
+
+                    @Override
+                    public void printJobNoMoreEvents(PrintJobEvent pje) {
+                    }
+
+                    @Override
+                    public void printJobRequiresAttention(PrintJobEvent pje) {
+                    }
+                });
+                Doc doc = new SimpleDoc(fin, DocFlavor.INPUT_STREAM.AUTOSENSE, null);
+                job.print(doc, pras);
+            }
+            else {
+                printError();
+            }
+
+        } catch (IOException | PrintException ex) {
             Logger.getLogger(DataSource.class.getName()).log(Level.SEVERE, null, ex);
         }
         return "";
+    }
+    
+    void printError() {
+        JOptionPane.showMessageDialog(MenuPanel.this,
+            "Det gick inte skriva ut dina configurerade rätter.\n "
+                    + "Har du konfigurerat din standardskrivare ännu?",
+            "Server error",
+            JOptionPane.ERROR_MESSAGE);
     }
 }

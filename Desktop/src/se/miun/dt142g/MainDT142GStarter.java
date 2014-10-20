@@ -103,12 +103,12 @@ public class MainDT142GStarter extends JPanel {
             // since last visit
             dishesPanel.updateTextFieldContents();
             // Set selected tab to be the dishespanel tab
-            tabbedPane.setSelectedIndex(0);
+            tabbedPane.setSelectedIndex(1);
         }
 
         @Override
         public void setViewWebsite() {
-            tabbedPane.setSelectedIndex(1);
+            tabbedPane.setSelectedIndex(2);
         }
 
         @Override
@@ -127,7 +127,7 @@ public class MainDT142GStarter extends JPanel {
 
         @Override
         public void setViewUsers() {
-            tabbedPane.setSelectedIndex(4);
+            tabbedPane.setSelectedIndex(5);
         }
 
         @Override
@@ -203,6 +203,8 @@ public class MainDT142GStarter extends JPanel {
         newBookingsScrollPane = new JScrollPane(newBooking, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         newBookingsScrollPane.setMinimumSize(new Dimension(500, 700));
 
+        JComponent panel1 = new FrontPanel();
+        panels.add(panel1);
         dishesPanel = new DishesPanel(remote);
         dishesPanel.setViewSwitch(remote);
         panels.add(dishesPanel);
@@ -219,8 +221,11 @@ public class MainDT142GStarter extends JPanel {
         panels.add(panel6);
         BookingsPanel panel7 = new BookingsPanel(remote);
         panels.add(panel7);
-        SchedulesPanel panel8 = new SchedulesPanel();
-        panels.add(panel8);
+        /**
+         * If the scheduler works we uncomment this code and everything is awesome!
+         * SchedulesPanel panel8 = new SchedulesPanel();
+         * panels.add(panel8);
+         */
         int i = 0;
         for (JComponent panel : panels) {
             JScrollPane sp = new JScrollPane(panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
