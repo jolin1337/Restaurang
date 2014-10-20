@@ -23,11 +23,11 @@ public class Settings {
      * Some common used objects for styling
      */
     public static class Styles {
-        public static Color applicationBgColor = new Color(245, 250, 255);
+        public static Color applicationBgColor = Color.white;
         public static Color btnBackground = new Color(180, 0, 0);
-        public static Color btnForeground = applicationBgColor;
+        public static Color btnForeground = Color.white;
         public static Color fieldColor = new Color(255, 200, 200);
-        public static Color darkBg = new Color(225, 235, 235);
+        public static Color darkBg = new Color(240, 240, 240);
         public static String dateFormat = "dd/MM-yy 'kl:' HH:mm";
     }
 

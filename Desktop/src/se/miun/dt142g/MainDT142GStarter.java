@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +20,6 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.plaf.ColorUIResource;
 import se.miun.dt142g.bookings.BookingsPanel;
 import se.miun.dt142g.bookings.NewBooking;
 import se.miun.dt142g.data.Booking;
@@ -151,7 +149,6 @@ public class MainDT142GStarter extends JPanel {
          * @param tabView - The view for us to set the saved state of
          * @param savedState - The state to set in the tab itself
          */
-        @Override
         public void setSavedTab(JComponent tabView, boolean savedState) {
             int tabIndex = 0;
             for (JComponent tabToChange : panels) {
@@ -301,20 +298,8 @@ public class MainDT142GStarter extends JPanel {
 
         UIManager.put("Spinner.background", Styles.fieldColor);
 
-        UIManager.put("TabbedPane.background", Styles.fieldColor.brighter());
-        UIManager.put("TabbedPane.foreground", Styles.btnBackground.darker().darker().darker());
-        UIManager.put("TabbedPane.selected", Styles.fieldColor);
-        
-        UIManager.put("TabbedPane.contentAreaColor ", Color.GREEN);
-        UIManager.put("TabbedPane.borderColor", Color.RED);
-        UIManager.put("TabbedPane.darkShadow", Color.TRANSLUCENT);
-        UIManager.put("TabbedPane.light", Color.RED);
-        UIManager.put("TabbedPane.focus", Color.LIGHT_GRAY);
-        UIManager.put("TabbedPane.selectHighlight", Color.RED);
-        UIManager.put("TabbedPane.borderHightlightColor", Color.TRANSLUCENT); 
-        UIManager.put("TabbedPane.contentBorderInsets", new Insets(0, 0, 0, 0));
-        
-        
+        UIManager.put("TabbedPane.background", Styles.fieldColor);
+
         UIManager.put("TitledBorder.font", new Font("Calibri", Font.PLAIN, 22));
         UIManager.put("TextField.font", new Font("Calibri", Font.PLAIN, 32));
         UIManager.put("TextField.background", Styles.fieldColor);

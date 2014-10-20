@@ -1,6 +1,7 @@
 package se.miun.dt142g.user;
 
 import se.miun.dt142g.data.User;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -54,22 +55,22 @@ public class UserPanel extends JPanel {
         
         editUser = new JTextField(user.getUsername());
         editUser.setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
-        editUser.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Settings.Styles.darkBg), BorderFactory.createTitledBorder("Namn:")));
+        editUser.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.white), BorderFactory.createTitledBorder("Namn:")));
         editUser.addFocusListener(userPanelFocusListener);
         editUser.addKeyListener(userPanelKeyListener);
         pwd = new JTextField(user.getPassword());        
         pwd.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-        pwd.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Settings.Styles.darkBg), BorderFactory.createTitledBorder("Lösenord:")));
+        pwd.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.white), BorderFactory.createTitledBorder("Lösenord:")));
         pwd.addFocusListener(userPanelFocusListener);
         pwd.addKeyListener(userPanelKeyListener);
         mail = new JTextField(user.getMail());
         mail.setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
-        mail.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Settings.Styles.darkBg), BorderFactory.createTitledBorder("Mail:")));
+        mail.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.white), BorderFactory.createTitledBorder("Mail:")));
         mail.addFocusListener(userPanelFocusListener);
         mail.addKeyListener(userPanelKeyListener);
         telenr = new JTextField(user.getPhoneNumber());
         telenr.setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
-        telenr.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Settings.Styles.darkBg), BorderFactory.createTitledBorder("Tel:")));
+        telenr.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.white), BorderFactory.createTitledBorder("Tel:")));
         telenr.addFocusListener(userPanelFocusListener);
         telenr.addKeyListener(userPanelKeyListener);
 
