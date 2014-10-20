@@ -103,7 +103,7 @@ public class MainDT142GStarter extends JPanel {
             // since last visit
             dishesPanel.updateTextFieldContents();
             // Set selected tab to be the dishespanel tab
-            tabbedPane.setSelectedComponent(dishesPanel);
+            tabbedPane.setSelectedIndex(0);
         }
 
         @Override

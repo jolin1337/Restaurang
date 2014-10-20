@@ -314,6 +314,15 @@ public class BookingsPanel extends JPanel {
             });
             resizeColumnWidth(table);
             newBookingP = false;
+            try {
+                bookings.update();
+            } catch (DataSource.WrongKeyException ex) {
+                JOptionPane.showMessageDialog(BookingsPanel.this,
+                    Settings.Strings.serverConnectionError,
+                    "Server error",
+                    JOptionPane.ERROR_MESSAGE);
+                remote.setConnectionView();
+            }
         } else if (removeBooking) {
             removeBooking = false;
             try {
