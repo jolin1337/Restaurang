@@ -71,7 +71,6 @@ public class Inventory extends DataSource implements Iterable<Ingredient> {
         int id;
         String name;
         int amount;
-        Ingredient ingredient;
         
         try {
             id = jsonIngredient.getInt("id");

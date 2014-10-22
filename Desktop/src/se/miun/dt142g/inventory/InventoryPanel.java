@@ -10,6 +10,7 @@ import se.miun.dt142g.DataSource;
 import se.miun.dt142g.Settings;
 import se.miun.dt142g.data.Ingredient;
 import se.miun.dt142g.food.Inventory;
+import se.miun.dt142g.inventory.IngredientPanel.IngredientFieldListener;
 
 /**
  * Inventory administration panel. Keeps track of ingredients and allows user to
@@ -21,7 +22,7 @@ import se.miun.dt142g.food.Inventory;
  */
 public class InventoryPanel extends JPanel {
 
-    private JButton addIngredient;
+    private final JButton addIngredient;
     private Inventory inventory;
 
     /**
@@ -41,7 +42,7 @@ public class InventoryPanel extends JPanel {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(Settings.Styles.applicationBgColor);
         for (Ingredient ingredient : inventory) {
-            add(new IngredientPanel(ingredient, inventory));
+            addIngredientPanel(ingredient);
         }
 
         this.add(addIngredient);
@@ -59,15 +60,40 @@ public class InventoryPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Ingredient ing = new Ingredient(inventory.getUniqueId(), "", 0);
-                final IngredientPanel panel = new IngredientPanel(ing, inventory);
                 inventory.addIngredient(ing);
-
-                remove(addIngredient);
-
-                add(panel);
-                add(addIngredient);
-                revalidate();
+                update();
+//                IngredientPanel panel = new IngredientPanel(ing);
+//
+//                remove(addIngredient);
+//
+//                add(panel);
+//                add(addIngredient);
+//                revalidate();
             }
         });
     }
+
+    private void addIngredientPanel(Ingredient ingredient) {
+        IngredientPanel ip = new IngredientPanel(ingredient);
+        ip.setIngredientFieldListener(ingredientFieldLIstener);
+        this.add(ip);
+    }
+
+    private void update() {
+        inventory.update();
+        removeAll();
+        for (Ingredient ing : inventory) {
+            addIngredientPanel(ing);
+        }
+        add(addIngredient);
+        revalidate();
+        repaint();
+    }
+
+    private final IngredientFieldListener ingredientFieldLIstener = new IngredientFieldListener() {
+        @Override
+        public void onFieldEdit() {
+            update();
+        }
+    };
 }

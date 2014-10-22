@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -27,11 +29,11 @@ import se.miun.dt142g.food.Inventory;
 public class IngredientPanel extends JPanel {
 
     /**
-     * Is the remove button fot this ingredient
+     * Is the remove button for this ingredient
      */
     private final JButton close;
     /**
-     * This field containst the name of this ingredient that the user can edit
+     * This field contains the name of this ingredient that the user can edit
      */
     private final JTextField ingredientName;
     /**
@@ -43,9 +45,9 @@ public class IngredientPanel extends JPanel {
      */
     private final Ingredient ingredient;
     /**
-     * Uses a reference to the inventory to sync this ingredient to the server
+     * 
      */
-    private final Inventory inventory;
+    private IngredientFieldListener ingredientFieldListener = null; 
 
     /**
      * Constructor initializes the panel and adds focus listeners and click
@@ -53,8 +55,7 @@ public class IngredientPanel extends JPanel {
      *
      * @param ingredient The Ingredient to represent in the panel
      */
-    public IngredientPanel(final Ingredient ingredient, final Inventory inventory) {
-        this.inventory = inventory;
+    public IngredientPanel(final Ingredient ingredient) {
         this.ingredient = ingredient;
 
         this.ingredientName = new JTextField(ingredient.getName());
@@ -63,15 +64,18 @@ public class IngredientPanel extends JPanel {
 
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         this.setBackground(Settings.Styles.applicationBgColor);
-        this.ingredientName.setMaximumSize(new Dimension(Integer.MAX_VALUE, 70));
+        this.ingredientName.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
         ingredientName.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Settings.Styles.applicationBgColor), BorderFactory.createTitledBorder("Namn")));
-        this.close.setMaximumSize(new Dimension(50, 70));
+        this.close.setMaximumSize(new Dimension(50, 80));
         amount.setColumns(3);
-        amount.setMaximumSize(new Dimension(40, 70));
+        amount.setMaximumSize(new Dimension(40, 80));
         amount.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Settings.Styles.applicationBgColor), BorderFactory.createTitledBorder("Port.")));
 
         amount.addFocusListener(ingredientFocusListener);
+        amount.addKeyListener(ingredientKeyListener);
         ingredientName.addFocusListener(ingredientFocusListener);
+        ingredientName.addKeyListener(ingredientKeyListener);
+        
 
         close.addActionListener(new ActionListener() {
 
@@ -84,12 +88,8 @@ public class IngredientPanel extends JPanel {
             public void actionPerformed(ActionEvent ae) {
                 int n = ConfirmationBox.confirm(IngredientPanel.this, ingredientName.getText());
                 if (n == 0) {
-                    Container parent = IngredientPanel.this.getParent();
-                    parent.remove(IngredientPanel.this);
-                    inventory.update();
-                    parent.revalidate();
-                    parent.repaint();
                     ingredient.setFlaggedForRemoval(true);
+                    updateFromFields();
                 }
             }
         });
@@ -114,7 +114,7 @@ public class IngredientPanel extends JPanel {
     FocusListener ingredientFocusListener = new FocusListener() {
         @Override
         public void focusGained(FocusEvent e) {
-            //do nothing
+            // do nothing
         }
 
         /**
@@ -127,16 +127,39 @@ public class IngredientPanel extends JPanel {
             updateFromFields();
         }
     };
+    
+    KeyListener ingredientKeyListener = new KeyListener() {
+
+        @Override
+        public void keyTyped(KeyEvent e) {
+            // do nothing
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            if(e.getKeyCode()==KeyEvent.VK_ENTER){
+                System.out.println("SLAKJSLDKJASLDKJASDLKJASDLKDJLASDKJLASKDJ");
+                updateFromFields();
+            }
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            //do nothing
+        }
+    };
 
     /**
      * Updates the fields and sync/uploads to the server
      */
     public void updateFromFields() {
-        if (isInteger(this.amount.getText())) {
+        if (isInteger(this.amount.getText()))
             this.ingredient.setAmount(Integer.parseInt(this.amount.getText()));
-        }
+        else 
+            this.amount.setText(Integer.toString(this.ingredient.getAmount()));
         this.ingredient.setName(this.ingredientName.getText());
-        inventory.update();
+        if (ingredientFieldListener != null)
+            ingredientFieldListener.onFieldEdit();
     }
 
     /**
@@ -152,5 +175,23 @@ public class IngredientPanel extends JPanel {
             return false;
         }
         return true;
+    }
+    
+        /**
+     * @return the userPanelListener
+     */
+    public IngredientFieldListener getIngredientFieldListener() {
+        return ingredientFieldListener;
+    }
+
+    /**
+     * @param ingredientFieldListener the IngredientFieldListener to set
+     */
+    public void setIngredientFieldListener(IngredientFieldListener ingredientFieldListener) {
+        this.ingredientFieldListener = ingredientFieldListener;
+    }
+    
+    public interface IngredientFieldListener{
+        public void onFieldEdit();
     }
 }
