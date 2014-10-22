@@ -7,8 +7,10 @@
  */
 package data.entity;
 
+import com.sun.xml.ws.rx.rm.runtime.transaction.TransactionException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import javax.json.Json;
@@ -19,8 +21,10 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,13 +34,16 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.TransactionRequiredException;
 import javax.persistence.TypedQuery;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * TableOrder entity contains a list of dishes a table has ordered,
@@ -49,37 +56,33 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "TableOrder.findAll", query = "SELECT o FROM TableOrder o ORDER BY o.timeOfOrder"),
-    @NamedQuery(name = "TableOrder.findByTableID", query = "SELECT o FROM TableOrder o WHERE o.id = :id"),
-    @NamedQuery(name = "TableOrder.findAllOrders", query = "SELECT o FROM TableOrder o")})
+    @NamedQuery(name = "TableOrder.findByTableID", query = "SELECT o FROM TableOrder o WHERE o.id = :id")})
 public class TableOrder extends JsonEntity implements Serializable {
+    @Column(name = "TABLE_NR")
+    private Short tableNr;
+    @Column(name = "SPECIAL")
+    private Short special;
+    @OneToMany(cascade = CascadeType.DETACH, mappedBy = "tableOrder")
+    private Collection<Tablehasdish> tablehasdishCollection;
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO) 
     @NotNull
     @Column(name = "ID")
     /**
      * The primary key of this entity
      */
-    private Integer id;
+    private Long id;
     @Column(name = "TIMEOFORDER")
     @Temporal(TemporalType.DATE) 
     private Date timeOfOrder;
-    @Column(name = "TABLE_NR")
-    private Integer tableNr;
-    @Column(name = "SPECIAL")
-    private Boolean special;
-    @JoinTable(name = "TABLE_HAS_ORDER", joinColumns = {
-        @JoinColumn(name = "TABLE_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
-        @JoinColumn(name = "DISH_ID", referencedColumnName = "ID")})
-    @ManyToMany
-    private List<Dish> orderedDishes;
 
-    /**
+    /** 
      * Getter of the table ID
      * @return the table ID
      */
-    public int getId() {
+    public long getId() {
         return id;
     }
         
@@ -87,41 +90,19 @@ public class TableOrder extends JsonEntity implements Serializable {
      * Set the table ID
      * @param id the table ID
      */
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public Integer getTableNr() {
+    public Short getTableNr() {
         return tableNr;
     }
 
-    public void setTableNr(Integer tableNr) {
+    public void setTableNr(Short tableNr) {
         this.tableNr = tableNr;
     }
 
-    public Boolean getSpecial() {
-        return special;
-    }
-
-    public void setSpecial(Boolean special) {
-        this.special = special;
-    }
         
-    /**
-     * Getter of the ordered dishes for this table
-     * @return the dishes ordered by this table
-     */
-    public List<Dish> getOrderedDishes() {
-        return orderedDishes;
-    }
-
-    /**
-     * Sets the ordered dishes for this table
-     * @param orderedDishes The list of orders
-     */
-    public void setOrderedDishes(List<Dish> orderedDishes) {
-        this.orderedDishes = orderedDishes;
-    }
     
     /**
      * Returns the time at which the order was placed
@@ -166,25 +147,49 @@ public class TableOrder extends JsonEntity implements Serializable {
      * that the dish is not an existing dish. This will generate an error
      * </p>
      * @param dish - The dish you want to add
+     * @param em - The entitymanager to get the relation with dishes with
+     * @return true on successed updating/added entity otherwise false
      */
-    public void addToOrders(Dish dish) {
-        if(orderedDishes == null)
-            orderedDishes = new ArrayList<>();
-        if (dish != null && orderedDishes.indexOf(dish) < 0) {
-            orderedDishes.add(dish);
+    public boolean addToOrders(Dish dish, EntityManager em) {
+        try {
+            TypedQuery<Tablehasdish> thdQuery = em.createNamedQuery("Tablehasdish.findByTablenr", Tablehasdish.class);
+
+            List<Tablehasdish> thds = thdQuery.getResultList();
+            for(Tablehasdish thd : thds) {
+                if(thd.getDish().getId().equals(dish.getId())) {
+                    thd.setDish(dish);
+                    thd.setDishCount(thd.getDishCount() + 1);
+                    em.merge(thd);
+                    return true;
+                }
+            }
+            Tablehasdish thd = new Tablehasdish(dish.getId(), id);
+            thd.setDishCount(1);
+            em.persist(thd);
+            return true;
+        }
+        catch(TransactionRequiredException | IllegalArgumentException | EntityExistsException ex) {
+            return false;
         }
     }
     
     /**
      * Removes an existing order if it exists for this table.
      * @param dish - The dish to remove
+     * @param em - The entitymanager to get the relation with dishes with
+     * @return true on successed updating/removed entity otherwise false
      */
-    public void removeOrder(Dish dish) {
-        if(orderedDishes == null)
-            orderedDishes = new ArrayList<>();
-        if (dish != null && orderedDishes.indexOf(dish) > -1) {
-            orderedDishes.remove(dish);
+    public boolean removeOrder(Dish dish, EntityManager em) {
+        TypedQuery<Tablehasdish> thdQuery = em.createNamedQuery("Tablehasdish.findByTablenr", Tablehasdish.class);
+        
+        List<Tablehasdish> thds = thdQuery.getResultList();
+        for(Tablehasdish thd : thds) {
+            if(thd.getDish().getId().equals(dish.getId())) {
+                em.detach(thd);
+                return true;
+            }
         }
+        return false;
     }
     
     /**
@@ -193,22 +198,13 @@ public class TableOrder extends JsonEntity implements Serializable {
      */
     @Override
     public String toJsonString() { 
-        // First we need to build an array of orders for this table
-        JsonArrayBuilder orders = Json.createArrayBuilder(); 
-        for (Dish i : orderedDishes) {
-        
-            JsonObject obj = Json.createObjectBuilder().add("as", i.getId()).build();
-            JsonValue val = obj.get("as");
-            orders.add(val); // add a index of the current dish
-        }
         
         // Create the main json object for the string
         JsonObjectBuilder value = Json.createObjectBuilder()
                 .add("id", getId())
-                .add("orders", orders.build())
                 .add("table", getTableNr())
                 .add("timeOfOrder", getTimeOfOrder().getTime());
-        if(special)
+        if(special > 0)
             value.add("special", 1);
         else value.add("special", 0);
         return value.build().toString();
@@ -217,9 +213,9 @@ public class TableOrder extends JsonEntity implements Serializable {
     @Override
     public boolean setEntityByJson(JsonObject obj, EntityManager em) {
         try {
-            special = obj.getInt("special") == 1;
+            special = (short)(obj.getInt("special") % 2);
             timeOfOrder = new Date(obj.getJsonNumber("timeOfOrder").longValue());
-            tableNr = obj.getInt("table");
+            tableNr = (short)obj.getInt("table");
             // Parse the json object for insertion in this entity
             JsonArray orders = obj.getJsonArray("orders");
             for (JsonValue itDish : orders) {
@@ -229,13 +225,13 @@ public class TableOrder extends JsonEntity implements Serializable {
                         Dish dish = em.find(Dish.class, pk_inv);
                         if (dish != null) {
                             decreaseDishInventory(dish.getId(), em);
-                            addToOrders(dish);
+                            addToOrders(dish, em);
 
                         }
                     } else {
                         Dish dish = em.find(Dish.class, -(pk_inv + 1));
                         if (dish != null) {
-                            removeOrder(dish);
+                            removeOrder(dish, em);
                         }
                     }
                 }
@@ -265,5 +261,17 @@ public class TableOrder extends JsonEntity implements Serializable {
     
     private void subtractIngredient(int ingredientId){
         
+    }
+
+    public TableOrder() {
+    }
+
+    @XmlTransient
+    public Collection<Tablehasdish> getTablehasdishCollection() {
+        return tablehasdishCollection;
+    }
+
+    public void setTablehasdishCollection(Collection<Tablehasdish> tablehasdishCollection) {
+        this.tablehasdishCollection = tablehasdishCollection;
     }
 }

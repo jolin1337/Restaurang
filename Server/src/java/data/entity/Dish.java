@@ -9,6 +9,7 @@ package data.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -17,6 +18,7 @@ import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
@@ -28,6 +30,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -51,6 +54,13 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Dish.findByName", query = "SELECT d FROM Dish d WHERE d.name = :name"),
     @NamedQuery(name = "Dish.findByPrice", query = "SELECT d FROM Dish d WHERE d.price = :price")})
 public class Dish extends JsonEntity implements Serializable {
+    @JoinTable(name = "GROUP_HAS_DISH", joinColumns = {
+        @JoinColumn(name = "DISH_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
+        @JoinColumn(name = "GROUP_ID", referencedColumnName = "NAME")})
+    @ManyToMany
+    private Collection<Dishgroup> dishgroupCollection;
+    @OneToMany(cascade = CascadeType.DETACH, mappedBy = "dish")
+    private Collection<Tablehasdish> tablehasdishCollection;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -65,20 +75,13 @@ public class Dish extends JsonEntity implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "PRICE")
     private Double price;
-    @ManyToMany(mappedBy = "dishList")
+    @ManyToMany(cascade = {CascadeType.DETACH}, mappedBy = "dishList")
     private List<Dishgroup> dishgroupList;
     @JoinTable(name = "DISH_HAS_INVENTORY", joinColumns = {
         @JoinColumn(name = "DISH_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
         @JoinColumn(name = "INVENTORY_ID", referencedColumnName = "ID")})
-    @ManyToMany
+    @ManyToMany(cascade=CascadeType.DETACH)
     private List<Inventory> inventoryList;
-    
-    
-    @JoinTable(name = "TABLE_HAS_ORDER", joinColumns = {
-        @JoinColumn(name = "DISH_ID", referencedColumnName = "ID")}, inverseJoinColumns = {
-        @JoinColumn(name = "TABLE_ID", referencedColumnName = "tableID")})
-    @ManyToMany
-    private List<TableOrder> tableOrder;
 
     public Dish() {
     }
@@ -143,24 +146,6 @@ public class Dish extends JsonEntity implements Serializable {
     public void removeIngredient(Inventory inv) {
         if(inv != null && inventoryList != null && inventoryList.indexOf(inv) > -1)
             inventoryList.remove(inv);
-    }
-
-    public List<TableOrder> getTableOrder() {
-        return tableOrder;
-    }
-
-    public void setTableOrder(List<TableOrder> tableOrder) {
-        this.tableOrder = tableOrder;
-    }
-    public void addToTableOrder(TableOrder inv) {
-        if(tableOrder == null)
-            tableOrder = new ArrayList<>();
-        if(inv != null && tableOrder.indexOf(inv) < 0)
-            tableOrder.add(inv);
-    }
-    public void removeTableOrder(TableOrder inv) {
-        if(inv != null && tableOrder != null && tableOrder.indexOf(inv) > -1)
-            tableOrder.remove(inv);
     }
     
 
@@ -246,6 +231,24 @@ public class Dish extends JsonEntity implements Serializable {
             return false;
         }
         return true;
+    }
+
+    @XmlTransient
+    public Collection<Tablehasdish> getTablehasdishCollection() {
+        return tablehasdishCollection;
+    }
+
+    public void setTablehasdishCollection(Collection<Tablehasdish> tablehasdishCollection) {
+        this.tablehasdishCollection = tablehasdishCollection;
+    }
+
+    @XmlTransient
+    public Collection<Dishgroup> getDishgroupCollection() {
+        return dishgroupCollection;
+    }
+
+    public void setDishgroupCollection(Collection<Dishgroup> dishgroupCollection) {
+        this.dishgroupCollection = dishgroupCollection;
     }
 
 }

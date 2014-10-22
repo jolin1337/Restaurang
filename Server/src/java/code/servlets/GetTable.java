@@ -16,6 +16,7 @@ import data.entity.Info;
 import data.entity.Inventory;
 import data.entity.RestaurantUser;
 import data.entity.TableOrder;
+import data.entity.Tablehasdish;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
@@ -102,13 +103,13 @@ public class GetTable extends HttpServlet {
                         for (Inventory d : inventoryQuery.getResultList()) {
                             jsonString += d.toJsonString() + ",";
                         }
-                        break;
+                        break; 
                     case "scheme":
 
                         break;
                     case "tableorder":
-                        TypedQuery<TableOrder> tableOrderQuery = em.createNamedQuery("TableOrder.findAll", TableOrder.class);
-                        for (TableOrder d : tableOrderQuery.getResultList()) {
+                        TypedQuery<Tablehasdish> tableOrderQuery = em.createNamedQuery("Tablehasdish.findAllOrders", Tablehasdish.class);
+                        for (Tablehasdish d : tableOrderQuery.getResultList()) {
                             jsonString += d.toJsonString() + ",";
                         }
                         break;
@@ -127,7 +128,7 @@ public class GetTable extends HttpServlet {
                     jsonString = jsonString.substring(0, jsonString.length() - 1);
                 }
                 jsonString += "]}";
-                out.print(URLEncoder.encode(jsonString, "UTF-8"));
+                out.print(jsonString);//URLEncoder.encode(jsonString, "UTF-8"));
             } else if (authCode == Settings.AuthCode.expired) {
                 out.print("expired_key");
             } else if (authCode == Settings.AuthCode.deny) {

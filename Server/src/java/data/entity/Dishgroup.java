@@ -9,6 +9,7 @@ package data.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -17,6 +18,7 @@ import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
@@ -54,6 +56,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Dishgroup.findAll", query = "SELECT d FROM Dishgroup d"),
     @NamedQuery(name = "Dishgroup.findByName", query = "SELECT d FROM Dishgroup d WHERE d.name = :name")})
 public class Dishgroup extends JsonEntity implements Serializable {
+    @ManyToMany(mappedBy = "dishgroupCollection")
+    private Collection<Dish> dishCollection;
 
     private static final long serialVersionUID = 1L;
 
@@ -87,7 +91,7 @@ public class Dishgroup extends JsonEntity implements Serializable {
     @JoinTable(name = "GROUP_HAS_DISH", joinColumns = {
         @JoinColumn(name = "GROUP_ID", referencedColumnName = "NAME")}, inverseJoinColumns = {
         @JoinColumn(name = "DISH_ID", referencedColumnName = "ID")})
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.DETACH)
     /**
      * A list of the dishes this group has
      */
@@ -251,6 +255,15 @@ public class Dishgroup extends JsonEntity implements Serializable {
         }
         // yes every thing worked perfect!
         return true;
+    }
+
+    @XmlTransient
+    public Collection<Dish> getDishCollection() {
+        return dishCollection;
+    }
+
+    public void setDishCollection(Collection<Dish> dishCollection) {
+        this.dishCollection = dishCollection;
     }
 
 }
