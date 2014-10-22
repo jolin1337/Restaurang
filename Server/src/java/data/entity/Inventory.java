@@ -15,6 +15,7 @@ import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
@@ -68,7 +69,7 @@ public class Inventory extends JsonEntity implements Serializable {
      * The count of how many you have of this ingredient
      */
     private Integer amount;
-    @ManyToMany(mappedBy = "inventoryList")
+    @ManyToMany(cascade={CascadeType.DETACH}, mappedBy = "inventoryList")
     /**
      * A list of all dishes that uses this ingredient
      */
