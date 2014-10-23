@@ -119,6 +119,11 @@ public class TableOrder extends JsonEntity implements Serializable {
     public void setTimeOfOrder(Date timeOfOrder) {
         this.timeOfOrder = timeOfOrder;
     }
+    public void setTimeOfOrder(int timeOfOrder) {
+        if(this.timeOfOrder == null)
+            this.timeOfOrder = new Date();
+        this.timeOfOrder.setTime(timeOfOrder);
+    }
 
     @Override
     public int hashCode() {

@@ -17,10 +17,13 @@ import data.entity.Inventory;
 import data.entity.JsonEntity;
 import data.entity.RestaurantUser;
 import data.entity.TableOrder;
+import data.entity.Tablehasdish;
+import data.entity.TablehasdishPK;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
@@ -35,6 +38,7 @@ import javax.json.JsonValue;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
+import javax.persistence.TypedQuery;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.annotation.WebInitParam;
@@ -148,8 +152,10 @@ public class UpdateRow extends HttpServlet {
                             break;
                         case "tableorder":
                             // try to alter the table
-                            edited |= updateTable(obj, obj.getInt(TableOrder.getPK(), -1), TableOrder.class);
-
+                            EntityManager em = emf.createEntityManager();
+                            TablehasdishPK pk = Tablehasdish.getPKOf(obj, em);
+                            if(pk != null)
+                                edited |= updateTable(obj, pk, Tablehasdish.class);
                             break;
                         case "scheme":
 
