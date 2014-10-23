@@ -132,7 +132,7 @@ public class MainDT142GStarter extends JPanel {
 
         @Override
         public void setViewBookings() {
-            tabbedPane.setSelectedIndex(6);
+            tabbedPane.setSelectedIndex(7);
         }
 
         @Override

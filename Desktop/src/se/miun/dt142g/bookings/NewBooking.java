@@ -120,7 +120,7 @@ public class NewBooking extends JPanel {
 
         spinner.setModel(model);
         spinner.setEditor(new JSpinner.DateEditor(spinner, "HH:mm"));
-        spinner.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Settings.Styles.applicationBgColor), BorderFactory.createTitledBorder("Antal personer:")));
+        spinner.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Settings.Styles.applicationBgColor), BorderFactory.createTitledBorder("Tid:")));
         add(spinner);
         /* Time spinner */
 
@@ -129,7 +129,7 @@ public class NewBooking extends JPanel {
         Border bbb = BorderFactory.createTitledBorder("Antal personer:");
         final DatePicker datePicker = new DatePicker(new Date());
         datePicker.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-        datePicker.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Settings.Styles.applicationBgColor), BorderFactory.createTitledBorder("Antal personer:")));
+        datePicker.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Settings.Styles.applicationBgColor), BorderFactory.createTitledBorder("Datum:")));
 
         this.add(datePicker);
         durationField = addTextField("");
