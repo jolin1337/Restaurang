@@ -75,6 +75,12 @@ public abstract class DataSource {
      */
     protected static String getRequest(String url, String params) {
         try {
+            int bracketIndex = params.indexOf("{");
+            if(bracketIndex != -1){
+                String temp = params.substring(bracketIndex);
+                temp = temp.replaceAll("&", "och");
+                params = params.substring(0, bracketIndex)+temp;
+            }
             URL obj = new URL(Settings.Strings.serverURL + url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
