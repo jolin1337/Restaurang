@@ -46,7 +46,7 @@ import se.miun.dt142g.data.Dish;
  */
 public class MenuPanel extends JPanel {
 
-    DishGroups dishGroups = new DishGroups();
+    static DishGroups dishGroups = new DishGroups();
     JButton addDishBtn;
     private Controller remote = null;
     List<SingleDishPanel> dishPanel = new ArrayList<>();

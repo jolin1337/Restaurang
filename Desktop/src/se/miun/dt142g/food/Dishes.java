@@ -165,4 +165,17 @@ public class Dishes extends DataSource implements Iterable<Dish> {
     void clear() {
         dishes.clear();
     }
+    
+    public List<String> getDishNames(int ingredientId){
+        List<String> dishNames = new ArrayList<String>(); 
+        for(Dish d : dishes){
+            for(Integer i : d.getIngredients()){
+                if(i == ingredientId){
+                    dishNames.add(d.getName());
+                    break;
+                }
+            }
+        }
+        return dishNames; 
+    }
 }

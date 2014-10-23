@@ -5,7 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
+import se.miun.dt142g.Controller;
 import se.miun.dt142g.DataSource;
 import se.miun.dt142g.Settings;
 import se.miun.dt142g.data.Ingredient;
@@ -24,6 +26,8 @@ public class InventoryPanel extends JPanel {
 
     private final JButton addIngredient;
     private Inventory inventory;
+    private IngredientFieldListener ingredientFieldListener = null; 
+    final Controller remote; 
 
     /**
      * Constructor sets up layout and adds event listeners to buttons. Also
@@ -32,7 +36,9 @@ public class InventoryPanel extends JPanel {
      * @throws se.miun.dt142g.DataSource.WrongKeyException when there fails to
      * connect to server
      */
-    public InventoryPanel() throws DataSource.WrongKeyException {
+    public InventoryPanel(Controller c) throws DataSource.WrongKeyException {
+        this.remote = c; 
+        
         this.inventory = new Inventory();
         this.addIngredient = new JButton("Lägg till ingrediens");
 
@@ -41,11 +47,12 @@ public class InventoryPanel extends JPanel {
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(Settings.Styles.applicationBgColor);
+        this.add(addIngredient);
         for (Ingredient ingredient : inventory) {
             addIngredientPanel(ingredient);
         }
 
-        this.add(addIngredient);
+
         addIngredient.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
 
         this.addIngredient.addActionListener(new ActionListener() {
@@ -62,19 +69,12 @@ public class InventoryPanel extends JPanel {
                 Ingredient ing = new Ingredient(inventory.getUniqueId(), "", 0);
                 inventory.addIngredient(ing);
                 update();
-//                IngredientPanel panel = new IngredientPanel(ing);
-//
-//                remove(addIngredient);
-//
-//                add(panel);
-//                add(addIngredient);
-//                revalidate();
             }
         });
     }
 
     private void addIngredientPanel(Ingredient ingredient) {
-        IngredientPanel ip = new IngredientPanel(ingredient);
+        IngredientPanel ip = new IngredientPanel(ingredient, remote);
         ip.setIngredientFieldListener(ingredientFieldLIstener);
         this.add(ip);
     }
@@ -82,10 +82,11 @@ public class InventoryPanel extends JPanel {
     private void update() {
         inventory.update();
         removeAll();
+        add(addIngredient);
         for (Ingredient ing : inventory) {
             addIngredientPanel(ing);
         }
-        add(addIngredient);
+        remote.setSavedTab((JComponent) InventoryPanel.this, true);
         revalidate();
         repaint();
     }

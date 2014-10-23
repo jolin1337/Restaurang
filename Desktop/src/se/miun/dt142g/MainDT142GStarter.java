@@ -211,7 +211,7 @@ public class MainDT142GStarter extends JPanel {
 
         JComponent panel2 = new WebsitePanel(remote);
         panels.add(panel2);
-        InventoryPanel panel3 = new InventoryPanel();
+        InventoryPanel panel3 = new InventoryPanel(remote);
         panels.add(panel3);
         UsersPanel panel4 = new UsersPanel(remote);
         panels.add(panel4);
