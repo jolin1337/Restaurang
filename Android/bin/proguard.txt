@@ -4,19 +4,22 @@
 # view AndroidManifest.xml #generated:11
 -keep class se.miun.dt142g.LoginActivity { <init>(...); }
 
+# view AndroidManifest.xml #generated:38
+-keep class se.miun.dt142g.data.entityhandler.DataService { <init>(...); }
+
 # view AndroidManifest.xml #generated:32
--keep class se.miun.dt142g.kitchen.Orders { <init>(...); }
+-keep class se.miun.dt142g.kitchen.KitchenOrdersActivity { <init>(...); }
 
 # view AndroidManifest.xml #generated:35
 -keep class se.miun.dt142g.reservations.ReservationsActivity { <init>(...); }
 
 # view AndroidManifest.xml #generated:25
--keep class se.miun.dt142g.waiter.OrdersActivity { <init>(...); }
+-keep class se.miun.dt142g.waiter.WaiterOrdersActivity { <init>(...); }
 
 # view AndroidManifest.xml #generated:18
--keep class se.miun.dt142g.waiter.WaiterActivity { <init>(...); }
+-keep class se.miun.dt142g.waiter.WaiterTableActivity { <init>(...); }
 
-# onClick res/layout/login_activity.xml #generated:50
+# onClick res/layout/login_activity.xml #generated:51
 -keepclassmembers class * { *** loginButtonClicked(...); }
 
 # onClick res/layout/order_menu.xml #generated:14

@@ -7,7 +7,6 @@
  */
 package se.miun.dt142g.data.handler;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -15,6 +14,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import se.miun.dt142g.data.EntityRep.Dish;
 import se.miun.dt142g.data.entityhandler.DataSource;
 import se.miun.dt142g.data.EntityRep.TableOrder;
 
@@ -42,17 +42,34 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
             JSONArray data = json.getJSONArray("data");
             for(int i=data.length(); i > 0; i--) {
                 JSONObject row = data.getJSONObject(i-1);
-                TableOrder order = new TableOrder(row.getInt("table"));
-                order.setId(row.getInt("id"));
-                order.setSpecial((row.getInt("special") != 0));
-                order.setTimeOfOrder(new Date(row.getInt("timeOfOrder")));
+                JSONObject tableOrder = row.getJSONObject("tableOrder");
+                int tboId = tableOrder.getInt("id");
+                TableOrder order = null;
+                for(TableOrder tbo : res) {
+                    if(tbo.getId() == tboId) {
+                        order = tbo;
+                    }
+                }
+                if(order == null)
+                    order = new TableOrder(tableOrder.getInt("table"));
+                order.setId(tboId);
+                order.setTimeOfOrder(new Date(tableOrder.getInt("timeOfOrder")));
+                
+                JSONObject dish = row.getJSONObject("dish");
+                for(Dish d : dishes) {
+                    if(d.getId() == dish.getInt("dishId")) {
+                        d.setSpecial(dish.getBoolean("special"));
+                        d.setCount(dish.getInt("dishCount"));
+                    }
+                }
+                //order.setSpecial((row.getInt("special") != 0));
                 JSONArray ds = row.getJSONArray("orders");
                 List<Integer> dishesIndicies = new ArrayList<Integer>();
                 for(int j=ds.length(); j > 0; j--) {
                     int dishIndex = ds.getInt(j-1);
                     dishesIndicies.add(dishIndex);
                 }
-                order.setOrderedDishes(dishesIndicies);
+                //order.setOrderedDishes(dishesIndicies);
                 res.add(order);
             }
         } catch (JSONException ex) {
@@ -71,9 +88,9 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
         for(TableOrder t1 : tableOs) {
             boolean found = false;
             for(TableOrder t2 : tableOrders) {
-                if(t1.getId() == t2.getId() && t2.getOrderedDishes().containsAll(t1.getOrderedDishes())) {
-                    found = true;
-                }
+                //if(t1.getId() == t2.getId() && t2.getOrderedDishes().containsAll(t1.getOrderedDishes())) {
+                //    found = true;
+                //}
             }
             if(found == false)
                 toRemove.add(t1);
@@ -91,22 +108,24 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
             JSONObject json = new JSONObject();
             JSONArray data = new JSONArray();
             for(TableOrder rm : tblOrders) {
-                JSONObject data2 = new JSONObject();
-                JSONObject item = new JSONObject();
-                item.put("id", rm.getId());
-                item.put("table", rm.getTable());
-                if(rm.isSpecial())
-                    item.put("special", 1);
-                else
-                    item.put("special", 0);
-                if(!removeFlag) {
-                    item.put("timeOfOrder", rm.getTimeOfOrder().getTime());
-                    JSONArray orders = new JSONArray(rm.getOrderedDishes());
-                    item.put("orders", orders);
-                }
-                else item.put("remove", true);
-                data2.put("data", item);
-                data.put(data2);
+                /*for(Integer dishId : rm.getOrderedDishes()) {
+                    JSONObject data2 = new JSONObject();
+                    JSONObject item = new JSONObject();
+                    item.put("id", rm.getId());
+                    item.put("dishId", dishId);
+                    item.put("table", rm.getTable());
+                    if(!removeFlag) {
+                        if(rm.isSpecial())
+                            item.put("special", 1);
+                        else
+                            item.put("special", 0);
+                        item.put("timeOfOrder", rm.getTimeOfOrder().getTime());
+                    }
+                    else 
+                        item.put("remove", true);
+                    data2.put("data", item);
+                    data.put(data2);
+                }*/
             }
             json.put("data", data);
             return json.toString();
@@ -141,7 +160,7 @@ public class TableOrders extends DataSource implements Iterable<TableOrder> {
             for(int i=0;i<6;i++) {
                 tableOrders.add(new TableOrder(i));
             }
-            update();
+            // update();
             return;
         }
         for(TableOrder tableOrder : tbos)

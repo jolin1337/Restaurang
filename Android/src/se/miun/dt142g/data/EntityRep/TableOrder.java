@@ -22,13 +22,10 @@ public class TableOrder {
     private int id;
     private int table;
     private Date timeOfOrder;
-    private List<Integer> orderedDishes;
-    private boolean special;
 
     public TableOrder(int tbl) {
         id = -1;
         timeOfOrder = new Date();
-        orderedDishes = new ArrayList<Integer>();
         table = tbl;
     }
     
@@ -40,13 +37,6 @@ public class TableOrder {
         this.id = id;
     }
 
-    public boolean isSpecial() {
-        return special;
-    }
-
-    public void setSpecial(boolean special) {
-        this.special = special;
-    }
 
     public Date getTimeOfOrder() {
         return timeOfOrder;
@@ -55,25 +45,19 @@ public class TableOrder {
     public void setTimeOfOrder(Date timeOfOrder) {
         this.timeOfOrder = timeOfOrder;
     }
-
-    public List<Integer> getOrderedDishes() {
-        return orderedDishes;
-    }
-
-    public void setOrderedDishes(List<Integer> orderedDishes) {
-        this.orderedDishes = orderedDishes;
+    public void setTimeOfOrder(int timeOfOrder) {
+        if(this.timeOfOrder == null)
+            this.timeOfOrder = new Date();
+        this.timeOfOrder.setTime(timeOfOrder);
     }
     
     public String toJsonString() {
         // Set all properties of this event here to export the event to a json object
         JSONObject value = new JSONObject();
         try {
-            JSONArray orders = new JSONArray(getOrderedDishes());
             value.put("id", getId())
-                    .put("special", (special==true?1:0))
                     .put("table", table)
-                    .put("timeOrder", getTimeOfOrder())
-                    .put("orderDishes", orders);
+                    .put("timeOrder", getTimeOfOrder().getTime());
         } catch (JSONException ex) {
         }
         return value.toString();

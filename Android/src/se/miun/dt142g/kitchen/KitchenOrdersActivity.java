@@ -10,10 +10,12 @@ import android.widget.ExpandableListView;
 import java.text.SimpleDateFormat;
 import se.miun.dt142g.BaseActivity;
 import se.miun.dt142g.R;
+import se.miun.dt142g.data.EntityRep.TableHasDish;
 import se.miun.dt142g.data.handler.TableOrders;
 import se.miun.dt142g.data.EntityRep.TableOrder;
 import se.miun.dt142g.data.entityhandler.DataService;
 import se.miun.dt142g.data.entityhandler.DataSourceListener;
+import se.miun.dt142g.data.entityhandler.TableDishRelations;
 
 public class KitchenOrdersActivity extends BaseActivity {
 
@@ -21,7 +23,7 @@ public class KitchenOrdersActivity extends BaseActivity {
     ExpandableListView expListView;
     final List<String> listDataHeader = new ArrayList<String>();
     HashMap<String, List<String>> listDataChild;
-    final TableOrders tableOrders = new TableOrders();
+    final TableDishRelations tableOrders = new TableDishRelations();
 
     // Define the Handler that receives messages from the thread and update the progress
     private final Handler handler = new Handler() {
@@ -84,10 +86,10 @@ public class KitchenOrdersActivity extends BaseActivity {
         int index = 0;
         synchronized(tableOrders) {
             int size = 0;
-            for (TableOrder tblOrder : tableOrders) {
+            for (TableHasDish tblOrder : tableOrders) {
 
                 // Adding child data
-                List<Integer> tblDishes = tblOrder.getOrderedDishes();
+                List<TableHasDish> tblDishes = tblOrder.getRelations();
                 if(tblDishes.size() > 0) {
                     listDataHeader.add("Bord " + (tblOrder.getTable()+1) + "\n" + 
                             new SimpleDateFormat("HH:mm").format(tblOrder.getTimeOfOrder()));

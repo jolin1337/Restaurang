@@ -13,8 +13,10 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import se.miun.dt142g.R;
+import se.miun.dt142g.data.EntityRep.TableHasDish;
 import se.miun.dt142g.data.entityhandler.DataService;
 import se.miun.dt142g.data.entityhandler.DataSource;
+import se.miun.dt142g.data.entityhandler.TableDishRelations;
 import se.miun.dt142g.data.handler.TableOrders;
 /**
  * Created by Tomas on 2014-09-20.
@@ -127,10 +129,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     _listDataHeader.remove(groupPosition);
                     final DataSource ds = DataService.getDataSource();
                     synchronized(ds) {
-                        if(ds instanceof TableOrders) {
+                        if(ds instanceof TableDishRelations) {
                             try {
                                 DataService.setAutoLoad(false);
-                            ((TableOrders)ds).getTable(groupPosition).getOrderedDishes().clear();
+                            ((TableDishRelations)ds).getTable(groupPosition).getOrderedDishes().clear();
                             DataService.updateServer();
                                 DataService.setAutoLoad(false);
                             } catch(UnsupportedOperationException ex) {}

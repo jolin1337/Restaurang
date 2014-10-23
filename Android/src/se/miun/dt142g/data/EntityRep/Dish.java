@@ -21,6 +21,8 @@ public class Dish implements Comparable<Dish> {
     private int id;
     private String name;
     private float price;
+    private boolean special = false;
+    private int count = 1;
     private List<Integer> ingredientIds = new ArrayList<Integer>(); 
 
     public Dish(int id, String name, float price, List<Integer> ingredientIds, boolean inStock) {
@@ -117,5 +119,20 @@ public class Dish implements Comparable<Dish> {
      */
     public void setInStock(boolean inStock) {
         this.inStock = inStock;
+    }
+
+    public void setSpecial(boolean special) {
+        this.special = special;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+    public boolean getSpecial() {
+        return special;
+    }
+
+    public int getCount() {
+        return count;
     }
 }

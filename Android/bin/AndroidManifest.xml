@@ -15,25 +15,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".waiter.WaiterActivity"
+        <activity android:name=".waiter.WaiterTableActivity"
                   android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".waiter.OrdersActivity"
+        <activity android:name=".waiter.WaiterOrdersActivity"
                   android:label="@string/app_name" >
                     <!-- The meta-data element is needed for versions lower than 4.1 -->
                     <meta-data
                         android:name="android.support.PARENT_ACTIVITY"
                         android:value="se.miun.dt142g.waiter.WaiterActivity" />
         </activity>
-        <activity android:name=".kitchen.Orders"
+        <activity android:name=".kitchen.KitchenOrdersActivity"
                   android:label="@string/app_name" >
         </activity>
         <activity android:name=".reservations.ReservationsActivity"
             android:label="@string/reservations">
         </activity>
+        <service android:name="se.miun.dt142g.data.entityhandler.DataService"/>
     </application>
 </manifest>

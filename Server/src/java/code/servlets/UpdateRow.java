@@ -222,6 +222,8 @@ public class UpdateRow extends HttpServlet {
             try {
                 em.flush();
             } catch (Exception e) {
+                edited = false;
+                return false; 
             } finally {
                 if (edited) {
                     utx.commit(); // confirm the changes
@@ -232,10 +234,15 @@ public class UpdateRow extends HttpServlet {
                 em.close();     // close the em
             }
 
-        } catch (NotSupportedException | SystemException | InstantiationException | IllegalAccessException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
-            Logger.getLogger(UpdateRow.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotSupportedException | SystemException | InstantiationException | RollbackException | IllegalAccessException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+            //Logger.getLogger(UpdateRow.class.getName()).log(Level.SEVERE, null, ex);
+
+            edited = false;
+            return false;
         }
-        return edited;  // return if we have altered a table
+        finally {
+            return edited;  // return if we have altered a table
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
