@@ -90,19 +90,19 @@ select {
     left: 10px;
 }
 .syear:before {
-    content: "Year";
+    content: "År";
 }
 .smonth:before {
-    content: "Month";
+    content: "Månad";
 }
 .sday:before {
-    content: "Date";
+    content: "Dag";
 }
 .shours:before {
-    content: "Hour";
+    content: "Timme";
 }
 .smin:before {
-    content: "Minute";
+    content: "Minut";
 }
 
 @media (max-width: 500px) {

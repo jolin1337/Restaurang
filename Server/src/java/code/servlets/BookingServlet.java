@@ -104,7 +104,8 @@ public class BookingServlet extends HttpServlet {
             Query query = em.createQuery(countBookings);
             query.setParameter("dateValue", d.getTime());
             Long sum = (Long)query.getSingleResult();
-            if(name.isEmpty() || tel.isEmpty() || sdate.isEmpty() || count <= 0){
+            Date today = new Date();
+            if(name.isEmpty() || tel.isEmpty() || sdate.isEmpty() || count <= 0 || d.before(today)){
                     response.sendRedirect(response.encodeRedirectURL("/Server/?page=bord&s=false"));
                     return;
             }
