@@ -28,7 +28,7 @@ import se.miun.dt142g.data.EntityRep.TableOrder;
 import se.miun.dt142g.data.entityhandler.DataService;
 import se.miun.dt142g.data.entityhandler.DataSource;
 import se.miun.dt142g.data.entityhandler.DataSourceListener;
-import se.miun.dt142g.data.entityhandler.TableDishRelations;
+import se.miun.dt142g.data.handler.TableDishRelations;
 import se.miun.dt142g.data.handler.Dishes;
 
 /**

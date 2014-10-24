@@ -16,7 +16,7 @@ import se.miun.dt142g.data.handler.TableOrders;
 import se.miun.dt142g.data.EntityRep.TableOrder;
 import se.miun.dt142g.data.entityhandler.DataService;
 import se.miun.dt142g.data.entityhandler.DataSourceListener;
-import se.miun.dt142g.data.entityhandler.TableDishRelations;
+import se.miun.dt142g.data.handler.TableDishRelations;
 
 public class KitchenOrdersActivity extends BaseActivity {
 

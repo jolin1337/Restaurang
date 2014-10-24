@@ -53,11 +53,11 @@ public class TableHasDish {
     }
 
     public void parseDish(JSONObject dish) throws JSONException {
-            if(this.dish == null)
-                this.dish = new DishIndex();
-            this.dish.dishCount = dish.getInt("dishCount");
-            this.dish.special = dish.getInt("special") > 0;
-            this.dish.id = dish.getInt("id");
+        if(this.dish == null)
+            this.dish = new DishIndex();
+        this.dish.dishCount = dish.getInt("dishCount");
+        this.dish.special = dish.getInt("special") > 0;
+        this.dish.id = dish.getInt("id");
     }
 
     public void parseTableOrder(JSONObject tableOrder) throws JSONException {

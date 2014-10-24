@@ -8,18 +8,13 @@
 package se.miun.dt142g.waiter;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Toast;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.http.auth.InvalidCredentialsException;
@@ -30,8 +25,7 @@ import se.miun.dt142g.data.EntityRep.TableOrder;
 import se.miun.dt142g.data.entityhandler.DataService;
 import se.miun.dt142g.data.entityhandler.DataSource;
 import se.miun.dt142g.data.entityhandler.DataSourceListener;
-import se.miun.dt142g.data.entityhandler.TableDishRelations;
-import se.miun.dt142g.data.handler.TableOrders;
+import se.miun.dt142g.data.handler.TableDishRelations;
 /**
  * 
  * @author Johannes
@@ -42,7 +36,6 @@ public class WaiterTableActivity extends BaseActivity {
     
     private static final TableDishRelations tableOrders = new TableDishRelations();
     static final TableDishRelations tableOrdersLocal = new TableDishRelations();
-    private final List<Button> tableButtons = new ArrayList<Button>();
     
     Handler handler = new Handler() {
         @Override
@@ -96,13 +89,9 @@ public class WaiterTableActivity extends BaseActivity {
     }
     
     @Override
-    protected void onActivityResult(int reqCode, int resCode, Intent data) {
+    protected synchronized void onActivityResult(int reqCode, int resCode, Intent data) {
         super.onActivityResult(resCode, resCode, data);
         if(resCode == RESPONSE) {
-            tableOrders.getRelations().clear();
-            for(TableHasDish hd : WaiterOrdersActivity.tableOrder) {
-                tableOrders.getRelations().add(hd);
-            }
             
             updateBtnColors(true);
         }
@@ -117,21 +106,25 @@ public class WaiterTableActivity extends BaseActivity {
         DataSource dataSource = DataService.getDataSource();
         if(!(dataSource instanceof TableDishRelations))
             return;
-        if(b) {
-            dataSource = new TableDishRelations();
-            updateTableOrderObject(dataSource);
-        }
-        if(!(dataSource instanceof TableDishRelations))
-            return;
         LinearLayout btnsParent = (LinearLayout)findViewById(R.id.order_btns);
         for(int i = btnsParent.getChildCount(); i > 0; i--) {
             Button btn = (Button)btnsParent.getChildAt(i-1);
             int tableNr = Integer.parseInt(btn.getText().toString().replace("Bord ", ""));
             if(tableOrders.getDishesFromTable(tableNr-1).size() > 0) {
-                TableOrder tbl2 = tableOrders.getTable(tableNr-1);
-                TableOrder tbl1 = tableOrdersLocal.getTableOrder(tableNr-1);
+                List<TableHasDish> tbl2 = tableOrders.getDishesFromTable(tableNr-1);
+                List<TableHasDish> tbl1 = tableOrdersLocal.getDishesFromTable(tableNr-1);
+                
+                boolean isEqual = tbl1.size() == tbl2.size();
+                if(isEqual) {
+                    for(TableHasDish hd : tbl1) {
+                        for(TableHasDish hd2 : tbl2) {
+                            if(hd.getDish().id != hd2.getDish().id)
+                                isEqual = false;
+                        }
+                    }
+                }
                 // om tableOrder == dataSource => lagar mat => orange
-                if(tbl1 != null && tbl2 != null && tbl1.getId() == tbl2.getId())
+                if(isEqual)
                    btn.setBackgroundResource(R.drawable.orange_button);
                 // annars => kund äter => grön
                 else
@@ -139,7 +132,6 @@ public class WaiterTableActivity extends BaseActivity {
             }
             else
                 btn.setBackgroundResource(R.drawable.default_button);
-            tableButtons.add(btn);
         }
     }
 

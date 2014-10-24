@@ -19,7 +19,7 @@ import se.miun.dt142g.data.EntityRep.TableHasDish;
 import se.miun.dt142g.data.EntityRep.TableOrder;
 import se.miun.dt142g.data.entityhandler.DataService;
 import se.miun.dt142g.data.entityhandler.DataSource;
-import se.miun.dt142g.data.entityhandler.TableDishRelations;
+import se.miun.dt142g.data.handler.TableDishRelations;
 import se.miun.dt142g.data.handler.TableOrders;
 /**
  * Created by Tomas on 2014-09-20.

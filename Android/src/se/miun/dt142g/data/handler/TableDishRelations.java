@@ -5,7 +5,7 @@
  * This code is a piece of a project in the course DT142G on Mid. Sweden university
  * Created by students for this projekt only
  */
-package se.miun.dt142g.data.entityhandler;
+package se.miun.dt142g.data.handler;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,7 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import se.miun.dt142g.data.EntityRep.TableHasDish;
 import se.miun.dt142g.data.EntityRep.TableOrder;
-import static se.miun.dt142g.data.entityhandler.DataSource.key;
+import se.miun.dt142g.data.entityhandler.DataSource;
 import se.miun.dt142g.data.handler.Dishes;
 import se.miun.dt142g.data.handler.TableOrders;
 
@@ -105,7 +105,6 @@ public class TableDishRelations extends DataSource implements Iterable<TableHasD
         List<TableHasDish> tableOs = parse(getRequest("gettable", "key=" + key + "&table=" + table));
         List<TableHasDish> toRemove = new ArrayList<TableHasDish>();
         for(TableHasDish t1 : tableOs) {
-            boolean found = false;
             if(indexOfRelation(relations, t1.getTableOrder().getId(), t1.getDish().id) == -1)
                 toRemove.add(t1);
         }

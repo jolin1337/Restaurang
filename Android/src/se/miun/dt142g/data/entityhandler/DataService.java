@@ -58,12 +58,12 @@ public class DataService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        try {
+        /*try {
             background.indicateStop();
             background.join();
         } catch (InterruptedException ex) {
             Logger.getLogger(DataService.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
     }
     
     public static void setSyncSpeed(int syncSpeed) {
@@ -84,8 +84,10 @@ public class DataService extends Service {
         background.setHandler(h);
     }
     public static void startListener() {
-        if(!background.isAlive())
+        if(!background.isAlive() && background.getState() == Thread.State.NEW) {
+            background.setDaemon(true);
             background.start();
+        }
     }
     public static boolean isAlive() {
         return background.isAlive();
