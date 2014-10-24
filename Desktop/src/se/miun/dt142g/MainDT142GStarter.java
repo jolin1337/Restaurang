@@ -113,7 +113,7 @@ public class MainDT142GStarter extends JPanel {
 
         @Override
         public void setViewInventory() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            tabbedPane.setSelectedIndex(3);
         }
 
         @Override
@@ -132,7 +132,7 @@ public class MainDT142GStarter extends JPanel {
 
         @Override
         public void setViewBookings() {
-            tabbedPane.setSelectedIndex(6);
+            tabbedPane.setSelectedIndex(7);
         }
 
         @Override
@@ -211,7 +211,7 @@ public class MainDT142GStarter extends JPanel {
 
         JComponent panel2 = new WebsitePanel(remote);
         panels.add(panel2);
-        InventoryPanel panel3 = new InventoryPanel();
+        InventoryPanel panel3 = new InventoryPanel(remote);
         panels.add(panel3);
         UsersPanel panel4 = new UsersPanel(remote);
         panels.add(panel4);

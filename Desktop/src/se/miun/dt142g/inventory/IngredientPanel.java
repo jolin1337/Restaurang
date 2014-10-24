@@ -8,16 +8,26 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import se.miun.dt142g.ConfirmationBox;
+import se.miun.dt142g.Controller;
+import se.miun.dt142g.DataSource;
 import se.miun.dt142g.Settings;
 import se.miun.dt142g.data.Ingredient;
+import se.miun.dt142g.food.Dishes;
 import se.miun.dt142g.food.Inventory;
+import se.miun.dt142g.user.UserPanel;
+import se.miun.dt142g.user.UsersPanel;
 
 /**
  * JPanel for a single Ingredient. Fields update when their focus is lost.
@@ -48,6 +58,10 @@ public class IngredientPanel extends JPanel {
      * 
      */
     private IngredientFieldListener ingredientFieldListener = null; 
+    
+    final Controller remote; 
+    
+    static Dishes dishes = new Dishes(); 
 
     /**
      * Constructor initializes the panel and adds focus listeners and click
@@ -55,8 +69,9 @@ public class IngredientPanel extends JPanel {
      *
      * @param ingredient The Ingredient to represent in the panel
      */
-    public IngredientPanel(final Ingredient ingredient) {
+    public IngredientPanel(final Ingredient ingredient, final Controller c) {
         this.ingredient = ingredient;
+        this.remote = c; 
 
         this.ingredientName = new JTextField(ingredient.getName());
         this.amount = new JTextField(Integer.toString(ingredient.getAmount()));
@@ -86,10 +101,25 @@ public class IngredientPanel extends JPanel {
              */
             @Override
             public void actionPerformed(ActionEvent ae) {
-                int n = ConfirmationBox.confirm(IngredientPanel.this, ingredientName.getText());
-                if (n == 0) {
-                    ingredient.setFlaggedForRemoval(true);
-                    updateFromFields();
+                try {
+                    dishes.loadData();
+                } catch (DataSource.WrongKeyException ex) {
+                    Logger.getLogger(IngredientPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                List<String> dishNames = dishes.getDishNames(ingredient.getId());
+                if(!dishNames.isEmpty()){
+                    String toDialog = "Kan inte ta bort ingrediensen,\nden används i:\n";
+                    for(String s : dishNames){
+                        toDialog += s + "\n"; 
+                    }
+                    JOptionPane.showMessageDialog(IngredientPanel.this, toDialog);
+                }
+                else{
+                    int n = ConfirmationBox.confirm(IngredientPanel.this, "Ta bort " + ingredientName.getText() + "?");
+                    if (n == 0) {
+                        ingredient.setFlaggedForRemoval(true);
+                        updateFromFields();
+                    }
                 }
             }
         });
@@ -138,8 +168,10 @@ public class IngredientPanel extends JPanel {
         @Override
         public void keyPressed(KeyEvent e) {
             if(e.getKeyCode()==KeyEvent.VK_ENTER){
-                System.out.println("SLAKJSLDKJASLDKJASDLKJASDLKDJLASDKJLASKDJ");
                 updateFromFields();
+            }
+            else{
+                remote.setSavedTab((JComponent) IngredientPanel.this.getParent(), false);
             }
         }
 

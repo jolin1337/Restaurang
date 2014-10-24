@@ -14,13 +14,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import se.miun.dt142g.Controller;
 import se.miun.dt142g.ConfirmationBox;
+import se.miun.dt142g.DataSource;
 import se.miun.dt142g.Settings;
 import se.miun.dt142g.data.Dish;
 
@@ -37,6 +42,7 @@ public class DishPanel extends JPanel {
     Dish dish;
     JTextField name;
     Controller remote = null;
+    DishGroups dishGroups = new DishGroups(); 
 
     public DishPanel(Dish dish, final Controller c) {
         remote = c;
@@ -92,17 +98,32 @@ public class DishPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent ae) {
-            int n = ConfirmationBox.confirm(DishPanel.this, name.getText());
-            if (n == 0) {
-                isRemovedPanel = true;
-                Container parent = DishPanel.this.getParent();
-                remote.setSavedTab((JComponent)DishPanel.this.getParent(), false);
-                parent.remove(DishPanel.this);
-                parent.revalidate();
-                parent.repaint();
-                
-                if(remote != null)
-                    remote.setViewDishes();
+            try {
+                dishGroups.loadData();
+            } catch (DataSource.WrongKeyException ex) {
+                Logger.getLogger(DishPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            List<String> groupNames = dishGroups.getDishGroups(dish.getId());
+            if(!groupNames.isEmpty()){
+                String toDialog = "Kan inte ta bort rätten,\nrätten används i:\n";
+                for(String s : groupNames){
+                    toDialog += s + "\n"; 
+                }
+                JOptionPane.showMessageDialog(DishPanel.this, toDialog);
+            }
+            else{
+                int n = ConfirmationBox.confirm(DishPanel.this, "Ta bort "+name.getText()+"?");
+                if (n == 0) {
+                    isRemovedPanel = true;
+                    Container parent = DishPanel.this.getParent();
+                    remote.setSavedTab((JComponent)DishPanel.this.getParent(), false);
+                    parent.remove(DishPanel.this);
+                    parent.revalidate();
+                    parent.repaint();
+
+                    if(remote != null)
+                        remote.setViewDishes();
+                }
             }
         }
     };

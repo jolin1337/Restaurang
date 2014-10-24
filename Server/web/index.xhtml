@@ -34,7 +34,7 @@
                                     <h2>#{dishGroup.name}</h2>
 
                                     <c:forEach items="#{dishGroup.dishList}" var="dish">
-                                        <p>#{dish.name}</p>
+                                        <p>#{dish.name}: #{dish.formattedPrice}</p>
                                     </c:forEach>
                                 </div>
                             </c:forEach>

@@ -17,8 +17,13 @@ public class ConfirmationBox {
      * @param s - The identifier of the object to remove
      * @return 
      */
-    static public int confirm(Component a, String s) {
-        int n = JOptionPane.showConfirmDialog(a, "Ta bort " + s + "?", "Confirm", JOptionPane.YES_NO_OPTION);
+    static public int confirm(Component a, String msg) {
+        String[] options = new String[2];
+        options[0] = new String("Ja");
+        options[1] = new String("Nej");
+        String title = "Bekräfta";
+        int n = JOptionPane.showOptionDialog(a, msg, title, 0, JOptionPane.QUESTION_MESSAGE, null, options, null);
+//                JOptionPane.showOptionDialog(frame.getContentPane(),"Message!","Title", 0,JOptionPane.INFORMATION_MESSAGE,null,options,null);
         return n;
     }
 

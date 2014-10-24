@@ -8,6 +8,8 @@
 package data.entity;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -114,6 +116,13 @@ public class Dish extends JsonEntity implements Serializable {
             return price;
         }
         return 0.0;
+    }
+    
+    public String getFormattedPrice(){
+        NumberFormat moneyFormat = new DecimalFormat("#0.00");
+        String formattedPrice = moneyFormat.format(getPrice()) + " kr";
+        formattedPrice = formattedPrice.replace(".", ",");
+        return formattedPrice;
     }
 
     public void setPrice(Double price) {

@@ -52,6 +52,10 @@ public class Inventory extends DataSource implements Iterable<Ingredient> {
         return null;
     }
     
+    public List<Ingredient> getIngredients(){
+        return this.ingredients;
+    }
+    
     /**
      * Adds Ingredient to list of ingredients. 
      * @param ingredient The Ingredient to add to list of ingredients

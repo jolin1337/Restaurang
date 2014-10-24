@@ -100,7 +100,7 @@ public class UserPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent ae) {
-            int n = ConfirmationBox.confirm(UserPanel.this, UserPanel.this.editUser.getText());
+            int n = ConfirmationBox.confirm(UserPanel.this, "Ta bort " + UserPanel.this.editUser.getText() + "?");
             if(n == 0){
                 usr.setRemove();
                 Container parent = UserPanel.this.getParent();
@@ -108,6 +108,7 @@ public class UserPanel extends JPanel {
                 remove= new JButton("X");
                 parent.revalidate();
                 remote.setSavedTab((JComponent)parent, false);
+                userPanelListener.onFieldEdit();
             }
         }
     };

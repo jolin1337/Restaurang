@@ -94,7 +94,7 @@ public class Ingredient implements Comparable<Ingredient> {
      */
     @Override
     public int compareTo(Ingredient t) {
-        return this.getName().compareTo(t.getName());
+        return this.getName().toLowerCase().compareTo(t.getName().toLowerCase());
     }
 
     /**

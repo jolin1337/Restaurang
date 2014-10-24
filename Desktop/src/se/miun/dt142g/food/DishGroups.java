@@ -18,7 +18,7 @@ import org.json.JSONObject;
  *
  * @author Nikander Gielen
  */
-public class DishGroups extends DataSource{
+public class DishGroups extends DataSource {
     private final String table = "dishgroup";
     private final List<DishGroup> dishGroups = new ArrayList<>();
     private Dishes dishes = new Dishes();
@@ -33,10 +33,11 @@ public class DishGroups extends DataSource{
      */
     public List<DishGroup> getDishGroups(String[] groupNames) {
         List<DishGroup> dishesInGroup = new ArrayList<>();
-        for (DishGroup d : dishGroups) {
-            for (String groupName : groupNames) {
+        for (String groupName : groupNames) {
+            for (DishGroup d : dishGroups) {
                 if (d.getGroup().equals(groupName)) {
                     dishesInGroup.add(d);
+                    break;
                 }
             }
         }
@@ -159,6 +160,17 @@ public class DishGroups extends DataSource{
             }
         }
         return currentGroups;            // return that we have changed this entity
+    }
+    
+    public List<String> getDishGroups(int dishId){
+        List<String> groupNames = new ArrayList<String>(); 
+            for(DishGroup dg : dishGroups){
+                for(Integer d : dg.getDishes()){
+                    if(d == dishId)
+                        groupNames.add(dg.getGroup());
+                }
+            }
+        return groupNames; 
     }
     
 

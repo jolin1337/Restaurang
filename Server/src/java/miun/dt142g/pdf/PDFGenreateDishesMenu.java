@@ -68,7 +68,7 @@ public class PDFGenreateDishesMenu {
                         contentStream.setFont(font, 14);
                         contentStream.setNonStrokingColor(Color.DARK_GRAY);
                         contentStream.moveTextPositionByAmount(100, 670-i*15);
-                        contentStream.drawString(d.getName());
+                        contentStream.drawString(d.getName()+": "+d.getFormattedPrice());
                         contentStream.endText();
                         i++;
                     }

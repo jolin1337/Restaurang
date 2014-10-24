@@ -61,6 +61,7 @@ public class UsersPanel extends JPanel {
                 UsersPanel.this.add(addUserBtn);
                 UsersPanel.this.revalidate();
                 remote.setSavedTab(UsersPanel.this, false);
+                userPanelListener.onFieldEdit();
             }
         }
     };
