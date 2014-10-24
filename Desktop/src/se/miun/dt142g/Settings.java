@@ -39,7 +39,7 @@ public class Settings {
         public static String logoSrc = "res/graphics/logo.png";
         public static String[] tabTitles = {"Hem", "Rätter", "Hemsida", "Inventarie", "Användare", "A La Carté", "Veckans Meny", "Bokningar", "Schema"};
         public static String serverURL = "http://localhost:8080/Server/";
-        public static String submit = "Synkronisera med server";
+        public static String submit = "Spara ändringar";
         public static Object serverConnectionError = "There is an error in the authentication to the server or the server is down. Please check this out before do any changes!";
         public static Object noDishesCreatedError = "Inga rätter tillgängliga ännu. Du kommer att skickas till tabben rätter för att lägga till några sådanna";
     }

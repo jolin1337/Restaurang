@@ -7,6 +7,7 @@
  */
 package se.miun.dt142g.food;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -77,7 +78,8 @@ public class DishDetailPanel extends JPanel {
 
     private JTextField addTextField(String textName) {
         JTextField textField = new JTextField(textName);
-        textField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
+        textField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
+        textField.setMinimumSize(new Dimension(0, 60));
         add(textField);
         return textField;
     }

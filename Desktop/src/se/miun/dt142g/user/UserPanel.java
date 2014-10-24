@@ -108,6 +108,7 @@ public class UserPanel extends JPanel {
                 remove= new JButton("X");
                 parent.revalidate();
                 remote.setSavedTab((JComponent)parent, false);
+                userPanelListener.onFieldEdit();
             }
         }
     };
