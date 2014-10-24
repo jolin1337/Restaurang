@@ -23,8 +23,10 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import se.miun.dt142g.ConfirmationBox;
 import se.miun.dt142g.Controller;
 import se.miun.dt142g.DataSource;
 import se.miun.dt142g.Settings;
@@ -41,7 +43,7 @@ import se.miun.dt142g.data.Ingredient;
 public class DishDetailPanel extends JPanel {
 
     Dish dish = null;
-    Inventory inv = new Inventory();
+    Inventory inventory = new Inventory();
     JButton addIngBtn = new JButton("Lägg till ingrediens");
     JButton saveDishBtn;
     JPanel ingredientsContainer;
@@ -89,8 +91,8 @@ public class DishDetailPanel extends JPanel {
     }
     
     public final void setDish(Dish d) throws DataSource.WrongKeyException {
-        inv.dbConnect();
-        inv.loadData();
+        inventory.dbConnect();
+        inventory.loadData();
         removeAll();
         addIngBtn = new JButton("Lägg till ingrediens");
 
@@ -117,7 +119,7 @@ public class DishDetailPanel extends JPanel {
                 remove.addActionListener(removeIngredientListener);
                 JComboBox<Ingredient> jListInventory = new JComboBox<>();
                 
-                for (Ingredient ing : inv) {
+                for (Ingredient ing : inventory) {
                     jListInventory.addItem(ing);
                     if (ing.getId() == ingredient) {
                         jListInventory.setSelectedItem(ing);
@@ -142,12 +144,20 @@ public class DishDetailPanel extends JPanel {
         addIngBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
+                if (inventory.getIngredients().isEmpty()){
+                    String message = "Det finns inga ingredienser i inventariet,\nvill du lägga till ingredienser nu?";
+                    int n = ConfirmationBox.confirm(DishDetailPanel.this, message);
+                    if(n == 0){
+                        remote.setViewInventory();
+                    }
+                    return; 
+                }
                 JButton remove = new JButton("X");
                 remove.setMaximumSize(new Dimension(35, 35));
                 remove.addActionListener(removeIngredientListener);
 
                 JComboBox<Ingredient> jListInventory = new JComboBox<>();
-                for (Ingredient ing : inv) {
+                for (Ingredient ing : inventory) {
                     jListInventory.addItem(ing);
                 }
                 JPanel horiView = new JPanel();

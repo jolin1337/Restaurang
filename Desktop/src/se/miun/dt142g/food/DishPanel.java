@@ -112,7 +112,7 @@ public class DishPanel extends JPanel {
                 JOptionPane.showMessageDialog(DishPanel.this, toDialog);
             }
             else{
-                int n = ConfirmationBox.confirm(DishPanel.this, name.getText());
+                int n = ConfirmationBox.confirm(DishPanel.this, "Ta bort "+name.getText()+"?");
                 if (n == 0) {
                     isRemovedPanel = true;
                     Container parent = DishPanel.this.getParent();

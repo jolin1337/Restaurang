@@ -115,7 +115,7 @@ public class IngredientPanel extends JPanel {
                     JOptionPane.showMessageDialog(IngredientPanel.this, toDialog);
                 }
                 else{
-                    int n = ConfirmationBox.confirm(IngredientPanel.this, ingredientName.getText());
+                    int n = ConfirmationBox.confirm(IngredientPanel.this, "Ta bort " + ingredientName.getText() + "?");
                     if (n == 0) {
                         ingredient.setFlaggedForRemoval(true);
                         updateFromFields();

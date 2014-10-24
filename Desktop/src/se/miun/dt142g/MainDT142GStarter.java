@@ -113,7 +113,7 @@ public class MainDT142GStarter extends JPanel {
 
         @Override
         public void setViewInventory() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            tabbedPane.setSelectedIndex(3);
         }
 
         @Override

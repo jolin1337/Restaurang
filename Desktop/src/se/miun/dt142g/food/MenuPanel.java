@@ -233,7 +233,7 @@ public class MenuPanel extends JPanel {
 
                 @Override
                 public void actionPerformed(ActionEvent ae) {
-                    int n = ConfirmationBox.confirm(SingleDishPanel.this, myComboBox.getSelectedItem().toString());
+                    int n = ConfirmationBox.confirm(SingleDishPanel.this, "Ta bort " + myComboBox.getSelectedItem().toString() + "?");
                     if(n == 0){
                         
                         dishPanel.remove(SingleDishPanel.this);
