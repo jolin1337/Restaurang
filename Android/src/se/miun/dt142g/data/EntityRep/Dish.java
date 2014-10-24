@@ -86,7 +86,7 @@ public class Dish implements Comparable<Dish> {
 
     @Override
     public String toString() {
-        return this.getName() + "\n      " + Float.toString(this.getPrice()) + ":-";
+        return this.getName();// + "\n      " + Float.toString(this.getPrice()) + ":-";
     }
 
     /*
