@@ -33,8 +33,8 @@ public class DishGroups extends DataSource {
      */
     public List<DishGroup> getDishGroups(String[] groupNames) {
         List<DishGroup> dishesInGroup = new ArrayList<>();
-        for (DishGroup d : dishGroups) {
-            for (String groupName : groupNames) {
+        for (String groupName : groupNames) {
+            for (DishGroup d : dishGroups) {
                 if (d.getGroup().equals(groupName)) {
                     dishesInGroup.add(d);
                     break;
