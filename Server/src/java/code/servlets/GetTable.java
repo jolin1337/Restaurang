@@ -108,8 +108,14 @@ public class GetTable extends HttpServlet {
 
                         break;
                     case "tableorder":
-                        TypedQuery<TableOrder> tableOrderQuery = em.createNamedQuery("Tablehasdish.findAllOrders", TableOrder.class);
+                        TypedQuery<TableOrder> tableOrderQuery = em.createNamedQuery("TableOrder.findAll", TableOrder.class);
                         for (TableOrder d : tableOrderQuery.getResultList()) {
+                            jsonString += d.toJsonString() + ",";
+                        }
+                        break;
+                    case "tabledishrelation":
+                        TypedQuery<Tablehasdish> tableHasDishQuery = em.createNamedQuery("Tablehasdish.findAllOrders", Tablehasdish.class);
+                        for (Tablehasdish d : tableHasDishQuery.getResultList()) {
                             jsonString += d.toJsonString() + ",";
                         }
                         break;

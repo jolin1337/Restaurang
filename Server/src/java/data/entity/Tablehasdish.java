@@ -37,22 +37,20 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Tablehasdish.findAll", query = "SELECT t FROM Tablehasdish t"),
     @NamedQuery(name = "Tablehasdish.findByDishCount", query = "SELECT t FROM Tablehasdish t WHERE t.dishCount = :dishCount"),
     @NamedQuery(name = "Tablehasdish.findByDishId", query = "SELECT t FROM Tablehasdish t WHERE t.tablehasdishPK.dishId = :dishId"),
-    @NamedQuery(name = "Tablehasdish.findByTablenr", query = "SELECT t FROM Tablehasdish t WHERE t.tablehasdishPK.tablenr = :tablenr"),
+    @NamedQuery(name = "Tablehasdish.findByTablenr", query = "SELECT t FROM Tablehasdish t WHERE t.tablehasdishPK.dishId = :dishId"),
     @NamedQuery(name = "Tablehasdish.findAllOrders", query = "SELECT d FROM TableOrder o, Tablehasdish d WHERE o.id = d.tablehasdishPK.tablenr")})
 public class Tablehasdish extends JsonEntity implements Serializable {
 
-    public static TablehasdishPK getPKOf(JsonObject obj, EntityManager em) {
+    public static TablehasdishPK getPKOf(int tableNr, long id, int dishId, EntityManager em) {
         TypedQuery<Tablehasdish> query = em.createNamedQuery("Tablehasdish.findByTablenr", Tablehasdish.class);
-        query.setParameter("tablenr", obj.getInt("tableNr"));
+        query.setParameter("dishId", dishId);
         List<Tablehasdish> tbls = query.getResultList();
         TablehasdishPK pk = null;
 
         for(Tablehasdish tbl : tbls) {
-            if(tbl.getTableOrder().getId() == obj.getInt("id") && tbl.getDish().getId() == obj.getInt("dishId"))
+            if(tbl.getTableOrder().getId() == id && tbl.getDish().getId() == dishId)
                 pk = tbl.getTablehasdishPK();
         }
-        em.clear();
-        em.close();
         return pk;
     }
     @Basic(optional = false)
@@ -146,7 +144,10 @@ public class Tablehasdish extends JsonEntity implements Serializable {
         setDishCount(obj.getInt("dishCount"));
         Dish d = em.find(Dish.class, dishId);
         
-        TableOrder tmp = em.find(TableOrder.class, obj.getInt("id"));
+        if(tablehasdishPK == null) {
+            tablehasdishPK = new TablehasdishPK(d.getId(), tableOrder.getId());
+        }
+        TableOrder tmp = em.find(TableOrder.class, (long)obj.getInt("id"));
         if(tmp != null) {
             tmp.setTimeOfOrder(obj.getInt("timeOfOrder"));
             tableOrder = tmp;
@@ -172,7 +173,7 @@ public class Tablehasdish extends JsonEntity implements Serializable {
         
         // Create the main json object for the string
         JsonObjectBuilder value = Json.createObjectBuilder()
-                .add("tableOrder", tableOrder.toJsonString())
+                .add("tableOrder", tableOrder.toJsonObject())
                 .add("dish", 
                         Json.createObjectBuilder()
                             .add("id", dish.getId())

@@ -25,9 +25,12 @@ import java.util.logging.Logger;
 import org.apache.http.auth.InvalidCredentialsException;
 import se.miun.dt142g.BaseActivity;
 import se.miun.dt142g.R;
+import se.miun.dt142g.data.EntityRep.TableHasDish;
+import se.miun.dt142g.data.EntityRep.TableOrder;
 import se.miun.dt142g.data.entityhandler.DataService;
 import se.miun.dt142g.data.entityhandler.DataSource;
 import se.miun.dt142g.data.entityhandler.DataSourceListener;
+import se.miun.dt142g.data.entityhandler.TableDishRelations;
 import se.miun.dt142g.data.handler.TableOrders;
 /**
  * 
@@ -37,7 +40,8 @@ public class WaiterTableActivity extends BaseActivity {
     public static final int SYNCDURATION_DELAY = 10000;
     public static final int RESPONSE = 0;
     
-    private static final TableOrders tableOrders = new TableOrders();
+    private static final TableDishRelations tableOrders = new TableDishRelations();
+    static final TableDishRelations tableOrdersLocal = new TableDishRelations();
     private final List<Button> tableButtons = new ArrayList<Button>();
     
     Handler handler = new Handler() {
@@ -68,11 +72,10 @@ public class WaiterTableActivity extends BaseActivity {
         setContentView(R.layout.table_menu);
         
         DataService.setSyncSpeed(DataSourceListener.DEFAULT_SYNC_SPPED);
-        DataService.setAutoLoad(false);
         
         DataService.setDataSource(tableOrders);
         DataService.setHandler(handler);
-        if(tableOrders.getTables().size() != 6)
+        if(tableOrders.getTableSize() != 6)
             updateTableOrderObject(DataService.getDataSource());
         
         WaiterOrdersActivity.dishes = tableOrders.getDishes();
@@ -85,7 +88,8 @@ public class WaiterTableActivity extends BaseActivity {
         Button btn = (Button)v;
         
         int tableNr = Integer.parseInt(btn.getText().toString().replace("Bord ", ""));
-        WaiterOrdersActivity.tableOrder = tableOrders.getTable(tableNr-1);
+        WaiterOrdersActivity.tableOrder = tableOrders.getDishesFromTable(tableNr-1);
+        WaiterOrdersActivity.order = tableOrders.getTableOrder(tableNr-1);
         Intent ordersActivity = new Intent(getApplicationContext(), WaiterOrdersActivity.class);
         ordersActivity.putExtra("bord_str", btn.getText());
         startActivityForResult(ordersActivity, RESPONSE);
@@ -95,12 +99,12 @@ public class WaiterTableActivity extends BaseActivity {
     protected void onActivityResult(int reqCode, int resCode, Intent data) {
         super.onActivityResult(resCode, resCode, data);
         if(resCode == RESPONSE) {
-            // To get data use
-            // data.getExtras().get("data_name");
-            Toast.makeText(getApplicationContext(),
-                      "Result passed", Toast.LENGTH_LONG)
-                      .show();
+            tableOrders.getRelations().clear();
+            for(TableHasDish hd : WaiterOrdersActivity.tableOrder) {
+                tableOrders.getRelations().add(hd);
+            }
             
+            updateBtnColors(true);
         }
     }
     @Override
@@ -111,19 +115,23 @@ public class WaiterTableActivity extends BaseActivity {
 
     private void updateBtnColors(boolean b) {
         DataSource dataSource = DataService.getDataSource();
-        if(!(dataSource instanceof TableOrders))
+        if(!(dataSource instanceof TableDishRelations))
             return;
         if(b) {
-            dataSource = new TableOrders();
+            dataSource = new TableDishRelations();
             updateTableOrderObject(dataSource);
         }
+        if(!(dataSource instanceof TableDishRelations))
+            return;
         LinearLayout btnsParent = (LinearLayout)findViewById(R.id.order_btns);
         for(int i = btnsParent.getChildCount(); i > 0; i--) {
             Button btn = (Button)btnsParent.getChildAt(i-1);
             int tableNr = Integer.parseInt(btn.getText().toString().replace("Bord ", ""));
-            if(tableOrders.getTable(tableNr-1).getOrderedDishes().size() > 0) {
+            if(tableOrders.getDishesFromTable(tableNr-1).size() > 0) {
+                TableOrder tbl2 = tableOrders.getTable(tableNr-1);
+                TableOrder tbl1 = tableOrdersLocal.getTableOrder(tableNr-1);
                 // om tableOrder == dataSource => lagar mat => orange
-                if(tableOrders.getTable(tableNr-1).getId() == ((TableOrders)dataSource).getTable(tableNr-1).getId())
+                if(tbl1 != null && tbl2 != null && tbl1.getId() == tbl2.getId())
                    btn.setBackgroundResource(R.drawable.orange_button);
                 // annars => kund äter => grön
                 else

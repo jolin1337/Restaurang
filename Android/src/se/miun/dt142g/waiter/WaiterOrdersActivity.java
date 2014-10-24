@@ -8,30 +8,28 @@ package se.miun.dt142g.waiter;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import se.miun.dt142g.BaseActivity;
 import se.miun.dt142g.R;
 import se.miun.dt142g.data.EntityRep.Dish;
+import se.miun.dt142g.data.EntityRep.TableHasDish;
 import se.miun.dt142g.data.EntityRep.TableOrder;
 import se.miun.dt142g.data.entityhandler.DataService;
+import se.miun.dt142g.data.entityhandler.DataSource;
 import se.miun.dt142g.data.entityhandler.DataSourceListener;
+import se.miun.dt142g.data.entityhandler.TableDishRelations;
 import se.miun.dt142g.data.handler.Dishes;
-import se.miun.dt142g.data.handler.TableOrders;
 
 /**
  *
@@ -42,7 +40,8 @@ public class WaiterOrdersActivity extends BaseActivity {
     private ArrayAdapter<Dish> orders = null;
     private final List<Dish> values = new ArrayList<Dish>();
     
-    static TableOrder tableOrder;
+    static List<TableHasDish> tableOrder;
+    static TableOrder order = null;
     static Dishes dishes;
 
     // Define the Handler that receives messages from the thread and update the progress
@@ -106,12 +105,17 @@ public class WaiterOrdersActivity extends BaseActivity {
         if(listView != null) {
             orders.clear();
             values.clear();
-            for(Integer dish : tableOrder.getOrderedDishes()) {
-                values.add(dishes.getDish(dish));
+            for(TableHasDish hd : tableOrder) {
+                Dish dish = dishes.getDish(hd.getDish().id);
+                dish.setSpecial(hd.getDish().special);
+                for(int i = 0; i < hd.getDish().dishCount; i++) {
+                    values.add(dish);
+                }
             }
             orders.notifyDataSetChanged();
         }
     }
+    
     
     public void removeBtnClicked(View btn) {
         int position = listView.getPositionForView(btn);
@@ -144,31 +148,40 @@ public class WaiterOrdersActivity extends BaseActivity {
         
         tv.setTextColor(Color.BLACK);
         orderItem.setBackgroundColor(Color.DKGRAY);
-        
-        // Show Alert 
-//        Toast.makeText(getApplicationContext(),
-//           "Index :"+position+"  Val: " +itemValue , Toast.LENGTH_LONG)
-//           .show();       
-        makeChoiseOfMenu(new DialogInterface.OnClickListener() {
+           
+        makeChoiceOfMenu(new DialogInterface.OnClickListener() {
             @Override
-            public synchronized void onClick(DialogInterface dialog, int which) {
-                Dish m = dishes.getDishByIndex(which);
+            public synchronized void onClick(DialogInterface dialog, int index) {
+                Dish m = dishes.getDishByIndex(index);
                 if(m.isInStock()){
                     Dish p = values.get(position);
                     values.set(position, m);
                     orders.notifyDataSetChanged();
                     tv.setTextColor(Color.BLACK);
                     orderItem.setBackgroundColor(Color.WHITE);
-                    List<Integer> dishes = tableOrder.getOrderedDishes();
-                    for(int dishIndex = dishes.size(); dishIndex > 0; dishIndex--) {
-                        if(p.getId() == dishes.get(dishIndex-1)) {
-                            if(m.getId() < 0 || dishes.get(dishIndex-1) < 0) continue;
-                            dishes.add(-p.getId()-1);
-                            dishes.set(dishIndex-1, m.getId());
-                            tableOrder.setTimeOfOrder(new Date());
+                    int dishIndex = 0;
+                    for(TableHasDish hd : tableOrder) {
+                        if(p.getId() == hd.getDish().id) {
+                            if(m.getId() < 0 || hd.getDish().id < 0) 
+                                continue;
+                            //dishes.add(-p.getId()-1);
+                            if(hd.getDish().dishCount > 1 && hd.getDish().id != m.getId()) {
+                                hd.getDish().dishCount--;
+                                newBtnClick.onClick(null, index);
+                                return;
+                            }
+                            for(TableHasDish hd2 : WaiterTableActivity.tableOrdersLocal) {
+                                if(hd2.getTableOrder().getTable() == hd.getTableOrder().getTable() && hd.getDish().id == hd2.getDish().id) {
+                                    hd2.setDish(m);
+                                    hd2.getTableOrder().setTimeOfOrder(new Date());
+                                }
+                            }
+                            hd.setDish(m);//dishIndex, m.getId());
+                            hd.getTableOrder().setTimeOfOrder(new Date());
                             DataService.updateServer();
                             break;
                         }
+                        dishIndex++;
                     }
                 }
                 tv.setTextColor(Color.BLACK);
@@ -177,20 +190,7 @@ public class WaiterOrdersActivity extends BaseActivity {
         });
     }
     public void newOrder(View newBtn) {
-        makeChoiseOfMenu(new DialogInterface.OnClickListener() {
-            @Override
-            public synchronized void onClick(DialogInterface dialog, int which) {
-                Dish m = dishes.getDishByIndex(which);
-                if (m.isInStock()){
-                    values.add(m);
-                    orders.notifyDataSetChanged();
-
-                    tableOrder.getOrderedDishes().add(m.getId());
-                    tableOrder.setTimeOfOrder(new Date());
-                    DataService.updateServer();
-                }
-            }
-        });
+        makeChoiceOfMenu(newBtnClick);
     }
     
     @Override
@@ -201,26 +201,65 @@ public class WaiterOrdersActivity extends BaseActivity {
         finish();
     }
 
-    private synchronized void makeChoiseOfMenu(DialogInterface.OnClickListener blob) {
+    private synchronized void makeChoiceOfMenu(DialogInterface.OnClickListener blob) {
             
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Väj en meny till vår gäst");
         builder.setItems(dishes.toCharSequence(), blob);
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+
+            public void onCancel(DialogInterface dialog) {
+                
+            }
+        });
         builder.show();
     }
     
-    public void toggleSpecial(View v) {
-        if(v instanceof ImageView){
-            ImageView special = (ImageView)v;
+    public void toggleSpecial(View orderItem) {
+        int position = listView.getPositionForView(orderItem);
+        if(orderItem instanceof ImageView){
+            ImageView special = (ImageView)orderItem;
             if (special.getTag().equals(R.drawable.special)) {
                 special.setImageResource(R.drawable.special_gray);
                 special.setTag(R.drawable.special_gray);
-                tableOrder.setSpecial(true);
+                
+                int index = 0;
+                for(TableHasDish hd : tableOrder) {
+                    if(position-index > -1 && position-index < hd.getDish().dishCount) {
+                        for(TableHasDish hd2 : WaiterTableActivity.tableOrdersLocal) {
+                            if(hd2.getTableOrder().getTable() == hd.getTableOrder().getTable() && hd.getDish().id == hd2.getDish().id) {
+                                hd2.getDish().special = false;
+                            }
+                        }
+                        hd.getDish().special = false;
+                        break;
+                    }
+                    else
+                        index += hd.getDish().dishCount;
+                }
+                //tableOrder.get(position).getDish().special = false;
+                DataService.updateServer();
             }
             else {
                 special.setTag(R.drawable.special);
                 special.setImageResource(R.drawable.special);
-                tableOrder.setSpecial(false);
+                
+                int index = 0;
+                for(TableHasDish hd : tableOrder) {
+                    if(position-index > -1 && position-index < hd.getDish().dishCount) {
+                        for(TableHasDish hd2 : WaiterTableActivity.tableOrdersLocal) {
+                            if(hd2.getTableOrder().getTable() == hd.getTableOrder().getTable() && hd.getDish().id == hd2.getDish().id) {
+                                hd2.getDish().special = true;
+                            }
+                        }
+                        hd.getDish().special = true;
+                        break;
+                    }
+                    else
+                        index += hd.getDish().dishCount;
+                }
+                // tableOrder.get(index).getDish().special = true;
+                DataService.updateServer();
             }
         }
     }
@@ -230,4 +269,39 @@ public class WaiterOrdersActivity extends BaseActivity {
         super.onDestroy();
         tableOrder = null;
     }
+    DialogInterface.OnClickListener newBtnClick =  new DialogInterface.OnClickListener() {
+            @Override
+            public synchronized void onClick(DialogInterface dialog, int which) {
+                Dish m = dishes.getDishByIndex(which);
+                if (m.isInStock()){
+                    if(dialog != null) {
+                        values.add(m);
+                        orders.notifyDataSetChanged();
+                    }
+                    
+                    TableHasDish hd = new TableHasDish();
+                    hd.setDish(m);
+                    order.setTimeOfOrder(new Date());
+                    hd.setTableOrder(order);
+                    tableOrder.add(hd);
+
+                    
+                    DataSource ds = DataService.getDataSource();
+                    if(ds instanceof TableDishRelations) {
+                        ((TableDishRelations)ds).getRelations().add(hd);
+                    }
+                    DataService.updateServer();
+                    
+                    int loc = 0;
+                    for(TableHasDish hdtmp : WaiterTableActivity.tableOrdersLocal.getRelations()){
+                        if(hdtmp.getDish().id == hd.getDish().id && hdtmp.getTableOrder().getTable() == hd.getTableOrder().getId()) {
+                            WaiterTableActivity.tableOrdersLocal.getRelations().set(loc, hd);
+                            return;
+                        }
+                        loc++;
+                    }
+                    WaiterTableActivity.tableOrdersLocal.getRelations().add(hd);
+                }
+            }
+        };
 }

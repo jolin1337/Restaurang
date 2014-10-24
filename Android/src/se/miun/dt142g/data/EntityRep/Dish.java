@@ -135,4 +135,13 @@ public class Dish implements Comparable<Dish> {
     public int getCount() {
         return count;
     }
+
+    public List<Integer> getIngredientIds() {
+        return ingredientIds;
+    }
+
+    public void setIngredientIds(List<Integer> ingredientIds) {
+        this.ingredientIds = ingredientIds;
+    }
+    
 }

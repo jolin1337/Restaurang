@@ -9,9 +9,11 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.List;
 import se.miun.dt142g.data.EntityRep.Dish;
+import se.miun.dt142g.R;
 
 /**
  *
@@ -35,7 +37,17 @@ public class OrdersListView extends ArrayAdapter<Dish>{
         if (convertView == null)
             return null;
         TextView priceView = (TextView)(convertView.findViewById(textViewResourceId2));
-        priceView.setText(Float.toString(getItem(position).getPrice()) + " :-");
+        Dish dish = getItem(position);
+        priceView.setText(Float.toString(dish.getPrice()) + " :-");
+        ImageView img = ((ImageView)convertView.findViewById(R.id.special_img));
+        if(dish.getSpecial()) {
+            img.setImageResource(R.drawable.special);
+            img.setTag(R.drawable.special);
+        }
+        else {
+            img.setImageResource(R.drawable.special_gray);
+            img.setTag(R.drawable.special_gray);
+        }
         return convertView;
     }
 }

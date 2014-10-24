@@ -56,7 +56,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "TableOrder.findAll", query = "SELECT o FROM TableOrder o ORDER BY o.timeOfOrder"),
-    @NamedQuery(name = "TableOrder.findByTableID", query = "SELECT o FROM TableOrder o WHERE o.id = :id")})
+    @NamedQuery(name = "TableOrder.findByTableID", query = "SELECT o FROM TableOrder o WHERE o.id = :id"),
+    @NamedQuery(name = "TableOrder.findByTableNr", query = "SELECT o FROM TableOrder o WHERE o.tableNr = :tableNr")})
 public class TableOrder extends JsonEntity implements Serializable {
     @Column(name = "TABLE_NR")
     private Short tableNr;
@@ -203,16 +204,19 @@ public class TableOrder extends JsonEntity implements Serializable {
      */
     @Override
     public String toJsonString() { 
-        
+        return toJsonObject().toString();
+    }
+    
+    JsonObject toJsonObject() {
         // Create the main json object for the string
         JsonObjectBuilder value = Json.createObjectBuilder()
                 .add("id", getId())
-                .add("table", getTableNr())
+                .add("tableNr", getTableNr())
                 .add("timeOfOrder", getTimeOfOrder().getTime());
         if(special > 0)
             value.add("special", 1);
         else value.add("special", 0);
-        return value.build().toString();
+        return value.build();
     }
     
     @Override
@@ -279,4 +283,5 @@ public class TableOrder extends JsonEntity implements Serializable {
     public void setTablehasdishCollection(Collection<Tablehasdish> tablehasdishCollection) {
         this.tablehasdishCollection = tablehasdishCollection;
     }
+
 }

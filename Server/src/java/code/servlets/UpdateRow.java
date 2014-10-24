@@ -150,12 +150,24 @@ public class UpdateRow extends HttpServlet {
                             // try to alter the table
                             edited |= updateTable(obj, obj.getInt(Inventory.getPK(), -1), Inventory.class);
                             break;
-                        case "tableorder":
+                        case "tabledishrelation":
                             // try to alter the table
                             EntityManager em = emf.createEntityManager();
-                            TablehasdishPK pk = Tablehasdish.getPKOf(obj, em);
-                            if(pk != null)
+                            TablehasdishPK pk = Tablehasdish.getPKOf(obj.getInt("tableNr"), obj.getInt("id"), obj.getInt("dishId"), em);
+                            
+                            em.clear();
+                            em.close();
+                            
+                            if(pk == null) {
+                                edited |= newTableHasDish(obj);
+                            }
+                            else {
                                 edited |= updateTable(obj, pk, Tablehasdish.class);
+                            }
+                            break;
+                        case "tableorder":
+                            // try to alter the table
+                            edited |= updateTable(obj, obj.getInt(TableOrder.getPK()), Tablehasdish.class);
                             break;
                         case "scheme":
 
@@ -283,5 +295,56 @@ public class UpdateRow extends HttpServlet {
     public String getServletInfo() {
         return "Set and update all rows information";
     }// </editor-fold>
+
+    private boolean newTableHasDish(JsonObject obj) {
+        try {
+            utx.begin();
+            EntityManager em = emf.createEntityManager();
+            int tableNr = obj.getInt("tableNr");
+            TypedQuery<TableOrder> query = em.createNamedQuery("TableOrder.findByTableNr", TableOrder.class);
+            query.setParameter("tableNr", tableNr);
+            List<TableOrder> t = query.getResultList();
+            //em.clear();
+            if(t.size() > 0) {
+                TablehasdishPK pk = Tablehasdish.getPKOf(tableNr, t.get(0).getId(), obj.getInt("dishId"), em);
+
+                    if (obj.containsKey("remove")) {
+                        Tablehasdish hd = em.find(Tablehasdish.class, pk);
+                        if(hd != null) {
+                            em.remove(hd); 
+                        }
+                    }
+                    else {
+                        if(pk == null) {
+                            Tablehasdish hd = new Tablehasdish(obj.getInt("dishId"), t.get(0).getId());
+                            hd.setTableOrder(t.get(0));
+                            hd.setEntityByJson(obj, em);
+                            em.persist(hd);
+                        }
+                        else {
+                            Tablehasdish hd = em.find(Tablehasdish.class, pk);
+                            
+                            hd.setTableOrder(t.get(0));
+                            hd.setEntityByJson(obj, em);
+                            
+                            em.merge(hd);
+                        }
+                    }
+                    try {
+                        em.flush();
+                    } catch (Exception e) {
+                        return false; 
+                    }
+                    utx.commit();
+                    em.clear();     // forget everything we did
+                    em.close();     // close the em
+                    return true;
+
+            }
+        } catch (NotSupportedException | SystemException |RollbackException | HeuristicMixedException |HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+            Logger.getLogger(UpdateRow.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        return false;
+    }
 
 }

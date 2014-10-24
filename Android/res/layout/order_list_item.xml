@@ -39,6 +39,7 @@
             android:tag="0"
             android:layout_height="50dp"
             android:layout_width="70dp"
+            android:id="@+id/special_img"
         />
     
 </LinearLayout>

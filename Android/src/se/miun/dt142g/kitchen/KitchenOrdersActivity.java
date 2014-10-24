@@ -10,6 +10,7 @@ import android.widget.ExpandableListView;
 import java.text.SimpleDateFormat;
 import se.miun.dt142g.BaseActivity;
 import se.miun.dt142g.R;
+import se.miun.dt142g.data.EntityRep.Dish;
 import se.miun.dt142g.data.EntityRep.TableHasDish;
 import se.miun.dt142g.data.handler.TableOrders;
 import se.miun.dt142g.data.EntityRep.TableOrder;
@@ -21,8 +22,8 @@ public class KitchenOrdersActivity extends BaseActivity {
 
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
-    final List<String> listDataHeader = new ArrayList<String>();
-    HashMap<String, List<String>> listDataChild;
+    final List<TableOrder> listDataHeader = new ArrayList<TableOrder>();
+    HashMap<String, List<Dish>> listDataChild;
     final TableDishRelations tableOrders = new TableDishRelations();
 
     // Define the Handler that receives messages from the thread and update the progress
@@ -54,7 +55,7 @@ public class KitchenOrdersActivity extends BaseActivity {
         // get the listview
         expListView = (ExpandableListView) findViewById(R.id.ListOrders);
 
-        listDataChild = new HashMap<String, List<String>>();
+        listDataChild = new HashMap<String, List<Dish>>();
 
         // preparing list data
         prepareListData();
@@ -76,30 +77,54 @@ public class KitchenOrdersActivity extends BaseActivity {
      * Preparing the list data
      */
     private void prepareListData() {
-        listDataHeader.add("Ingen data tillgänglig på servern");
-        listDataChild.put(listDataHeader.get(0), null);
+        //listDataHeader.add("Ingen data tillgänglig på servern");
+        //listDataChild.put(listDataHeader.get(0), null);
 
     }
     private void updateViewList() {
         listDataHeader.clear();
         listDataChild.clear();
-        int index = 0;
+        
         synchronized(tableOrders) {
-            int size = 0;
-            for (TableHasDish tblOrder : tableOrders) {
-
-                // Adding child data
-                List<TableHasDish> tblDishes = tblOrder.getRelations();
-                if(tblDishes.size() > 0) {
-                    listDataHeader.add("Bord " + (tblOrder.getTable()+1) + "\n" + 
-                            new SimpleDateFormat("HH:mm").format(tblOrder.getTimeOfOrder()));
-                    List<String> bord1 = new ArrayList<String>();
-                    for (Integer dishIndex : tblDishes) {
-                        bord1.add(tableOrders.getDishes().getDish(dishIndex).getName());
+            int size = tableOrders.getRelations().size();
+            
+            // Bubble sort table relations
+            for (int index = 0; index < size; index++) {
+                TableHasDish tblOrder = tableOrders.getRelations().get(index);
+                for (int index2 = 0; index2 < size; index2++) {
+                    TableHasDish tblOrder2 = tableOrders.getRelations().get(index2);
+                    if(tblOrder2.getTableOrder().getTable() < tblOrder.getTableOrder().getTable()) {
+                        tableOrders.getRelations().set(index2, tblOrder);
+                        tableOrders.getRelations().set(index, tblOrder2);
                     }
-                    listDataChild.put(listDataHeader.get(index), bord1);
-                    index++;
                 }
+            }
+            
+            int prevTable = -1;
+            List<Dish> table = null;
+            int listIndex = 0;
+            TableHasDish tblOrder  = null;
+            for (int index = 0; index < size; index++) {
+                tblOrder = tableOrders.getRelations().get(index);
+                if(prevTable != tblOrder.getTableOrder().getTable()) {
+                    if(table != null) {
+                        listDataChild.put("Bord " + (1+listDataHeader.get(listIndex-1).getTable()) + "\n" + 
+                            new SimpleDateFormat("HH:mm").format(listDataHeader.get(listIndex-1).getTimeOfOrder()), table);
+                    }
+                    listDataHeader.add(tblOrder.getTableOrder());
+                    table = new ArrayList<Dish>();
+                    listIndex++;
+
+                }
+                // table is never null lol, (removes warning)
+                if(table != null) {
+                    table.add(tableOrders.getDishes().getDish(tblOrder.getDish().id));
+                }
+                prevTable = tblOrder.getTableOrder().getTable();
+            }
+            if(tblOrder != null) {
+                listDataChild.put("Bord " + (1+listDataHeader.get(listIndex-1).getTable()) + "\n" + 
+                    new SimpleDateFormat("HH:mm").format(listDataHeader.get(listIndex-1).getTimeOfOrder()), table);
             }
         }
         if(listDataHeader.size() > 0)

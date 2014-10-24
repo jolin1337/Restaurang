@@ -21,16 +21,27 @@ public class TableHasDish {
         public int id = -1;
         public boolean special = false;
         public int dishCount = 1;
+
+        private void setDish(Dish dish) {
+            id = dish.getId();
+        }
     }
-    private DishIndex dish = null;
+    private DishIndex dish = new DishIndex();
     private TableOrder tableOrder = null;
 
     public DishIndex getDish() {
+        if(this.dish == null)
+            this.dish = new DishIndex();
         return dish;
     }
 
     public void setDish(DishIndex dish) {
         this.dish = dish;
+    }
+    public void setDish(Dish dish) {
+        if(this.dish == null)
+            this.dish = new DishIndex();
+        this.dish.setDish(dish);
     }
 
     public TableOrder getTableOrder() {
@@ -52,6 +63,7 @@ public class TableHasDish {
     public void parseTableOrder(JSONObject tableOrder) throws JSONException {
         if(this.tableOrder == null)
             this.tableOrder = new TableOrder(tableOrder.getInt("id"));
+        this.tableOrder.setId(tableOrder.getInt("id"));
         this.tableOrder.setTable(tableOrder.getInt("tableNr"));
         this.tableOrder.setTimeOfOrder(tableOrder.getInt("timeOfOrder"));
     }

@@ -22,8 +22,9 @@ import se.miun.dt142g.inventory.IngredientPanel.IngredientFieldListener;
  */
 public class InventoryPanel extends JPanel {
 
-    private final JButton addIngredient;
+    private JButton addIngredient;
     private Inventory inventory;
+    private IngredientFieldListener ingredientFieldListener = null; 
 
     /**
      * Constructor sets up layout and adds event listeners to buttons. Also
@@ -72,25 +73,25 @@ public class InventoryPanel extends JPanel {
             }
         });
     }
-
-    private void addIngredientPanel(Ingredient ingredient) {
+    
+    private void addIngredientPanel(Ingredient ingredient){
         IngredientPanel ip = new IngredientPanel(ingredient);
         ip.setIngredientFieldListener(ingredientFieldLIstener);
         this.add(ip);
     }
-
-    private void update() {
+    
+    private void update(){
         inventory.update();
-        removeAll();
-        for (Ingredient ing : inventory) {
-            addIngredientPanel(ing);
-        }
-        add(addIngredient);
-        revalidate();
-        repaint();
+            removeAll();
+            for (Ingredient ing : inventory) {
+                addIngredientPanel(ing);
+            }
+            add(addIngredient);
+            revalidate();
+            repaint(); 
     }
-
-    private final IngredientFieldListener ingredientFieldLIstener = new IngredientFieldListener() {
+    
+    private IngredientFieldListener ingredientFieldLIstener = new IngredientFieldListener() {
         @Override
         public void onFieldEdit() {
             update();
