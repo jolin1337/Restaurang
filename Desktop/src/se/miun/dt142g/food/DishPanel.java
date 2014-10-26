@@ -38,12 +38,33 @@ import se.miun.dt142g.data.Dish;
  */
 public class DishPanel extends JPanel {
 
+    /**
+     * A boolean to verify the status of whether the panel is removed or not
+     */
     boolean isRemovedPanel = false;
+    /**
+     * An instance to the dish class
+     */
     Dish dish;
+    /**
+     * A textfield for the dish name
+     */
     JTextField name;
+    /**
+     * An instance to the controller class
+     */
     Controller remote = null;
-    DishGroups dishGroups = new DishGroups(); 
+    /**
+     * A new dishgroup instance
+     */
+    DishGroups dishGroups = new DishGroups();
 
+    /**
+     * Default constructor which initiates all components
+     *
+     * @param dish - The dish to initiate
+     * @param c - The controller instance
+     */
     public DishPanel(Dish dish, final Controller c) {
         remote = c;
         setLayout(new BorderLayout());
@@ -79,21 +100,38 @@ public class DishPanel extends JPanel {
 
     }
 
+    /**
+     * A setter for the name textfield, value retrieved from the dish
+     */
     public void updateTextFieldContent() {
         name.setText(dish.getName());
     }
 
+    /**
+     * A setter for the dish name, value retrieved from the textfield
+     */
     public void updateDishName() {
         dish.setName(name.getText());
     }
 
+    /**
+     * Getter for a dish
+     *
+     * @return this dish
+     */
     public Dish getDish() {
         return dish;
     }
 
+    /**
+     * A status function to verify whether the panel has been removed or not
+     *
+     * @return true if the panel has been removed, otherwise false
+     */
     boolean isRemoved() {
         return isRemovedPanel;
     }
+
     ActionListener removeEvent = new ActionListener() {
 
         @Override
@@ -104,34 +142,34 @@ public class DishPanel extends JPanel {
                 Logger.getLogger(DishPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
             List<String> groupNames = dishGroups.getDishGroups(dish.getId());
-            if(!groupNames.isEmpty()){
+            if (!groupNames.isEmpty()) {
                 String toDialog = "Kan inte ta bort rätten,\nrätten används i:\n";
-                for(String s : groupNames){
-                    toDialog += s + "\n"; 
+                for (String s : groupNames) {
+                    toDialog += s + "\n";
                 }
                 JOptionPane.showMessageDialog(DishPanel.this, toDialog);
-            }
-            else{
-                int n = ConfirmationBox.confirm(DishPanel.this, "Ta bort "+name.getText()+"?");
+            } else {
+                int n = ConfirmationBox.confirm(DishPanel.this, "Ta bort " + name.getText() + "?");
                 if (n == 0) {
                     isRemovedPanel = true;
                     Container parent = DishPanel.this.getParent();
-                    remote.setSavedTab((JComponent)DishPanel.this.getParent(), false);
+                    remote.setSavedTab((JComponent) DishPanel.this.getParent(), false);
                     parent.remove(DishPanel.this);
                     parent.revalidate();
                     parent.repaint();
 
-                    if(remote != null)
+                    if (remote != null) {
                         remote.setViewDishes();
+                    }
                 }
             }
         }
     };
-     KeyListener textFieldKeyListener = new KeyListener() {
+    KeyListener textFieldKeyListener = new KeyListener() {
 
         @Override
         public void keyTyped(KeyEvent ke) {
-            remote.setSavedTab((JComponent)DishPanel.this.getParent(), false);
+            remote.setSavedTab((JComponent) DishPanel.this.getParent(), false);
         }
 
         @Override

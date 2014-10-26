@@ -1,6 +1,5 @@
 package se.miun.dt142g.bookings;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -28,6 +27,7 @@ import se.miun.dt142g.data.Booking;
 
 /**
  * Holds the user interface for the bookings
+ *
  * @author Marcus
  */
 public class BookingsPanel extends JPanel {
@@ -38,7 +38,7 @@ public class BookingsPanel extends JPanel {
      */
     Object[] headers = new Object[]{"Namn", "Telefon", "Antal", "Datum", "Varaktighet (timmar)"};
     /**
-     * Indicates if we have shanged the view to NewBooking
+     * Indicates if we have changed the view to NewBooking
      */
     private boolean newBookingP = false;
     /**
@@ -49,9 +49,9 @@ public class BookingsPanel extends JPanel {
      * The container for all components in this view
      */
     private final JPanel thisPanel = this;
-    
+
     /**
-     * The remote to make it posible to change tabviews
+     * The remote to make it possible to change tabviews
      */
     private final Controller remote;
     /**
@@ -66,7 +66,7 @@ public class BookingsPanel extends JPanel {
      * Remove button to remove an booking object
      */
     private JButton remove;
-    
+
     //instance table model
     DefaultTableModel model = new DefaultTableModel() {
 
@@ -82,13 +82,12 @@ public class BookingsPanel extends JPanel {
     JTable table = new JTable(model);
 
     // End of variables declaration
-    
     /**
      * Constructs a bookingpanel. The controller is the remote object to make it
      * able to change views
-     * 
+     *
      * @param c - The remote
-     * @throws se.miun.dt142g.DataSource.WrongKeyException If we were unable to 
+     * @throws se.miun.dt142g.DataSource.WrongKeyException If we were unable to
      * connect to the server/database
      */
     public BookingsPanel(Controller c) throws DataSource.WrongKeyException {
@@ -125,7 +124,6 @@ public class BookingsPanel extends JPanel {
         }
         resizeColumnWidth(table);
         add(table);
-        
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         add(Box.createRigidArea(new Dimension(1, 10)));
@@ -139,8 +137,8 @@ public class BookingsPanel extends JPanel {
     /**
      * Adds listeners for components strictly in BookingsPanel only.
      */
-    private void addListeners(){
-        
+    private void addListeners() {
+
         // Remove booking listener
         remove.addActionListener(new ActionListener() {
             @Override
@@ -151,15 +149,16 @@ public class BookingsPanel extends JPanel {
                 thisPanel.revalidate();
             }
         });
-     
+
         /**
          * This adds an tablemodel listener to the table
          */
         table.getModel().addTableModelListener(new TableModelListener() {
-            
+
             /**
-             * This function syncronizes information to the server when a user 
+             * This function syncronizes information to the server when a user
              * edits any of the cells available for editing
+             *
              * @param e - The tablemodell
              */
             @Override
@@ -215,11 +214,11 @@ public class BookingsPanel extends JPanel {
                         System.err.println("Det gick tyvärr inte att uppdatera.");
                         Logger.getLogger(BookingsPanel.class.getName()).log(Level.SEVERE, null, ex);
                         System.err.println("Förlåt, ingen uppdatering. vi ska försöka visa det för användaren...");
-                        
+
                         JOptionPane.showMessageDialog(BookingsPanel.this,
-                            Settings.Strings.serverConnectionError,
-                            "Server error",
-                            JOptionPane.ERROR_MESSAGE);
+                                Settings.Strings.serverConnectionError,
+                                "Server error",
+                                JOptionPane.ERROR_MESSAGE);
                         remote.setConnectionView();
                     }
                 }
@@ -237,9 +236,10 @@ public class BookingsPanel extends JPanel {
             }
         });
     }
-    
+
     /**
      * Resizes a JTable according to the cell-contents
+     *
      * @param table table to be resized
      */
     private void resizeColumnWidth(JTable table) {
@@ -257,6 +257,7 @@ public class BookingsPanel extends JPanel {
 
     /**
      * Prase a string to a specified date format
+     *
      * @param date to be parsed
      * @param format format to be used
      * @return a formatted date
@@ -267,9 +268,10 @@ public class BookingsPanel extends JPanel {
         df.setLenient(false);
         return df.parse(date.trim());
     }
-    
+
     /**
      * Validates a string to verify whether it's a valid date format or not.
+     *
      * @param date the date to be validated
      * @param format the format to validate with
      * @return whether the string is valid
@@ -284,12 +286,13 @@ public class BookingsPanel extends JPanel {
         }
         return true;
     }
-    
+
     /**
-    * Verifies whether a string is an integer or alphabetic
-    * @param s String to verify
-    * @return returns true if the string is an integer
-    */
+     * Verifies whether a string is an integer or alphabetic
+     *
+     * @param s String to verify
+     * @return returns true if the string is an integer
+     */
     private boolean isInteger(String s) {
         try {
             Integer.parseInt(s);
@@ -298,7 +301,7 @@ public class BookingsPanel extends JPanel {
         }
         return true;
     }
-    
+
     @Override
     public void revalidate() {
         super.revalidate();
@@ -318,9 +321,9 @@ public class BookingsPanel extends JPanel {
                 bookings.update();
             } catch (DataSource.WrongKeyException ex) {
                 JOptionPane.showMessageDialog(BookingsPanel.this,
-                    Settings.Strings.serverConnectionError,
-                    "Server error",
-                    JOptionPane.ERROR_MESSAGE);
+                        Settings.Strings.serverConnectionError,
+                        "Server error",
+                        JOptionPane.ERROR_MESSAGE);
                 remote.setConnectionView();
             }
         } else if (removeBooking) {
@@ -328,7 +331,7 @@ public class BookingsPanel extends JPanel {
             try {
                 if (table.getSelectedRow() > 0) {
                     bookings.removeBooking(
-                            bookings.getBookingByIndex(table.getSelectedRow()-1)
+                            bookings.getBookingByIndex(table.getSelectedRow() - 1)
                             .getId());
                     model.removeRow(table.getSelectedRow());
                 }

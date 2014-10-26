@@ -34,10 +34,11 @@ public class Dish implements Comparable<Dish> {
 
     /**
      * Contructs a dish with the initial values of the parameters
+     *
      * @param id
      * @param name
      * @param price
-     * @param ingredients 
+     * @param ingredients
      */
     public Dish(int id, String name, float price, List<Integer> ingredients) {
         this.id = id;
@@ -48,6 +49,7 @@ public class Dish implements Comparable<Dish> {
 
     /**
      * Getter of identifier
+     *
      * @return the id of this dish
      */
     public int getId() {
@@ -56,6 +58,7 @@ public class Dish implements Comparable<Dish> {
 
     /**
      * Setter of identifier
+     *
      * @param id - The id of this dish
      */
     public void setId(int id) {
@@ -64,7 +67,7 @@ public class Dish implements Comparable<Dish> {
 
     /**
      * Getter of the name this dish is called
-     * 
+     *
      * @return the name
      */
     public String getName() {
@@ -73,7 +76,7 @@ public class Dish implements Comparable<Dish> {
 
     /**
      * Setter for the name of this dish
-     * 
+     *
      * @param name the name to set
      */
     public void setName(String name) {
@@ -82,7 +85,7 @@ public class Dish implements Comparable<Dish> {
 
     /**
      * Getter of the price this dish costs
-     * 
+     *
      * @return the price
      */
     public float getPrice() {
@@ -91,7 +94,7 @@ public class Dish implements Comparable<Dish> {
 
     /**
      * Setter of the price this dish costs
-     * 
+     *
      * @param price the price to set
      */
     public void setPrice(float price) {
@@ -100,7 +103,7 @@ public class Dish implements Comparable<Dish> {
 
     /**
      * Getter for one ingredient
-     * 
+     *
      * @param ingred - the index of ingredient to retrieve
      * @return the ingredients
      */
@@ -111,7 +114,7 @@ public class Dish implements Comparable<Dish> {
 
     /**
      * Getter for all ingredients
-     * 
+     *
      * @return a list of ingredient pk:s
      */
     public List<Integer> getIngredients() {
@@ -121,6 +124,7 @@ public class Dish implements Comparable<Dish> {
 
     /**
      * Add an ingredient with pk: id
+     *
      * @param id - The identifier of the ingredient to add
      */
     public void addIngredient(int id) {
@@ -130,6 +134,7 @@ public class Dish implements Comparable<Dish> {
 
     /**
      * Removes an ingredient by index
+     *
      * @param index - the index of the ingredient to remove
      */
     public void removeIngredient(int index) {
@@ -139,9 +144,9 @@ public class Dish implements Comparable<Dish> {
 
     /**
      * Update an ingredient
-     * 
+     *
      * @param index - The index of the ingredient to update
-     * @param id - The new ingredient pk 
+     * @param id - The new ingredient pk
      */
     public void editIngredient(int index, int id) {
         initIngredients();
@@ -157,6 +162,13 @@ public class Dish implements Comparable<Dish> {
         }
     }
 
+    /**
+     * Compares to whether the dish equals this dish
+     *
+     * @param x the dish to compare
+     * @return true if the given dish id is equivalent to this dish id, false
+     * otherwise
+     */
     public boolean equals(Dish x) {
         if (x == null) {
             return false;
@@ -172,6 +184,7 @@ public class Dish implements Comparable<Dish> {
 
     /**
      * Generates an Json representation of this objects attributes
+     *
      * @return A string containing the json object of this object
      */
     public String toJsonString() {

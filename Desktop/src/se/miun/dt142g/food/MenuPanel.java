@@ -4,7 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener; 
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -41,53 +41,82 @@ import se.miun.dt142g.Settings;
 import se.miun.dt142g.data.Dish;
 
 /**
+ * GUI representation for a DishGroup, extends JPanel
  *
  * @author Tomas
  */
 public class MenuPanel extends JPanel {
 
+    /**
+     * DishGroups object to handle different instances of MenuPanel objects
+     */
     static DishGroups dishGroups = new DishGroups();
+    /**
+     * JButton object for adding a new dish to list of dishes for this group
+     */
     JButton addDishBtn;
+    /**
+     * Controller object to enable changing tab and adding asterisk for not
+     * saved status
+     */
     private Controller remote = null;
+    /**
+     * List of dishPanel objects, each panel represents a dish
+     */
     List<SingleDishPanel> dishPanel = new ArrayList<>();
+    /**
+     * Array of DishGroup names to display in this dishGroup gui
+     */
     String[] activeDishGroups;
 
+    /**
+     * Action listener object to synchronize dishgroups with server
+     */
     private final ActionListener syncGroupEvent = new ActionListener() {
 
         @Override
         public void actionPerformed(ActionEvent ae) {
             try {
                 List<String> takenGroups = new ArrayList<>();
-                for(SingleDishPanel sdp : dishPanel) {
-                    if(!takenGroups.contains(sdp.getGroupName())) {
+                for (SingleDishPanel sdp : dishPanel) {
+                    if (!takenGroups.contains(sdp.getGroupName())) {
                         dishGroups.removeAllFromGroup(sdp.getGroupName());
                         takenGroups.add(sdp.getGroupName());
                     }
                     //for(int i = sdp.myComboBox.getItemCount(); i > 0; i--) {
-                    dishGroups.addDishToGroup(sdp.getGroupName(), (Dish)sdp.myComboBox.getSelectedItem());
+                    dishGroups.addDishToGroup(sdp.getGroupName(), (Dish) sdp.myComboBox.getSelectedItem());
                     //}
                 }
                 dishGroups.update();
             } catch (DataSource.WrongKeyException ex) {
                 JOptionPane.showMessageDialog(MenuPanel.this,
-                    Settings.Strings.serverConnectionError,
-                    "Server error",
-                    JOptionPane.ERROR_MESSAGE);
-                if(remote != null)
+                        Settings.Strings.serverConnectionError,
+                        "Server error",
+                        JOptionPane.ERROR_MESSAGE);
+                if (remote != null) {
                     remote.setConnectionView();
+                }
             }
         }
     };
-    
+
+    /**
+     * MenuPanel constructor Initializes graphical components Sets controller
+     * variable and groups for this panel and loads the dishgroups from server.
+     *
+     * @param c controller to set
+     * @param groupNames String array of group names to be displayed in this
+     * MenuPanel
+     * @throws se.miun.dt142g.DataSource.WrongKeyException
+     */
     public MenuPanel(Controller c, String[] groupNames) throws DataSource.WrongKeyException {
         this.remote = c;
         dishGroups.dbConnect();
         dishGroups.loadData();
-        
-        
+
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Settings.Styles.applicationBgColor);
-        
+
         JButton printButton = new JButton("Skriv ut menyblad");
         printButton.addActionListener(new ActionListener() {
 
@@ -97,21 +126,21 @@ public class MenuPanel extends JPanel {
             }
         });
         add(printButton);
-        
+
         JButton submitBtn = new JButton(Settings.Strings.submit);
         submitBtn.addActionListener(syncGroupEvent);
         add(submitBtn);
         List<DishGroup> dishList = dishGroups.getDishGroups(groupNames);
-        
+
         for (final DishGroup dishGroup : dishList) {
-            
+
             JLabel groupTitle = new JLabel(dishGroup.getGroup());
             add(groupTitle);
-            
+
             JPanel groupContainer = new JPanel();
             groupContainer.setLayout(new BoxLayout(groupContainer, BoxLayout.Y_AXIS));
             groupContainer.setBackground(Settings.Styles.applicationBgColor);
-            for(Integer dishId : dishGroup.getDishes()) {
+            for (Integer dishId : dishGroup.getDishes()) {
                 Dish dish = dishGroups.getDishes().getDish(dishId);
                 SingleDishPanel dp = new SingleDishPanel(dish, dishGroup.getGroup(), remote);
                 dishPanel.add(dp);
@@ -163,22 +192,47 @@ public class MenuPanel extends JPanel {
             groupContainer.add(addDishBtn);
             add(groupContainer);
         }
-        
+
         submitBtn = new JButton(Settings.Strings.submit);
         submitBtn.addActionListener(syncGroupEvent);
         add(submitBtn);
         add(Box.createGlue());
     }
 
+    /**
+     * Sets the controller variable remote
+     *
+     * @param c the controller object
+     */
     public void setViewSwitch(Controller c) {
         this.remote = c;
     }
 
+    /**
+     * subclass SingleDishPanel a JPanel that represents a single dish
+     */
     class SingleDishPanel extends JPanel {
 
+        /**
+         * Group name for this panels dish
+         */
         String groupName = null;
+        /**
+         * The dish object for this panel
+         */
         Dish dish;
+        /**
+         * JComboBox for dish selection
+         */
         JComboBox<Dish> myComboBox;
+
+        /**
+         * Constructor initializes object and loads graphical components
+         *
+         * @param dish The dish for this panel
+         * @param gn The group name for this panel
+         * @param c The controller
+         */
         public SingleDishPanel(Dish dish, String gn, final Controller c) {
             this.dish = dish;
             this.groupName = gn;
@@ -209,9 +263,9 @@ public class MenuPanel extends JPanel {
                         MenuPanel.this.dishGroups.getDishes().loadData();
                     } catch (DataSource.WrongKeyException ex) {
                         JOptionPane.showMessageDialog(MenuPanel.this,
-                            Settings.Strings.serverConnectionError,
-                            "Server error",
-                            JOptionPane.ERROR_MESSAGE);
+                                Settings.Strings.serverConnectionError,
+                                "Server error",
+                                JOptionPane.ERROR_MESSAGE);
                         MenuPanel.this.remote.setConnectionView();
                     }
                     myComboBox.removeAllItems();
@@ -234,8 +288,8 @@ public class MenuPanel extends JPanel {
                 @Override
                 public void actionPerformed(ActionEvent ae) {
                     int n = ConfirmationBox.confirm(SingleDishPanel.this, "Ta bort " + myComboBox.getSelectedItem().toString() + "?");
-                    if(n == 0){
-                        
+                    if (n == 0) {
+
                         dishPanel.remove(SingleDishPanel.this);
                         Container parent = SingleDishPanel.this.getParent();
                         parent.remove(SingleDishPanel.this);
@@ -244,19 +298,37 @@ public class MenuPanel extends JPanel {
                 }
             });
         }
-        
+
+        /**
+         * Loads dishes into combobox and sets selected item
+         *
+         * @param dish The dish to be set as selected item
+         */
         final void populateComboBox(Dish dish) {
             for (Dish d : dishGroups.getDishes()) {
                 myComboBox.addItem(d);
-                if(d.equals(dish))
+                if (d.equals(dish)) {
                     myComboBox.setSelectedItem(d);
+                }
             }
         }
+
+        /**
+         * returns the groupname for this SingleDishPanel
+         *
+         * @return
+         */
         public final String getGroupName() {
             return groupName;
         }
     }
-    private String printDishesPDF(){
+
+    /**
+     * Prints menu for this MenuPanel
+     *
+     * @return Returns empty string if successful else returns "Too bad"
+     */
+    private String printDishesPDF() {
         try {
             String url = "getpdfdishes";
             URL obj = new URL(Settings.Strings.serverURL + url);
@@ -274,10 +346,10 @@ public class MenuPanel extends JPanel {
             if (responseCode != 200) {
                 return "Too bad";
             }
-            
+
             PrintService service = PrintServiceLookup.lookupDefaultPrintService();
-            if(service != null) {
-                PrintRequestAttributeSet  pras = new HashPrintRequestAttributeSet();
+            if (service != null) {
+                PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
                 InputStreamReader fin = new InputStreamReader(con.getInputStream());
                 DocPrintJob job = service.createPrintJob();
                 job.addPrintJobListener(new PrintJobListener() {
@@ -309,8 +381,7 @@ public class MenuPanel extends JPanel {
                 });
                 Doc doc = new SimpleDoc(fin, DocFlavor.INPUT_STREAM.AUTOSENSE, null);
                 job.print(doc, pras);
-            }
-            else {
+            } else {
                 printError();
             }
 
@@ -319,12 +390,15 @@ public class MenuPanel extends JPanel {
         }
         return "";
     }
-    
+
+    /**
+     * prints error message on popup dialog if printing is not successful
+     */
     void printError() {
         JOptionPane.showMessageDialog(MenuPanel.this,
-            "Det gick inte skriva ut dina configurerade rätter.\n "
-                    + "Har du konfigurerat din standardskrivare ännu?",
-            "Server error",
-            JOptionPane.ERROR_MESSAGE);
+                "Det gick inte skriva ut dina configurerade rätter.\n "
+                + "Har du konfigurerat din standardskrivare ännu?",
+                "Server error",
+                JOptionPane.ERROR_MESSAGE);
     }
 }

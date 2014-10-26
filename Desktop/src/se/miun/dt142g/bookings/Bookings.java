@@ -24,10 +24,13 @@ public class Bookings extends DataSource implements Iterable<Booking> {
      */
     private final List<Booking> bookings = new ArrayList<>();
     /**
-     * The table name to syncronize to the server
+     * The table name to synchronize to the server
      */
     private final String table = "booking";
 
+    /**
+     * Default constructor for this class
+     */
     public Bookings() {
     }
 

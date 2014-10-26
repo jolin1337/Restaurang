@@ -30,12 +30,36 @@ import se.miun.dt142g.data.Dish;
  */
 public class DishesPanel extends JPanel {
 
+    /**
+     * A list of all dishpanels
+     */
     List<DishPanel> dishPanels = new ArrayList<>();
+    /**
+     * Dishes collection
+     *
+     * @see Dishes.java
+     */
     Dishes dishes = new Dishes();
+    /**
+     * Button object for adding another dish
+     */
     JButton addDishBtn = new JButton("Lägg till rätt");
+    /**
+     * Button object for synchronizing with server
+     */
     JButton submitBtn = new JButton(Settings.Strings.submit);
+    /**
+     * Controller object to enable changing tab and adding asterisk for not
+     * saved status
+     */
     private Controller remote = null;
 
+    /**
+     * Initiates all components
+     *
+     * @param c - The controller instance
+     * @throws se.miun.dt142g.DataSource.WrongKeyException
+     */
     public DishesPanel(Controller c) throws DataSource.WrongKeyException {
         this.remote = c;
         dishes.dbConnect();
@@ -47,12 +71,12 @@ public class DishesPanel extends JPanel {
         addDishBtnTop.addActionListener(addNewDishEvent);
         add(addDishBtnTop);
         addDishBtnTop.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-        
+
         JButton submitBtnTop = new JButton(Settings.Strings.submit);
         submitBtnTop.addActionListener(submitEvent);
         add(submitBtnTop);
         submitBtnTop.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-        
+
         for (Dish dish : dishes) {
             DishPanel dp = new DishPanel(dish, remote);
             add(dp);
@@ -61,67 +85,85 @@ public class DishesPanel extends JPanel {
         addDishBtn.addActionListener(addNewDishEvent);
         add(addDishBtn);
         addDishBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-        
+
         submitBtn.addActionListener(submitEvent);
         add(submitBtn);
         submitBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
     }
 
+    /**
+     * Sets the controller variable remote
+     *
+     * @param c the controller object
+     */
     public void setViewSwitch(Controller c) {
         this.remote = c;
     }
 
-    public void updateTextFieldContents(){
-        for(DishPanel d: dishPanels){
+    /**
+     * Updates all textfields in this DishesPanel object
+     */
+    public void updateTextFieldContents() {
+        for (DishPanel d : dishPanels) {
             d.updateTextFieldContent();
         }
     }
-    
+
+    /**
+     * Actionlistener object for synchronizing with server, this object is added
+     * as action listener for the submit button
+     */
     ActionListener submitEvent = new ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                dishes.clear();
-                List<DishPanel> dishesToRemove = new ArrayList<>();
-                for(DishPanel dp : dishPanels) {
-                    if(dp.isRemoved()) {
-                        dishesToRemove.add(dp);
-                        continue;
-                    }
-                    dp.updateDishName();
-                    dishes.addDish(dp.getDish());
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            dishes.clear();
+            List<DishPanel> dishesToRemove = new ArrayList<>();
+            for (DishPanel dp : dishPanels) {
+                if (dp.isRemoved()) {
+                    dishesToRemove.add(dp);
+                    continue;
                 }
-                for(DishPanel dp : dishesToRemove){
-                        dishPanels.remove(dp);
-                }
-                try {
-                    dishes.update();
-                    remote.setSavedTab(DishesPanel.this, true);
-                } catch (DataSource.WrongKeyException ex) {
-                    JOptionPane.showMessageDialog(DishesPanel.this,
+                dp.updateDishName();
+                dishes.addDish(dp.getDish());
+            }
+            for (DishPanel dp : dishesToRemove) {
+                dishPanels.remove(dp);
+            }
+            try {
+                dishes.update();
+                remote.setSavedTab(DishesPanel.this, true);
+            } catch (DataSource.WrongKeyException ex) {
+                JOptionPane.showMessageDialog(DishesPanel.this,
                         Settings.Strings.serverConnectionError,
                         "Server error",
                         JOptionPane.ERROR_MESSAGE);
-                    if(remote != null)
-                        remote.setConnectionView();
+                if (remote != null) {
+                    remote.setConnectionView();
                 }
             }
-        };
+        }
+    };
+
+    /**
+     * action listener object for adding a new dish, this object is added as
+     * action listener for the button for adding a new dish.
+     */
     ActionListener addNewDishEvent = new ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                Dish dish = new Dish(-1, "", 0.0f, null);
-                DishPanel dp = new DishPanel(dish, remote);
-                remove(addDishBtn);
-                remove(submitBtn);
-                add(dp);
-                
-                add(addDishBtn);
-                add(submitBtn);
-                dishPanels.add(dp);
-                remote.setSavedTab(DishesPanel.this, false);
-                DishesPanel.this.revalidate();
-            }
-        };
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            Dish dish = new Dish(-1, "", 0.0f, null);
+            DishPanel dp = new DishPanel(dish, remote);
+            remove(addDishBtn);
+            remove(submitBtn);
+            add(dp);
+
+            add(addDishBtn);
+            add(submitBtn);
+            dishPanels.add(dp);
+            remote.setSavedTab(DishesPanel.this, false);
+            DishesPanel.this.revalidate();
+        }
+    };
 }

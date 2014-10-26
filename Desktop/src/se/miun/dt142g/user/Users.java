@@ -16,50 +16,86 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 /**
+ * A container for all users
  *
  * @author Ali Omran
  */
-public class Users extends DataSource implements Iterable<User>{
-    
+public class Users extends DataSource implements Iterable<User> {
+
+    /**
+     * A list to hold all users
+     */
     private List<User> users = new ArrayList<>();
+    /**
+     * Json array to hold all users
+     */
     private JSONArray jsonUsers = new JSONArray();
-            JSONObject response;
-        JSONArray data; 
-    
-    public Users(){     
+    JSONObject response;
+    JSONArray data;
+
+    /**
+     * Default constructor
+     */
+    public Users() {
     }
-    
-    public int getRows(){
+
+    /**
+     * Getter for the amount instances in users
+     *
+     * @return the amount of users in the list, eg. the amount of rows
+     */
+    public int getRows() {
         return users.size();
     }
-    
-    public User getUser(int id){
-        for(User u: users)
-        {
-            if(u.getId() == id)
+
+    /**
+     * Getter for users, retrieves a user by id
+     *
+     * @param id - The id of the requested user
+     * @return a user with the specified id, otherwise null if not found
+     */
+    public User getUser(int id) {
+        for (User u : users) {
+            if (u.getId() == id) {
                 return u;
+            }
         }
         return null;
     }
-    public void addUser(User user){
+
+    /**
+     * Add user by specifying a user
+     *
+     * @param user - User to be added
+     */
+    public void addUser(User user) {
         users.add(user);
         listToJsonArray();
     }
-            
-    public void removeUser(int id){
+
+    /**
+     * Remove a user by id
+     *
+     * @param id - Id of the user to remove
+     */
+    public void removeUser(int id) {
         users.remove(this.getUser(id));
     }
-    
-    public void addJsonUser(JSONObject jsonUser){
+
+    /**
+     * Add a user into the list from json object
+     *
+     * @param jsonUser - Json object user to be added
+     */
+    public void addJsonUser(JSONObject jsonUser) {
 
         int id;
         String username;
         String password;
         String phonenr;
         String email;
-        
+
         try {
             id = jsonUser.getInt("id");
             username = jsonUser.getString("username");
@@ -71,46 +107,45 @@ public class Users extends DataSource implements Iterable<User>{
             Logger.getLogger(Users.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void listToJsonArray(){
-        for(User u: users){
-            try{
+
+    /**
+     * Creates a json array from the users list
+     */
+    public void listToJsonArray() {
+        for (User u : users) {
+            try {
                 JSONObject jsonUser = new JSONObject();
                 JSONObject dataElement = new JSONObject();
-                if(u.isRemoved() == true)
-                {
-                   jsonUser.put("remove", true);
+                if (u.isRemoved() == true) {
+                    jsonUser.put("remove", true);
                 }
                 jsonUser.put("id", u.getId());
                 jsonUser.put("username", u.getUsername());
                 jsonUser.put("password", u.getPassword());
                 jsonUser.put("email", u.getMail());
                 jsonUser.put("phonenr", u.getPhoneNumber());
-                
+
                 dataElement.put("data", jsonUser);
                 jsonUsers.put(dataElement);
 
-            }
-            catch(JSONException ex){
+            } catch (JSONException ex) {
                 Logger.getLogger(Users.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-            
-        }        
+
+        }
     }
-  
-    
+
     @Override
-    public void loadData(){
+    public void loadData() {
         response = null;
-        JSONArray data = null; 
+        JSONArray data = null;
         try {
             response = getJsonRequest("user");
             data = response.getJSONArray("data");
         } catch (JSONException ex) {
             Logger.getLogger(Users.class.getName()).log(Level.SEVERE, null, ex);
         }
-        for(int i = 0;i<data.length();i++){
+        for (int i = 0; i < data.length(); i++) {
             try {
                 addJsonUser(data.getJSONObject(i));
             } catch (JSONException ex) {
@@ -118,35 +153,35 @@ public class Users extends DataSource implements Iterable<User>{
             }
         }
     }
-    
+
     @Override
-    public void update(){
+    public void update() {
         JSONObject send = new JSONObject();
 
         jsonUsers = new JSONArray();
         listToJsonArray();
-        
-        try{
+
+        try {
             send.put("data", jsonUsers);
-        }catch(JSONException ex){
+        } catch (JSONException ex) {
             Logger.getLogger(Users.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        String urlParams = "key=" + key + "&table=user&data="+send.toString();
-        System.out.println("Update status: " +getRequest("updaterow", urlParams));
+
+        String urlParams = "key=" + key + "&table=user&data=" + send.toString();
+        System.out.println("Update status: " + getRequest("updaterow", urlParams));
         System.out.println(send.toString());
         //jsonUsers = new JSONArray();
         users = new ArrayList<>();
         loadData();
     }
-    
+
     @Override
     public Iterator<User> iterator() {
         return users.iterator();
     }
-    
+
     @Override
-    public int getUniqueId(){
+    public int getUniqueId() {
         return -1;
     }
 }

@@ -4,9 +4,10 @@ package se.miun.dt142g;
 
 import java.awt.ScrollPane;
 import javax.swing.JFrame;
+
 /**
  * This is an test file for desktop application
- * 
+ *
  * @author Johannes Lindén
  * @since 2014-10-11
  * @version 1.3
@@ -40,5 +41,5 @@ public class Restaurang {
         //5. Show it.
         tmp.setVisible(true);
     }
-    
+
 }

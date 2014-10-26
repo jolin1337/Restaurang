@@ -13,15 +13,31 @@ import se.miun.dt142g.Settings;
 import se.miun.dt142g.user.UserPanel.JFieldEditListener;
 
 /**
+ * Graphical interface for the users
  *
  * @author Ali Omran
  */
 public class UsersPanel extends JPanel {
 
+    /**
+     * Button to add a user
+     */
     private final JButton addUserBtn = new JButton("Lägg till användare");
+    /**
+     * New instance of users
+     */
     private Users usrs = new Users();
+    /**
+     * An instance of the controller class to handle the tab-view
+     */
     final Controller remote;
 
+    /**
+     * Initiate components
+     *
+     * @param c - The controller instance
+     * @throws se.miun.dt142g.DataSource.WrongKeyException
+     */
     public UsersPanel(Controller c) throws DataSource.WrongKeyException {
         usrs.dbConnect();
         usrs.loadData();
@@ -66,6 +82,9 @@ public class UsersPanel extends JPanel {
         }
     };
 
+    /**
+     * Actionlistener for when the Jfield has been modified
+     */
     private JFieldEditListener userPanelListener = new JFieldEditListener() {
         @Override
         public void onFieldEdit() {

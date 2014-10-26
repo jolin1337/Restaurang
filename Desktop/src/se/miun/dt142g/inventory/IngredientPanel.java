@@ -1,6 +1,5 @@
 package se.miun.dt142g.inventory;
 
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,9 +24,6 @@ import se.miun.dt142g.DataSource;
 import se.miun.dt142g.Settings;
 import se.miun.dt142g.data.Ingredient;
 import se.miun.dt142g.food.Dishes;
-import se.miun.dt142g.food.Inventory;
-import se.miun.dt142g.user.UserPanel;
-import se.miun.dt142g.user.UsersPanel;
 
 /**
  * JPanel for a single Ingredient. Fields update when their focus is lost.
@@ -55,13 +51,17 @@ public class IngredientPanel extends JPanel {
      */
     private final Ingredient ingredient;
     /**
-     * 
+     * Ingredient field listener to load data from IngredientPanel fields
      */
-    private IngredientFieldListener ingredientFieldListener = null; 
-    
-    final Controller remote; 
-    
-    static Dishes dishes = new Dishes(); 
+    private IngredientFieldListener ingredientFieldListener = null;
+    /**
+     * An instance to the controller class
+     */
+    final Controller remote;
+    /**
+     * Dishes data handling object
+     */
+    static Dishes dishes = new Dishes();
 
     /**
      * Constructor initializes the panel and adds focus listeners and click
@@ -71,7 +71,7 @@ public class IngredientPanel extends JPanel {
      */
     public IngredientPanel(final Ingredient ingredient, final Controller c) {
         this.ingredient = ingredient;
-        this.remote = c; 
+        this.remote = c;
 
         this.ingredientName = new JTextField(ingredient.getName());
         this.amount = new JTextField(Integer.toString(ingredient.getAmount()));
@@ -90,7 +90,6 @@ public class IngredientPanel extends JPanel {
         amount.addKeyListener(ingredientKeyListener);
         ingredientName.addFocusListener(ingredientFocusListener);
         ingredientName.addKeyListener(ingredientKeyListener);
-        
 
         close.addActionListener(new ActionListener() {
 
@@ -107,14 +106,13 @@ public class IngredientPanel extends JPanel {
                     Logger.getLogger(IngredientPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 List<String> dishNames = dishes.getDishNames(ingredient.getId());
-                if(!dishNames.isEmpty()){
+                if (!dishNames.isEmpty()) {
                     String toDialog = "Kan inte ta bort ingrediensen,\nden används i:\n";
-                    for(String s : dishNames){
-                        toDialog += s + "\n"; 
+                    for (String s : dishNames) {
+                        toDialog += s + "\n";
                     }
                     JOptionPane.showMessageDialog(IngredientPanel.this, toDialog);
-                }
-                else{
+                } else {
                     int n = ConfirmationBox.confirm(IngredientPanel.this, "Ta bort " + ingredientName.getText() + "?");
                     if (n == 0) {
                         ingredient.setFlaggedForRemoval(true);
@@ -140,7 +138,9 @@ public class IngredientPanel extends JPanel {
     public Ingredient getIngredient() {
         return this.ingredient;
     }
-
+    /**
+     * focusListener to update data from fields
+     */
     FocusListener ingredientFocusListener = new FocusListener() {
         @Override
         public void focusGained(FocusEvent e) {
@@ -150,14 +150,18 @@ public class IngredientPanel extends JPanel {
         /**
          * Updates ingredients with data from fields when focus is lost
          *
-         * @param e
+         * @param
          */
         @Override
         public void focusLost(FocusEvent e) {
             updateFromFields();
         }
     };
-    
+
+    /**
+     * Key listener object to set saved tab to false to display asterisk on tab
+     * if the fields have been modified but not yet saved
+     */
     KeyListener ingredientKeyListener = new KeyListener() {
 
         @Override
@@ -167,10 +171,9 @@ public class IngredientPanel extends JPanel {
 
         @Override
         public void keyPressed(KeyEvent e) {
-            if(e.getKeyCode()==KeyEvent.VK_ENTER){
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                 updateFromFields();
-            }
-            else{
+            } else {
                 remote.setSavedTab((JComponent) IngredientPanel.this.getParent(), false);
             }
         }
@@ -185,13 +188,15 @@ public class IngredientPanel extends JPanel {
      * Updates the fields and sync/uploads to the server
      */
     public void updateFromFields() {
-        if (isInteger(this.amount.getText()))
+        if (isInteger(this.amount.getText())) {
             this.ingredient.setAmount(Integer.parseInt(this.amount.getText()));
-        else 
+        } else {
             this.amount.setText(Integer.toString(this.ingredient.getAmount()));
+        }
         this.ingredient.setName(this.ingredientName.getText());
-        if (ingredientFieldListener != null)
+        if (ingredientFieldListener != null) {
             ingredientFieldListener.onFieldEdit();
+        }
     }
 
     /**
@@ -208,8 +213,8 @@ public class IngredientPanel extends JPanel {
         }
         return true;
     }
-    
-        /**
+
+    /**
      * @return the userPanelListener
      */
     public IngredientFieldListener getIngredientFieldListener() {
@@ -222,8 +227,13 @@ public class IngredientPanel extends JPanel {
     public void setIngredientFieldListener(IngredientFieldListener ingredientFieldListener) {
         this.ingredientFieldListener = ingredientFieldListener;
     }
-    
-    public interface IngredientFieldListener{
+
+    /**
+     * Interface to be implemented in InventoryPanel so to be able to update
+     * data from the input fields of each ingredient panel
+     */
+    public interface IngredientFieldListener {
+
         public void onFieldEdit();
     }
 }

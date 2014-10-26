@@ -5,53 +5,115 @@
 package se.miun.dt142g.data;
 
 /**
+ * A dataclass for the timetable which is deprecated
  *
  * @author hagh1200
  */
+@Deprecated
 public class Schedule {
 
-    private String date; 
+    /**
+     * Date of the work shift
+     */
+    private String date;
+    /**
+     * Name of the persons work shift
+     */
     private String userName;
+    /**
+     * Start time of the work shift
+     */
     private String startTime;
+    /**
+     * End time of the work shift
+     */
     private String endTime;
-    
-    
-    
-    public Schedule(String u , String d , String st, String et){
+
+    /**
+     * Constructor for this class
+     *
+     * @param u sets the username
+     * @param d Sets the date
+     * @param st Sets the start time
+     * @param et Sets the end time
+     */
+    public Schedule(String u, String d, String st, String et) {
         date = d;
         userName = u;
         startTime = st;
         endTime = et;
     }
-    public void setDate(String d){
+
+    /**
+     * Setter for the date
+     *
+     * @param d The date to set
+     */
+    public void setDate(String d) {
         date = d;
     }
-    public String getDate(){
+
+    /**
+     * Getter for the date
+     *
+     * @return date of the instance
+     */
+    public String getDate() {
         return date;
     }
-    
-    public void setUsername(String u){
+
+    /**
+     * Setter for the username
+     *
+     * @param u username to set
+     */
+    public void setUsername(String u) {
         userName = u;
     }
-    
-    public String getUsername(){
+
+    /**
+     * Getter for the username
+     *
+     * @return username of the instance is returned
+     */
+    public String getUsername() {
         return userName;
     }
-    public void setStartTime(String st){
+
+    /**
+     * Setter for the start time
+     *
+     * @param st time to set
+     */
+    public void setStartTime(String st) {
         startTime = st;
     }
-    public String getStartTime(){
+
+    /**
+     * Getter for the start time
+     *
+     * @return the start time
+     */
+    public String getStartTime() {
         return startTime;
     }
-    public void setEndTime(String et){
-        endTime = et; 
+
+    /**
+     * Setter for the end time
+     *
+     * @param et time to set
+     */
+    public void setEndTime(String et) {
+        endTime = et;
     }
-    
-    public String getEndTime (){
+
+    /**
+     * Getter for the end time
+     *
+     * @return the end time
+     */
+    public String getEndTime() {
         return endTime;
     }
-  
-            
+
 }
-    
-   

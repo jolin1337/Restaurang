@@ -6,9 +6,9 @@
  * Created by students for this projekt only
  */
 package se.miun.dt142g.website;
- 
+
 import java.io.BufferedReader;
- 
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -22,24 +22,27 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
- 
+
 /**
  * This utility class provides an abstraction layer for sending multipart HTTP
  * POST requests to a web server.
+ *
  * @author www.codejava.net
  *
  */
 public class FormMultiPartUtility {
+
     private final String boundary;
     private static final String LINE_FEED = "\r\n";
     private final HttpURLConnection httpConn;
     private final String charset;
     private final OutputStream outputStream;
     private final PrintWriter writer;
- 
+
     /**
-     * This constructor initializes a new HTTP POST request with content type
-     * is set to multipart/form-data
+     * This constructor initializes a new HTTP POST request with content type is
+     * set to multipart/form-data
+     *
      * @param requestURL
      * @param charset
      * @throws IOException
@@ -47,10 +50,10 @@ public class FormMultiPartUtility {
     public FormMultiPartUtility(String requestURL, String charset)
             throws IOException {
         this.charset = charset;
-         
+
         // creates a unique boundary based on time stamp
         boundary = "===" + System.currentTimeMillis() + "===";
-         
+
         URL url = new URL(requestURL);
         httpConn = (HttpURLConnection) url.openConnection();
         httpConn.setUseCaches(false);
@@ -64,9 +67,10 @@ public class FormMultiPartUtility {
         writer = new PrintWriter(new OutputStreamWriter(outputStream, charset),
                 true);
     }
- 
+
     /**
      * Adds a form field to the request
+     *
      * @param name field name
      * @param value field value
      */
@@ -80,16 +84,17 @@ public class FormMultiPartUtility {
         writer.append(value).append(LINE_FEED);
         writer.flush();
     }
- 
+
     /**
      * Adds a upload file section to the request
+     *
      * @param fieldName name attribute in <input type="file" name="..." />
      * @param uploadFile a File to be uploaded
      * @throws IOException
      */
     public void addFilePart(String fieldName, File uploadFile)
             throws IOException {
-        if(!uploadFile.exists() || !uploadFile.isFile()) {
+        if (!uploadFile.exists() || !uploadFile.isFile()) {
             //throw new IOException("The file " + uploadFile.getName() + " does not exist");
             return;
         }
@@ -97,16 +102,16 @@ public class FormMultiPartUtility {
         writer.append("--" + boundary).append(LINE_FEED);
         writer.append(
                 "Content-Disposition: form-data; name=\"" + fieldName
-                        + "\"; filename=\"" + fileName + "\"")
+                + "\"; filename=\"" + fileName + "\"")
                 .append(LINE_FEED);
         writer.append(
                 "Content-Type: "
-                        + URLConnection.guessContentTypeFromName(fileName))
+                + URLConnection.guessContentTypeFromName(fileName))
                 .append(LINE_FEED);
         writer.append("Content-Transfer-Encoding: binary").append(LINE_FEED);
         writer.append(LINE_FEED);
         writer.flush();
- 
+
         try {
             FileInputStream inputStream = new FileInputStream(uploadFile);
             byte[] buffer = new byte[4096];
@@ -115,15 +120,16 @@ public class FormMultiPartUtility {
                 outputStream.write(buffer, 0, bytesRead);
             }
             outputStream.flush();
+        } catch (FileNotFoundException ex) {
         }
-        catch(FileNotFoundException ex) {}
-         
+
         writer.append(LINE_FEED);
-        writer.flush();    
+        writer.flush();
     }
- 
+
     /**
      * Adds a header field to the request.
+     *
      * @param name - name of the header field
      * @param value - value of the header field
      */
@@ -131,20 +137,21 @@ public class FormMultiPartUtility {
         writer.append(name + ": " + value).append(LINE_FEED);
         writer.flush();
     }
-     
+
     /**
      * Completes the request and receives response from the server.
-     * @return a list of Strings as response in case the server returned
-     * status OK, otherwise an exception is thrown.
+     *
+     * @return a list of Strings as response in case the server returned status
+     * OK, otherwise an exception is thrown.
      * @throws IOException
      */
     public List<String> finish() throws IOException {
         List<String> response = new ArrayList<String>();
- 
+
         writer.append(LINE_FEED).flush();
         writer.append("--" + boundary + "--").append(LINE_FEED);
         writer.close();
- 
+
         // checks server's status code first
         int status = httpConn.getResponseCode();
         if (status == HttpURLConnection.HTTP_OK) {
@@ -159,7 +166,7 @@ public class FormMultiPartUtility {
         } else {
             throw new IOException("Server returned non-OK status: " + status);
         }
- 
+
         return response;
     }
 }

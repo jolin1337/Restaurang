@@ -12,7 +12,6 @@ import java.util.Date;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 /**
  * This is a dataclass that represents an event (happening).
  *
@@ -40,27 +39,29 @@ public class EventPost implements Comparable<EventPost> {
      */
     private String title = "";
     /**
-     * The description on what happend on the event
+     * The description on what happened on the event
      */
     private String description = "";
 
     /**
      * Constructs an eventpost with a desired id
+     *
      * @param id - The id this post will get
      */
     public EventPost(int id) {
         this.id = id;
-        
+
         // Set the pudDate to current date for now
         this.pubDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
     }
 
     /**
-     * Constructs an eventpost with all attributes desided
+     * Constructs an eventpost with all attributes decided
+     *
      * @param id - The identifier for this event
      * @param pubDate - The startdate for this event
      * @param imgSrc - The source to image poster
-     * @param title - The titel for this post
+     * @param title - The title for this post
      * @param description - The description of this event
      */
     public EventPost(int id, String pubDate, String imgSrc, String title, String description) {
@@ -72,9 +73,10 @@ public class EventPost implements Comparable<EventPost> {
     }
 
     /**
-     * Constructs an simplified eventpost attribute collection 
+     * Constructs an simplified eventpost attribute collection
+     *
      * @param id - The identifier for this event
-     * @param title - The titel for this post
+     * @param title - The title for this post
      * @param description - The description of this event
      */
     public EventPost(int id, String title, String description) {
@@ -86,14 +88,17 @@ public class EventPost implements Comparable<EventPost> {
 
     /**
      * gets the id from this event
+     *
      * @return the unique identifier of this post event
      */
     public int getId() {
         return id;
     }
+
     /**
      * Sets the identifier of this object
-     * @param id - The new id this object retireves
+     *
+     * @param id - The new id this object retrieves
      */
     public void setId(int id) {
         this.id = id;
@@ -101,6 +106,7 @@ public class EventPost implements Comparable<EventPost> {
 
     /**
      * Gets the date when this event takes place
+     *
      * @return the date this event takes place
      */
     public String getPubDate() {
@@ -109,7 +115,8 @@ public class EventPost implements Comparable<EventPost> {
 
     /**
      * Setter for start date of this event
-     * @param pubDate 
+     *
+     * @param pubDate
      */
     public void setPubDate(String pubDate) {
         this.pubDate = pubDate;
@@ -117,6 +124,7 @@ public class EventPost implements Comparable<EventPost> {
 
     /**
      * Getter for the poster image name
+     *
      * @return the image name or sometimes url
      */
     public String getImgSrc() {
@@ -125,6 +133,7 @@ public class EventPost implements Comparable<EventPost> {
 
     /**
      * Setter for image name for this poster
+     *
      * @param imgSrc the image name or sometimes url
      */
     public void setImgSrc(String imgSrc) {
@@ -132,7 +141,8 @@ public class EventPost implements Comparable<EventPost> {
     }
 
     /**
-     * Getter for title of this event that describes what is happening 
+     * Getter for title of this event that describes what is happening
+     *
      * @return The title of the event
      */
     public String getTitle() {
@@ -141,6 +151,7 @@ public class EventPost implements Comparable<EventPost> {
 
     /**
      * Setter for title in this eventpost
+     *
      * @param title - The title to set this eventpost to have
      */
     public void setTitle(String title) {
@@ -149,6 +160,7 @@ public class EventPost implements Comparable<EventPost> {
 
     /**
      * Getter for description
+     *
      * @return the description text
      */
     public String getDescription() {
@@ -157,6 +169,7 @@ public class EventPost implements Comparable<EventPost> {
 
     /**
      * Setter for description
+     *
      * @param description - The description this eventpost will have
      */
     public void setDescription(String description) {
@@ -187,6 +200,7 @@ public class EventPost implements Comparable<EventPost> {
 
     /**
      * Converts this EventPost object to an json string
+     *
      * @return An json string representation of this object if it is valid
      * otherwise empty "{}"
      */
@@ -216,9 +230,8 @@ public class EventPost implements Comparable<EventPost> {
         } catch (JSONException ex) { // Nothing to do when something has gone wrong
         }
         return value.toString(); // return this object representation if it is valid
-                                // otherwise empty "{}"
+        // otherwise empty "{}"
     }
-
 
     @Override
     public int compareTo(EventPost t) {

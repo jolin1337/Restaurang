@@ -39,11 +39,11 @@ public class NewBooking extends JPanel {
      */
     private final JButton addBookingBtn = new JButton("Godkänn bokning");
     /**
-     * Textfield to input the name of the person to reservate a table
+     * Textfield to input the name of the person to reserve a table
      */
     private JTextField nameField;
     /**
-     * Textfield to input the amount of persons 
+     * Textfield to input the amount of persons
      */
     private JTextField personsField;
     /**
@@ -59,7 +59,7 @@ public class NewBooking extends JPanel {
      */
     private JTextField phoneNrField;
     /**
-     * Some place to place errors that might happend if the user puts wrong text 
+     * Some place to place errors that might happened if the user puts wrong text
      * in a field
      */
     private JTextArea errorMessagesTextArea;
@@ -72,7 +72,8 @@ public class NewBooking extends JPanel {
      */
     private final String missingBookingInput = "Vänligen fyll i alla fält för att godkänna bokningen.";
     /**
-     * The string displaying if the user typed some characters instead of numbers
+     * The string displaying if the user typed some characters instead of
+     * numbers
      */
     private final String invalidNumberInput = "Vänligen ange endast heltal i personer fältet och varaktighet fältet.";
     /**
@@ -83,7 +84,13 @@ public class NewBooking extends JPanel {
      * The spinner for the time when the booking takes place
      */
     private JSpinner spinner;
+    /**
+     * The variable to store the booking time
+     */
     private Date bookingTime = new Date();
+    /**
+     * The remote to handle the active tab-view
+     */
     private Controller remote = null;
 
     /**
@@ -92,9 +99,10 @@ public class NewBooking extends JPanel {
     public NewBooking() {
         setBackground(Settings.Styles.applicationBgColor);
     }
-    
+
     /**
      * This is called every time we want a new booking to be added
+     *
      * @param b - The booking we can alter
      * @param c - The remote to switch view
      */

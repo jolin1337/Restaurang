@@ -19,67 +19,76 @@ import org.json.JSONObject;
 
 /**
  * This class is a container class for se.miun.dt142g.data.Ingredient
- * 
- * An instance of the class stores Ingredients in an ArrayList and uses superclass
- * DataSource methods for server interaction. 
- * 
+ *
+ * An instance of the class stores Ingredients in an ArrayList and uses
+ * superclass DataSource methods for server interaction.
+ *
  * @author Ulf
  * @see Iterable
  * @see Datasource
- * 
+ *
  */
 public class Inventory extends DataSource implements Iterable<Ingredient> {
+
     private List<Ingredient> ingredients = new ArrayList<>();
-    
+
     /**
      * Constructor does nothing. Class relies on it's other methods for explicit
-     * interaction through DataSource. 
+     * interaction through DataSource.
      */
-    public Inventory(){
+    public Inventory() {
     }
-    
+
     /**
-     * Searches list of ingredients for an Ingredient with the given id and
-     * if it's found returns that Ingredient
-     * @param id the id of the Ingredient object to get. 
-     * @return returns Ingredient object if an Ingredient with correct id is 
-     * in the list of ingredients, else returns null
+     * Searches list of ingredients for an Ingredient with the given id and if
+     * it's found returns that Ingredient
+     *
+     * @param id the id of the Ingredient object to get.
+     * @return returns Ingredient object if an Ingredient with correct id is in
+     * the list of ingredients, else returns null
      */
-    public Ingredient getIngredient(int id){
-        for(Ingredient ing : ingredients)
-            if(ing.getId() == id)
+    public Ingredient getIngredient(int id) {
+        for (Ingredient ing : ingredients) {
+            if (ing.getId() == id) {
                 return ing;
+            }
+        }
         return null;
     }
-    
-    public List<Ingredient> getIngredients(){
+
+    /**
+     * @return returns the list of Ingredient objects for this Inventory object
+     */
+    public List<Ingredient> getIngredients() {
         return this.ingredients;
     }
-    
+
     /**
-     * Adds Ingredient to list of ingredients. 
+     * Adds Ingredient to list of ingredients.
+     *
      * @param ingredient The Ingredient to add to list of ingredients
      */
-    public void addIngredient(Ingredient ingredient){
+    public void addIngredient(Ingredient ingredient) {
         ingredients.add(ingredient);
-        
+
     }
-    
+
     /**
      * Adds Ingredient from json object to list of ingredients
+     *
      * @param jsonIngredient json object representing an Ingredient to add
      * @return returns true if the ingredient was successfully added
      */
-    public boolean addJsonIngredient(JSONObject jsonIngredient){
+    public boolean addJsonIngredient(JSONObject jsonIngredient) {
 
         int id;
         String name;
         int amount;
-        
+
         try {
             id = jsonIngredient.getInt("id");
             name = jsonIngredient.getString("name");
-            amount = jsonIngredient.getInt("amount");    
+            amount = jsonIngredient.getInt("amount");
             ingredients.add(new Ingredient(id, name, amount));
         } catch (JSONException ex) {
             Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);
@@ -87,23 +96,23 @@ public class Inventory extends DataSource implements Iterable<Ingredient> {
         }
         return false;
     }
-    
+
     /**
-     * Loads ingredients list from database. 
+     * Loads ingredients list from database.
      */
     @Override
     public void loadData() {
-        
+
         ingredients.clear();
         JSONObject response = null;
-        JSONArray data = null; 
+        JSONArray data = null;
         try {
             response = getJsonRequest("inventory");
             data = response.getJSONArray("data");
         } catch (JSONException ex) {
             Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);
         }
-        for(int i = 0;i<data.length();i++){
+        for (int i = 0; i < data.length(); i++) {
             try {
                 addJsonIngredient(data.getJSONObject(i));
             } catch (JSONException ex) {
@@ -119,93 +128,94 @@ public class Inventory extends DataSource implements Iterable<Ingredient> {
     @Override
     public void update() {
         try {
-            JSONArray data = new JSONArray(); 
-            for(Ingredient ing : this.ingredients) {
+            JSONArray data = new JSONArray();
+            for (Ingredient ing : this.ingredients) {
                 JSONObject jsonDataElement = new JSONObject();
                 JSONObject jsonIngredient = new JSONObject();
                 if (ing.isFlaggedForRemoval()) {
-                    if(canBeRemoved(ing.getId())){
+                    if (canBeRemoved(ing.getId())) {
                         jsonIngredient.put("id", ing.getId());
                         jsonIngredient.put("remove", true);
                         jsonDataElement.put("data", jsonIngredient);
                         data.put(jsonDataElement);
-                    }
-                    else {
+                    } else {
                         // Do something like popup indicating ingredient couldn't be removed.
                     }
-                }
-                else {
-                    if(ing.getId()<0)
+                } else {
+                    if (ing.getId() < 0) {
                         jsonIngredient.put("id", -1);
-                    else
+                    } else {
                         jsonIngredient.put("id", ing.getId());
+                    }
                     jsonIngredient.put("name", ing.getName());
                     jsonIngredient.put("amount", ing.getAmount());
                     jsonDataElement.put("data", jsonIngredient);
                     data.put(jsonDataElement);
                 }
             }
-            JSONObject send = new JSONObject(); 
+            JSONObject send = new JSONObject();
             send.put("data", data);
             System.out.println("Json object to send: " + send.toString());
-            String urlParams = "key=" + key + "&table=inventory&data="+send.toString();
-            System.out.println("Update status: " +getRequest("updaterow", urlParams));
-            
+            String urlParams = "key=" + key + "&table=inventory&data=" + send.toString();
+            System.out.println("Update status: " + getRequest("updaterow", urlParams));
+
             ingredients = new ArrayList<>();
             loadData();
-        } 
-        catch (JSONException ex) {
+        } catch (JSONException ex) {
             Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     /**
-     * Possibly deprecated. Unique ingredient id is handled in database, id of 
-     * -1 sent to database means the ingredient is new. 
-     * @return -1
+     * gets a unique id for local list of ingredients.
+     *
+     * @return unique negative integer id
      */
     @Override
     public int getUniqueId() {
-        int id  = -1;
-        for(Ingredient ing : ingredients){
-            if(ing.getId() <= id)
-                id = ing.getId()-1;
+        int id = -1;
+        for (Ingredient ing : ingredients) {
+            if (ing.getId() <= id) {
+                id = ing.getId() - 1;
+            }
         }
-        return id; 
+        return id;
     }
 
     /**
-     * to enable iteration 
+     * to enable iteration
+     *
      * @return returns iterator of List<Ingredient> object
      */
     @Override
     public Iterator<Ingredient> iterator() {
         return ingredients.iterator();
     }
-    
+
     /**
      * Checks if ingredient currently is in any dish_has_ingredient entry
+     *
      * @param id the id of ingredient to check
-     * @return returns true if it's safe to remove ingredient. 
+     * @return returns true if it's safe to remove ingredient.
      */
-    private boolean canBeRemoved(int id){
+    private boolean canBeRemoved(int id) {
         JSONObject dishHasInventory = null;
-        JSONArray data = null; 
+        JSONArray data = null;
         try {
             dishHasInventory = getJsonRequest("dish_has_inventory");
             data = dishHasInventory.getJSONArray("data");
         } catch (JSONException ex) {
             Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);
         }
-        for(int i = 0;i<data.length();i++){
+        for (int i = 0; i < data.length(); i++) {
             try {
-                if(id == data.getJSONObject(i).getInt("inventory_id")){
-                    return false; 
+                if (id == data.getJSONObject(i).getInt("inventory_id")) {
+                    return false;
                 }
             } catch (JSONException ex) {
                 Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return true; 
+        return true;
     }
 }

@@ -40,20 +40,54 @@ import se.miun.dt142g.data.EventPost;
  * @version 1.3
  */
 public class WebsitePanel extends JPanel {
+
+    /**
+     * List of EventPostPanels
+     */
     List<EventPostPanel> eventPostPanels = new ArrayList<>();
+    /**
+     * An instance of datasource object to sync the data of all events to server
+     */
     EventPosts eventPosts = new EventPosts();
+    /**
+     * A instance of datasource object to sync the data of information to server
+     */
     AboutUs about = new AboutUs();
-    
+
+    /**
+     * A button for adding new event that are positioned at the bottom of this
+     * panel
+     */
     JButton newEventPostBtn = new JButton("Lägg till nytt evenemang");
+    /**
+     * A button for adding new event that are positioned at the top of this
+     * panel
+     */
     JButton newEventPostBtnTop = new JButton("Lägg till nytt evenemang");
+    /**
+     * A submit button positioned at the bottom of this panel
+     */
     JButton submitBtn = new JButton(Settings.Strings.submit);
+    /**
+     * A submit button positioned at the top of this panel
+     */
     JButton submitBtnTop = new JButton(Settings.Strings.submit);
-    
+
+    /**
+     * The textarea for opening hours
+     */
     JTextArea openEdit = new JTextArea();
+    /**
+     * The textarea of the contact information
+     */
     JTextArea contactEdit = new JTextArea();
-    
+
+    /**
+     * A remote for setting saved tab to false to display asterisk in tab if
+     * unsaved
+     */
     Controller remote = null;
-    
+
     public WebsitePanel(Controller c) throws DataSource.WrongKeyException {
         eventPosts.dbConnect();
         eventPosts.loadData();
@@ -68,21 +102,21 @@ public class WebsitePanel extends JPanel {
         openEdit.addKeyListener(textFieldKeyListener);
         openEdit.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Settings.Styles.applicationBgColor), BorderFactory.createTitledBorder("Öppettider:")));
         add(openEdit);
-   
+
         contactEdit.setText(about.getDataContacts());
         contactEdit.addKeyListener(textFieldKeyListener);
         contactEdit.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Settings.Styles.applicationBgColor), BorderFactory.createTitledBorder("Kontaktinformation:")));
         add(contactEdit);
-        
+
         newEventPostBtnTop.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         newEventPostBtnTop.addActionListener(websiteEventListener);
         add(newEventPostBtnTop);
-        
+
         submitBtnTop.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         submitBtnTop.addActionListener(websiteEventListener);
         add(submitBtnTop);
-        
-        for(EventPost ep : eventPosts) {
+
+        for (EventPost ep : eventPosts) {
             add(Box.createRigidArea(new Dimension(1, 10)));
             EventPostPanel ep1 = new EventPostPanel(ep, remote);
             add(ep1);
@@ -91,77 +125,84 @@ public class WebsitePanel extends JPanel {
         newEventPostBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         newEventPostBtn.addActionListener(websiteEventListener);
         add(newEventPostBtn);
-        
+
         submitBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         submitBtn.addActionListener(websiteEventListener);
         add(submitBtn);
     }
+    /**
+     * Actionlistener for website panel
+     */
     ActionListener websiteEventListener = new ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                Object src = ae.getSource();
-                
-                // If we should submit
-                if(src == submitBtn || src == submitBtnTop) {
-                    about.setDataOpen(openEdit.getText());
-                    about.setDataContacts(contactEdit.getText());
-                    about.update();
-                    for(EventPostPanel evPostPanel : eventPostPanels) 
-                        evPostPanel.updateEvent();
-                    try {
-                        eventPosts.update();
-                    } catch (DataSource.WrongKeyException ex) {
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            Object src = ae.getSource();
 
-                        JOptionPane.showMessageDialog(WebsitePanel.this,
+            // If we should submit
+            if (src == submitBtn || src == submitBtnTop) {
+                about.setDataOpen(openEdit.getText());
+                about.setDataContacts(contactEdit.getText());
+                about.update();
+                for (EventPostPanel evPostPanel : eventPostPanels) {
+                    evPostPanel.updateEvent();
+                }
+                try {
+                    eventPosts.update();
+                } catch (DataSource.WrongKeyException ex) {
+
+                    JOptionPane.showMessageDialog(WebsitePanel.this,
                             Settings.Strings.serverConnectionError,
                             "Server error",
                             JOptionPane.ERROR_MESSAGE);
-                        remote.setConnectionView();
-                    }
-                    int index = 0;
-                    for(EventPost p : eventPosts)
-                        eventPostPanels.get(++index-1).setUpdatedEvent(p);
-                    remote.setSavedTab(WebsitePanel.this, true);
+                    remote.setConnectionView();
                 }
-                // If we should add new event
-                else if(src == newEventPostBtn || src == newEventPostBtnTop) {
-                    remove(newEventPostBtn);
-                    remove(submitBtn);
-                    EventPost ep = new EventPost(eventPosts.getUniqueId());
-                    add(Box.createRigidArea(new Dimension(1, 10)));
-                    EventPostPanel ep1 = new EventPostPanel(ep, remote);
-                    add(ep1);
-                    eventPostPanels.add(ep1);
-                    eventPosts.addEvent(ep);
-                    add(newEventPostBtn);
-                    add(submitBtn);
-                    WebsitePanel.this.revalidate();
-                    WebsitePanel.this.repaint();
-                    Container parent = WebsitePanel.this.getParent().getParent();
-                    if(parent instanceof JScrollPane) {
-                        final JScrollBar vertical = ((JScrollPane)parent).getVerticalScrollBar();
-                        Runnable myTask = new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    Thread.sleep(100);
-                                } catch (InterruptedException ex) {
-                                    Logger.getLogger(WebsitePanel.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                                vertical.setValue( vertical.getMaximum() );
-                                WebsitePanel.this.revalidate();
-                                WebsitePanel.this.repaint();
+                int index = 0;
+                for (EventPost p : eventPosts) {
+                    eventPostPanels.get(++index - 1).setUpdatedEvent(p);
+                }
+                remote.setSavedTab(WebsitePanel.this, true);
+            } // If we should add new event
+            else if (src == newEventPostBtn || src == newEventPostBtnTop) {
+                remove(newEventPostBtn);
+                remove(submitBtn);
+                EventPost ep = new EventPost(eventPosts.getUniqueId());
+                add(Box.createRigidArea(new Dimension(1, 10)));
+                EventPostPanel ep1 = new EventPostPanel(ep, remote);
+                add(ep1);
+                eventPostPanels.add(ep1);
+                eventPosts.addEvent(ep);
+                add(newEventPostBtn);
+                add(submitBtn);
+                WebsitePanel.this.revalidate();
+                WebsitePanel.this.repaint();
+                Container parent = WebsitePanel.this.getParent().getParent();
+                if (parent instanceof JScrollPane) {
+                    final JScrollBar vertical = ((JScrollPane) parent).getVerticalScrollBar();
+                    Runnable myTask = new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(WebsitePanel.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                        };
-                        Thread thread = new Thread(myTask);
-                        thread.start();
+                            vertical.setValue(vertical.getMaximum());
+                            WebsitePanel.this.revalidate();
+                            WebsitePanel.this.repaint();
+                        }
+                    };
+                    Thread thread = new Thread(myTask);
+                    thread.start();
 
-                    }
-                    remote.setSavedTab(WebsitePanel.this, false);
                 }
+                remote.setSavedTab(WebsitePanel.this, false);
             }
-        };
+        }
+    };
+    /**
+     * Key listener to see if anything has been modified
+     */
     KeyListener textFieldKeyListener = new KeyListener() {
 
         @Override

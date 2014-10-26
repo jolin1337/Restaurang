@@ -29,6 +29,7 @@ import javax.swing.JTextField;
  * @version 1.3
  */
 class LoginPage extends JPanel {
+
     /**
      * The alternative one choise, change the safekey textfield
      */
@@ -48,7 +49,7 @@ class LoginPage extends JPanel {
         add(alt1);
         alt1Txt.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         add(alt1Txt);
-        
+
         add(Box.createRigidArea(new Dimension(1, 10)));
         JButton alt2 = new JButton("2. Reconnect and se if it works.");
         add(alt2);

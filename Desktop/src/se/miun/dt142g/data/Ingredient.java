@@ -1,40 +1,42 @@
 package se.miun.dt142g.data;
 
 /**
- * Data representation of an ingredient. 
+ * Data representation of an ingredient.
+ *
  * @author Ulf
  */
 public class Ingredient implements Comparable<Ingredient> {
+
     /**
      * The identifier of this ingredient
      */
-    private int id; 
+    private int id;
     /**
      * The name of this ingredient
      */
-    private String name; 
+    private String name;
     /**
      * Amount left of this ingredient in stock
      */
-    private int amount; 
+    private int amount;
     /**
      * If this ingredient should be removed or not
      */
-    private boolean flaggedForRemoval = false; 
+    private boolean flaggedForRemoval = false;
 
     /**
      * Constructs an ingredient with the parameter as initial values
+     *
      * @param id
      * @param name
-     * @param amount 
+     * @param amount
      */
     public Ingredient(int id, String name, int amount) {
         this.id = id;
         this.name = name;
         this.amount = amount;
     }
-             
-    
+
     /**
      * @return the id
      */
@@ -76,9 +78,10 @@ public class Ingredient implements Comparable<Ingredient> {
     public void setAmount(int amount) {
         this.amount = amount;
     }
-    
+
     /**
      * Returns name of ingredient
+     *
      * @return the name of the ingredient
      */
     @Override
@@ -88,6 +91,7 @@ public class Ingredient implements Comparable<Ingredient> {
 
     /**
      * Implements abstract method for Comparable
+     *
      * @param t Ingredient object to compare to
      * @return -1 if this.name sorts before t.name, 0 if this.name == t.name and
      * 1 if this.name sorts after t.name
@@ -99,6 +103,7 @@ public class Ingredient implements Comparable<Ingredient> {
 
     /**
      * Checks to see if the ingredient is flagged for removal in database
+     *
      * @return the flaggedForRemoval
      */
     public boolean isFlaggedForRemoval() {
@@ -106,7 +111,8 @@ public class Ingredient implements Comparable<Ingredient> {
     }
 
     /**
-     * Sets the flag for removal from database. 
+     * Sets the flag for removal from database.
+     *
      * @param flaggedForRemoval the flaggedForRemoval to set
      */
     public void setFlaggedForRemoval(boolean flaggedForRemoval) {

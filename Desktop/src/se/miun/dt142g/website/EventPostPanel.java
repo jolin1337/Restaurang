@@ -29,9 +29,9 @@ import se.miun.dt142g.Controller;
 import se.miun.dt142g.Settings;
 import se.miun.dt142g.data.EventPost;
 
-
 /**
- * This class the event details and displays them on a jpanel in a form application
+ * This class the event details and displays them on a jpanel in a form
+ * application
  *
  * @author Johannes Lindén
  * @since 2014-10-11
@@ -39,14 +39,34 @@ import se.miun.dt142g.data.EventPost;
  */
 public class EventPostPanel extends JPanel {
 
+    /**
+     * A variable to handle the eventpost
+     */
     private EventPost eventPost = null;
-
+    /**
+     * Button to add a new image
+     */
     private final JButton imgBtn = new JButton("Lägg till poster");
+    /**
+     * Textfield for the event date
+     */
     private final JTextField editDate = new JTextField();
+    /**
+     * Textfield for the event title
+     */
     private final JTextField editTitle = new JTextField();
+    /**
+     * Textarea for the event description
+     */
     private final JTextArea editDesc = new JTextArea();
+    /**
+     * An instance of the controller to handle the tab-view
+     */
     private final Controller remote;
 
+    /**
+     * New action listener for the imageEvent
+     */
     private final ActionListener imageEvent = new ActionListener() {
 
         @Override
@@ -64,6 +84,12 @@ public class EventPostPanel extends JPanel {
         }
     };
 
+    /**
+     * Initiate components
+     *
+     * @param eventPost - The eventpost to initiate
+     * @param c - The controller instance
+     */
     public EventPostPanel(EventPost eventPost, Controller c) {
         this.eventPost = eventPost;
         remote = c;
@@ -99,6 +125,9 @@ public class EventPostPanel extends JPanel {
 
     }
 
+    /**
+     * Keylistener to see whether something has been modified
+     */
     KeyListener textFieldKeyListener = new KeyListener() {
 
         @Override
@@ -115,17 +144,31 @@ public class EventPostPanel extends JPanel {
         }
     };
 
+    /**
+     * Updates an event by setting the data to the data retrieved from the inout
+     * fields
+     */
     public void updateEvent() {
         eventPost.setDescription(editDesc.getText());
         eventPost.setPubDate(editDate.getText());
         eventPost.setTitle(editTitle.getText());
     }
 
+    /**
+     * Updates an eventpost by overriding it with a new eventpost
+     *
+     * @param e - Eventpost with the new data
+     */
     public void setUpdatedEvent(EventPost e) {
         eventPost = e;
         updateEvent();
     }
 
+    /**
+     * Retrieves this eventpost
+     *
+     * @return this eventpost
+     */
     public EventPost getEvent() {
         return eventPost;
     }

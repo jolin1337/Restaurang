@@ -16,7 +16,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-
 /**
  * This class is a static start page/panel
  *
@@ -25,16 +24,21 @@ import javax.swing.JPanel;
  * @version 1.3
  */
 public class FrontPanel extends JPanel {
+
     private BufferedImage image;
-    
+
+    /**
+     * Sets the background for the main window
+     */
     public FrontPanel() {
-       try {                
-           setBackground(Color.white);
-          image = ImageIO.read(new File("res/graphics/logo.png"));
-       } catch (IOException ex) {
-           add(new JLabel("Ingen bild/logga hittades"));
-       }
+        try {
+            setBackground(Color.white);
+            image = ImageIO.read(new File("res/graphics/logo.png"));
+        } catch (IOException ex) {
+            add(new JLabel("Ingen bild/logga hittades"));
+        }
     }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

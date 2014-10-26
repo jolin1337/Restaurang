@@ -16,7 +16,8 @@ import org.json.JSONObject;
 
 /**
  * This class describes a datasource object that uses special rows in the table
- * Info in the database. This class contains opening hours and contact information
+ * Info in the database. This class contains opening hours and contact
+ * information
  *
  * @author Johannes Lindén
  * @since 2014-10-11
@@ -46,6 +47,7 @@ public class AboutUs extends DataSource {
 
     /**
      * Getter for the data opning hours
+     *
      * @return The data containging information about the opening hours
      */
     public String getDataOpen() {
@@ -54,6 +56,7 @@ public class AboutUs extends DataSource {
 
     /**
      * Setter for the data opening hours
+     *
      * @param dataOpen - The data that this object will have
      */
     public void setDataOpen(String dataOpen) {
@@ -62,7 +65,8 @@ public class AboutUs extends DataSource {
 
     /**
      * Getter for the data contacts
-     * @return The data containging information about the contacts
+     *
+     * @return The data containing information about the contacts
      */
     public String getDataContacts() {
         return dataContacts;
@@ -70,6 +74,7 @@ public class AboutUs extends DataSource {
 
     /**
      * Setter for the data contacts
+     *
      * @param dataContacts - The data that this object will have
      */
     public void setDataContacts(String dataContacts) {
@@ -83,12 +88,13 @@ public class AboutUs extends DataSource {
             JSONArray dataArr = data.getJSONArray("data");
             dataOpen = "Öppetider är...";
             dataContacts = "Du når oss på...";
-            for(int i = dataArr.length();i > 0;i--) {
-                JSONObject obj = dataArr.getJSONObject(i-1);
-                if(obj.getString("what").equals("openings"))
+            for (int i = dataArr.length(); i > 0; i--) {
+                JSONObject obj = dataArr.getJSONObject(i - 1);
+                if (obj.getString("what").equals("openings")) {
                     dataOpen = obj.getString("data");
-                else if(obj.getString("what").equals("contacts"))
+                } else if (obj.getString("what").equals("contacts")) {
                     dataContacts = obj.getString("data");
+                }
             }
         } catch (JSONException ex) {
             Logger.getLogger(AboutUs.class.getName()).log(Level.SEVERE, null, ex);
@@ -107,6 +113,7 @@ public class AboutUs extends DataSource {
 
     /**
      * THis is not used
+     *
      * @return - A unique id for a new object of this type
      * @deprecated - Never use
      */

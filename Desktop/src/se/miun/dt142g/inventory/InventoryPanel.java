@@ -24,10 +24,23 @@ import se.miun.dt142g.inventory.IngredientPanel.IngredientFieldListener;
  */
 public class InventoryPanel extends JPanel {
 
+    /**
+     * button for adding ingredient
+     */
     private JButton addIngredient;
+    /**
+     * Inventory data handler object
+     */
     private Inventory inventory;
-    private IngredientFieldListener ingredientFieldListener = null; 
-    final Controller remote; 
+    /**
+     * IngredientFieldListener object to update data from ingredient panel Text
+     * fields
+     */
+    private IngredientFieldListener ingredientFieldListener = null;
+    /**
+     * The remote controller to switch tab-view
+     */
+    final Controller remote;
 
     /**
      * Constructor sets up layout and adds event listeners to buttons. Also
@@ -37,8 +50,8 @@ public class InventoryPanel extends JPanel {
      * connect to server
      */
     public InventoryPanel(Controller c) throws DataSource.WrongKeyException {
-        this.remote = c; 
-        
+        this.remote = c;
+
         this.inventory = new Inventory();
         this.addIngredient = new JButton("Lägg till ingrediens");
 
@@ -51,7 +64,6 @@ public class InventoryPanel extends JPanel {
         for (Ingredient ingredient : inventory) {
             addIngredientPanel(ingredient);
         }
-
 
         addIngredient.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
 
@@ -73,13 +85,21 @@ public class InventoryPanel extends JPanel {
         });
     }
 
+    /**
+     * adds an ingredient panel with a specific ingredient
+     *
+     * @param ingredient the ingredient to add the panel for
+     */
     private void addIngredientPanel(Ingredient ingredient) {
         IngredientPanel ip = new IngredientPanel(ingredient, remote);
         ip.setIngredientFieldListener(ingredientFieldLIstener);
         this.add(ip);
     }
-    
-    private void update(){
+
+    /**
+     * synchronizes with the server
+     */
+    private void update() {
         inventory.update();
         removeAll();
         add(addIngredient);
@@ -90,7 +110,11 @@ public class InventoryPanel extends JPanel {
         revalidate();
         repaint();
     }
-    
+
+    /**
+     * Ingredient Field Listener to trigger upon focus lost in each ingredient
+     * panel
+     */
     private IngredientFieldListener ingredientFieldLIstener = new IngredientFieldListener() {
         @Override
         public void onFieldEdit() {

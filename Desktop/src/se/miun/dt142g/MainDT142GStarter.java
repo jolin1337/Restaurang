@@ -21,7 +21,6 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.plaf.ColorUIResource;
 import se.miun.dt142g.bookings.BookingsPanel;
 import se.miun.dt142g.bookings.NewBooking;
 import se.miun.dt142g.data.Booking;
@@ -33,7 +32,6 @@ import se.miun.dt142g.inventory.InventoryPanel;
 import se.miun.dt142g.user.UsersPanel;
 import se.miun.dt142g.website.WebsitePanel;
 import se.miun.dt142g.Settings.Styles;
-import se.miun.dt142g.schedule.SchedulesPanel;
 
 /**
  * This class is the main class for this project on desktop side. It is used for
@@ -222,8 +220,8 @@ public class MainDT142GStarter extends JPanel {
         BookingsPanel panel7 = new BookingsPanel(remote);
         panels.add(panel7);
         /**
-         * If the scheduler works we uncomment this code and everything is awesome!
-         * SchedulesPanel panel8 = new SchedulesPanel();
+         * If the scheduler works we uncomment this code and everything is
+         * awesome! SchedulesPanel panel8 = new SchedulesPanel();
          * panels.add(panel8);
          */
         int i = 0;
@@ -289,6 +287,11 @@ public class MainDT142GStarter extends JPanel {
         frame.setVisible(true);
     }
 
+    /**
+     * The main program starts here. The user interface is defined here.
+     *
+     * @param args - Arguments to be considered, currrently none.
+     */
     public static void main(String[] args) {
 
         UIManager.put("Button.font", new Font("Calibri", Font.PLAIN, 22));
@@ -309,17 +312,16 @@ public class MainDT142GStarter extends JPanel {
         UIManager.put("TabbedPane.background", Styles.fieldColor.brighter());
         UIManager.put("TabbedPane.foreground", Styles.btnBackground.darker().darker().darker());
         UIManager.put("TabbedPane.selected", Styles.fieldColor);
-        
+
         UIManager.put("TabbedPane.contentAreaColor ", Color.GREEN);
         UIManager.put("TabbedPane.borderColor", Color.RED);
         UIManager.put("TabbedPane.darkShadow", Color.TRANSLUCENT);
         UIManager.put("TabbedPane.light", Color.RED);
         UIManager.put("TabbedPane.focus", Color.LIGHT_GRAY);
         UIManager.put("TabbedPane.selectHighlight", Color.RED);
-        UIManager.put("TabbedPane.borderHightlightColor", Color.TRANSLUCENT); 
+        UIManager.put("TabbedPane.borderHightlightColor", Color.TRANSLUCENT);
         UIManager.put("TabbedPane.contentBorderInsets", new Insets(0, 0, 0, 0));
-        
-        
+
         UIManager.put("TitledBorder.font", new Font("Calibri", Font.PLAIN, 22));
         UIManager.put("TextField.font", new Font("Calibri", Font.PLAIN, 32));
         UIManager.put("TextField.background", Styles.fieldColor);
