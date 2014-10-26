@@ -16,6 +16,13 @@ import javax.inject.Named;
  *
  * @author Johannes
  */
+
+/**
+* This class displays the months in new booking on the website
+* 
+*/
+
+
 @Stateful
 @Named
 public class DateFormat {
@@ -30,12 +37,6 @@ public class DateFormat {
         return resArray;
     }
     
-    public List<Integer> getIntegerItems(int count) {
-        List<Integer> res = new ArrayList<>();
-        for(int i=0; i < count; i++)
-            res.add(i+1);
-        return res;
-    }
 
     
 }

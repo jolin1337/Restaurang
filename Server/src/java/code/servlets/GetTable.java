@@ -63,6 +63,7 @@ public class GetTable extends HttpServlet {
             //Checks if the request has the right authority 
             int authCode = Settings.isAutorised(request.getParameter("key"));
             if (authCode == Settings.AuthCode.accept) {
+                //makes a json array
                 String jsonString = "{\"data\": [";
                 switch (request.getParameter("table")) {
                     case "dish":

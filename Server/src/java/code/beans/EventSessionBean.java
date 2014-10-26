@@ -43,12 +43,15 @@ public class EventSessionBean {
     
     public List<Event> getEvents(SHOW_EVENTS toShow) {
         TypedQuery<Event> query;
+        //gets all events
         if(toShow == SHOW_EVENTS.SHOW_ALL) 
             query = em.createNamedQuery("Event.findAll", Event.class);
+        //gets evens after a given date
         else if( toShow == SHOW_EVENTS.SHOW_AFTER) {
             query = em.createNamedQuery("Event.findByPubdateAfter", Event.class);
             query.setParameter("pubdate", new Date());
         }
+        //gets evens before a given date
         else if( toShow == SHOW_EVENTS.SHOW_BEFORE) {
             query = em.createNamedQuery("Event.findByPubdateBefore", Event.class);
             query.setParameter("pubdate", new Date());
