@@ -31,6 +31,11 @@ public class InfoSessionBean {
     private EntityManager em;
     
     
+   /**
+    *@param Row in the INFO table to get data from.
+    *@return data for the row. 
+    */
+    
     private String getInfo(String what) {
         try {
             TypedQuery<Info> query = em.createNamedQuery("Info.findByWhat", Info.class);

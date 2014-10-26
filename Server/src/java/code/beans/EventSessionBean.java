@@ -37,6 +37,10 @@ public class EventSessionBean {
     @PersistenceContext(unitName = "WebApplication1PU")
     private EntityManager em;
     
+   /**
+    * @return List of events from the database
+    */
+    
     public List<Event> getEvents(SHOW_EVENTS toShow) {
         TypedQuery<Event> query;
         if(toShow == SHOW_EVENTS.SHOW_ALL) 

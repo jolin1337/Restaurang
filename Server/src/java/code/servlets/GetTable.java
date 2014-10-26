@@ -60,45 +60,48 @@ public class GetTable extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         try (PrintWriter out = response.getWriter()) {
+            //Checks if the request has the right authority 
             int authCode = Settings.isAutorised(request.getParameter("key"));
             if (authCode == Settings.AuthCode.accept) {
                 String jsonString = "{\"data\": [";
                 switch (request.getParameter("table")) {
                     case "dish":
+                        //Gets data from dish table 
                         TypedQuery<Dish> dishQuery = em.createNamedQuery("Dish.findAll", Dish.class);
                         for (Dish d : dishQuery.getResultList()) {
                             jsonString += d.toJsonString() + ",";
                         }
                         break;
                     case "booking":
+                        //Gets data from the booking table
                         TypedQuery<Booking> bookingQuery = em.createNamedQuery("Booking.findAll", Booking.class);
                         for (Booking d : bookingQuery.getResultList()) {
                             jsonString += d.toJsonString() + ",";
                         }
                         break;
                     case "dishgroup":
-
+                        //Gets data from the dishgroup table
                         TypedQuery<Dishgroup> dishGroupQuery = em.createNamedQuery("Dishgroup.findAll", Dishgroup.class);
                         for (Dishgroup d : dishGroupQuery.getResultList()) {
                             jsonString += d.toJsonString() + ",";
                         }
                         break;
                     case "event":
-
+                        //get data from event table
                         TypedQuery<Event> eventQuery = em.createNamedQuery("Event.findAll", Event.class);
                         for (Event d : eventQuery.getResultList()) {
                             jsonString += d.toJsonString() + ",";
                         }
                         break;
                     case "info":
-
+                        //Gets data from info table
                         TypedQuery<Info> infoQuery = em.createNamedQuery("Info.findAll", Info.class);
                         for (Info d : infoQuery.getResultList()) {
                             jsonString += d.toJsonString() + ",";
                         }
                         break;
                     case "inventory":
-
+                        //Gets data from inventory table
                         TypedQuery<Inventory> inventoryQuery = em.createNamedQuery("Inventory.findAll", Inventory.class);
                         for (Inventory d : inventoryQuery.getResultList()) {
                             jsonString += d.toJsonString() + ",";
@@ -108,19 +111,21 @@ public class GetTable extends HttpServlet {
 
                         break;
                     case "tableorder":
+                        //Gets data from tableorder table
                         TypedQuery<TableOrder> tableOrderQuery = em.createNamedQuery("TableOrder.findAll", TableOrder.class);
                         for (TableOrder d : tableOrderQuery.getResultList()) {
                             jsonString += d.toJsonString() + ",";
                         }
                         break;
                     case "tabledishrelation":
+                        //Gets data from tabledishrelation table
                         TypedQuery<Tablehasdish> tableHasDishQuery = em.createNamedQuery("Tablehasdish.findAllOrders", Tablehasdish.class);
                         for (Tablehasdish d : tableHasDishQuery.getResultList()) {
                             jsonString += d.toJsonString() + ",";
                         }
                         break;
                     case "user":
-
+                        //Gets data from user table
                         TypedQuery<RestaurantUser> userQuery = em.createNamedQuery("RestaurantUser.findAll", RestaurantUser.class);
                         for (RestaurantUser d : userQuery.getResultList()) {
                             jsonString += d.toJsonString() + ",";
@@ -133,7 +138,7 @@ public class GetTable extends HttpServlet {
                 if (jsonString.length() > "{\"data\": [".length()) {
                     jsonString = jsonString.substring(0, jsonString.length() - 1);
                 }
-                jsonString += "]}";
+                jsonString += "]}"; // ends the json array
                 out.print(jsonString);//URLEncoder.encode(jsonString, "UTF-8"));
             } else if (authCode == Settings.AuthCode.expired) {
                 out.print("expired_key");

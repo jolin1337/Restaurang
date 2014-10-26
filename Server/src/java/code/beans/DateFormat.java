@@ -19,7 +19,7 @@ import javax.inject.Named;
 @Stateful
 @Named
 public class DateFormat {
-
+    
     public String[] getMonths() {
         final String[] resArray = new String[] {
             "Januari", "Februari", "Mars", "April", "Maj", "Juni", "Juli", 
