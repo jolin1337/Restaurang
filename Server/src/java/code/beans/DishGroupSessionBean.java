@@ -31,11 +31,19 @@ public class DishGroupSessionBean {
 
     @PersistenceContext(unitName = "WebApplication1PU")
     private EntityManager em;
-
+    
+    /**
+     * @return List of the A la Carte table
+     */
+   
     public List<Dishgroup> getAlaCarte() {
         TypedQuery<Dishgroup> query = em.createNamedQuery("Dishgroup.alaCarte", Dishgroup.class);
         return query.getResultList();
     }
+    
+    /**
+     * @return  List of Dishgroup from the week menu table
+     */
     
     public List<Dishgroup> getWeekMenu() {
         TypedQuery<Dishgroup> query = em.createNamedQuery("Dishgroup.weekMenu", Dishgroup.class);

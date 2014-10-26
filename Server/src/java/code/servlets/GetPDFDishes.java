@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import miun.dt142g.pdf.PDFGenreateDishesMenu;
 
 /**
- *
+ * This class generates a PDF file for the dishes
  * @author Johannes
  */
 @WebServlet(name = "GetPDFDishes", urlPatterns = {"/getpdfdishes"})
@@ -44,7 +44,6 @@ public class GetPDFDishes extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("application/pdf;charset=UTF-8");
         response.setHeader("Content-Disposition", "attachment; filename=\"dishes_menu.pdf\"");
-        System.out.println( new File("").getAbsolutePath() + "/resources/fest.jpg");
         TypedQuery<Dishgroup> dishQuery = em.createNamedQuery("Dishgroup.weekMenu", Dishgroup.class);
         List<Dishgroup> dishes = dishQuery.getResultList();
         Dishgroup.sortDishgroups(dishes);

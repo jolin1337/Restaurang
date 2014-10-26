@@ -32,7 +32,7 @@ import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 /**
- *
+ * This class handles a new booking
  * @author Johannes
  */
 @WebServlet(name = "BookingServlet", urlPatterns = {"/newbooking"}, initParams = {
