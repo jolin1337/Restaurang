@@ -24,6 +24,12 @@ import org.apache.pdfbox.io.IOUtils;
  *
  * @author Johannes
  */
+
+/**
+ * 
+ * This class gets a image path
+ */
+
 @WebServlet(name = "GetImage", urlPatterns = {"/getimage"}, initParams = {
     @WebInitParam(name = "img", value = "")})
 public class GetImage extends HttpServlet {

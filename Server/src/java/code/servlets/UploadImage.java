@@ -25,7 +25,8 @@ import javax.servlet.http.Part;
 import org.apache.pdfbox.io.IOUtils;
 
 /**
- *
+ * This class uploads an image
+ * 
  * @author Johannes
  */
 @WebServlet(name = "UploadImage", urlPatterns = {"/upload"})
